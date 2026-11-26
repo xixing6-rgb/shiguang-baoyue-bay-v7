@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-flowerbed",
+  "displayName": "孟德尔杂交花圃",
+  "summary": "6x4m厚原木边框花圃，含12株独立FlowerBloom_01..12花冠供运行态浇水杂交变色。",
+  "nodeMergeBlacklist": [
+    "FlowerBedRoot/FlowerBloom_01",
+    "FlowerBedRoot/FlowerBloom_02",
+    "FlowerBedRoot/FlowerBloom_03",
+    "FlowerBedRoot/FlowerBloom_04",
+    "FlowerBedRoot/FlowerBloom_05",
+    "FlowerBedRoot/FlowerBloom_06",
+    "FlowerBedRoot/FlowerBloom_07",
+    "FlowerBedRoot/FlowerBloom_08",
+    "FlowerBedRoot/FlowerBloom_09",
+    "FlowerBedRoot/FlowerBloom_10",
+    "FlowerBedRoot/FlowerBloom_11",
+    "FlowerBedRoot/FlowerBloom_12"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "maxRouteSlopeDeg": 11.94,
+    "maxStepM": 0.113,
+    "recommendedWorldImportPos": [
+      115.0,
+      79.35,
+      86.0
+    ]
+  },
+  "routeAudit": [
+    {
+      "route": "Dock_to_Courtyard_Spawn",
+      "samples": 52,
+      "maxSlopeDeg": 6.76,
+      "maxStepM": 0.063
+    },
+    {
+      "route": "Courtyard_to_Farm",
+      "samples": 11,
+      "maxSlopeDeg": 0.0,
+      "maxStepM": 0.0
+    },
+    {
+      "route": "Courtyard_to_Fountain",
+      "samples": 16,
+      "maxSlopeDeg": 0.0,
+      "maxStepM": 0.0
+    },
+    {
+      "route": "Courtyard_to_Cottage",
+      "samples": 23,
+      "maxSlopeDeg": 0.0,
+      "maxStepM": 0.0
+    },
+    {
+      "route": "Courtyard_to_North_Uplands",
+      "samples": 86,
+      "maxSlopeDeg": 5.56,
+      "maxStepM": 0.052
+    },
+    {
+      "route": "North_Uplands_to_Summit_L3",
+      "samples": 39,
+      "maxSlopeDeg": 10.31,
+      "maxStepM": 0.097
+    },
+    {
+      "route": "North_Creek_Crossing",
+      "samples": 26,
+      "maxSlopeDeg": 4.35,
+      "maxStepM": 0.041
+    },
+    {
+      "route": "West_Cape_to_Lighthouse_L3",
+      "samples": 46,
+      "maxSlopeDeg": 11.84,
+      "maxStepM": 0.113
+    },
+    {
+      "route": "West_Post_to_South_Beach",
+      "samples": 74,
+      "maxSlopeDeg": 11.94,
+      "maxStepM": 0.109
+    },
+    {
+      "route": "East_Causeway_to_South_Islet",
+      "samples": 63,
+      "maxSlopeDeg": 7.66,
+      "maxStepM": 0.072
+    },
+    {
+      "route": "East_Bay_to_Terrace",
+      "samples": 82,
+      "maxSlopeDeg": 5.93,
+      "maxStepM": 0.053
+    },
+    {
+      "route": "West_Plaza_to_East_Plaza",
+      "samples": 173,
+      "maxSlopeDeg": 4.94,
+      "maxStepM": 0.044
+    }
+  ],
+  "anchors": {
+    "spawn_courtyard": {
+      "x": 4.74,
+      "y": 1.15,
+      "z": 2.64
+    },
+    "F04_main_cottage": {
+      "x": -7.5,
+      "y": 1.15,
+      "z": 5.5
+    },
+    "FarmGarden_8plots": {
+      "x": 4.5,
+      "y": 1.15,
+      "z": 9.0
+    },
+    "F09_wish_fountain": {
+      "x": 13.5,
+      "y": 1.15,
+      "z": 1.5
+    },
+    "F22_west_lighthouse": {
+      "x": -54.0,
+      "y": 2.75,
+      "z": -24.0
+    },
+    "P05_bakery_cart": {
+      "x": -1.5,
+      "y": 1.15,
+      "z": 0.2
+    },
+    "NPC_Amu": {
+      "x": -2.5,
+      "y": 1.15,
+      "z": 3.6
+    },
+    "NPC_Mianmian": {
+      "x": 9.8,
+      "y": 1.15,
+      "z": 5.8
+    },
+    "F01_dock": {
+      "x": -6.0,
+      "y": 0.25,
+      "z": -22.0
+    },
+    "F34_north_summit": {
+      "x": 0.0,
+      "y": 3.1,
+      "z": 56.0
+    },
+    "F39_south_islet": {
+      "x": -2.0,
+      "y": 0.95,
+      "z": -45.0
+    }
+  }
+}

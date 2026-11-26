@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-f06-tripo",
+  "displayName": "导入模型",
+  "summary": "从显式 GLB 来源保留的二进制作者输入；来源没有可恢复的作者元数据。",
+  "nodeMergeBlacklist": [
+    "F06_Planter",
+    "F06_Slot_1",
+    "F06_Slot_2",
+    "F06_Slot_3",
+    "F06_Slot_4",
+    "F06_Slot_5",
+    "F06_Slot_6",
+    "F06_Slot_7",
+    "F06_Slot_8",
+    "F06_Slot_9",
+    "F06_Slot_10",
+    "F06_Slot_11",
+    "F06_Slot_12"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "captureFingerprint": "91f3004b3730492071d627277c154f5f08a75f50bd81c02a7b92f2e0b54918f3",
+  "status": "ready",
+  "summary": "对照 design.md 与 regions.md 复核 exterior.png：+Z 正面保留了 1.5m 独立木门 DoorPivot、两侧对称四格窗框、前廊双级木阶与两侧栏杆彩花箱；+X 侧立面透窗可见室内书架彩书与圆角茶桌轮廓，双坡5层暖陶红屋瓦与石砌烟囱体量比例准确，外部材质分工明确。",
+  "issues": [
+    "三向外观正交图未包含室内俯视剖面截图，室内壁炉炉芯、人字木地板与北墙 12x12 像素挂画在本次正交图中仅局部或未能全面直视，将在 Phase 1 Runtime 进屋实机测试中补齐完整室内视角截图并复核。",
+    "-Z 背面为完整闭合山墙与角柱，无露空裂缝，但背立面未设后窗（与设计一致）。"
+  ],
+  "views_checked": [
+    {
+      "name": "exterior",
+      "file": "wprefabs/shiguang-town/docs/indoor/model-cottage/exterior.png",
+      "checks": "已确认 +Z 正立面门廊/门窗洞/花箱/DoorPivot、+X 侧窗透视室内书架与茶桌、-Z 背面闭合山墙及屋顶烟囱结构无穿插"
+    }
+  ],
+  "limitations": [
+    "DoorPivot 开合动作、室内行走通道碰撞体承托与门口踏步贴合尚未经运行态实测，将在整图装配与 Runtime 启动后立即验证。"
+  ]
+}

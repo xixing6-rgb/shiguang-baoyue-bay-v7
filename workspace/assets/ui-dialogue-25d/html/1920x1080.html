@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>ui-dialogue-25d</title>
+</head>
+<body>
+<div data-u-name="ui-dialogue-25d" data-u-type="div" style="position:relative; width:1920px; height:1080px; background-color: rgba(0, 0, 0, 0); z-index: 20;">
+
+  <!-- 顶部左侧：轻种菜背包与种子切换胶囊（避让左上 Native 退出键与左下摇杆） -->
+  <div data-u-name="farmHudPanel" data-u-type="div" style="position:absolute; left:42px; top:142px; width:396px; height:122px; z-index: 1;">
+    <img data-u-name="hudCapsuleSkin" data-u-type="image" src="../images/hudCapsuleSkin.svg" style="position:absolute; left:0px; top:0px; width:396px; height:122px;" />
+    <div data-u-name="hudBagText" data-u-type="text" style="position:absolute; left:20px; top:18px; width:356px; height:32px; font-size:22px; font-weight:bold; color:#794f27; text-align:left;">萝卜 0 · 草莓 0 · 葵 0 · 壳 0</div>
+    <div data-u-name="seedSwitchBtn" data-u-type="button" style="position:absolute; left:20px; top:56px; width:260px; height:48px; z-index:2;">
+      <img data-u-name="seedBtnSkin" data-u-type="image" src="../images/btnSecondarySkin.svg" style="position:absolute; left:0px; top:0px; width:260px; height:48px;" />
+      <div data-u-name="seedBtnLabel" data-u-type="text" style="position:absolute; left:14px; top:10px; width:232px; height:28px; font-size:20px; font-weight:bold; color:#794f27; text-align:center;">切换种子：小红萝卜</div>
+    </div>
+  </div>
+
+  <!-- 顶部居中：轻提示 Toast 胶囊（位于退出与好友列表之间空隙） -->
+  <div data-u-name="toastPanel" data-u-type="div" style="position:absolute; left:580px; top:38px; width:560px; height:76px; z-index: 4;">
+    <img data-u-name="toastSkin" data-u-type="image" src="../images/hudCapsuleSkin.svg" style="position:absolute; left:0px; top:0px; width:560px; height:76px;" />
+    <div data-u-name="toastText" data-u-type="text" style="position:absolute; left:24px; top:20px; width:512px; height:36px; font-size:22px; font-weight:bold; color:#794f27; text-align:center;">海风很温柔，慢慢种菜吧。</div>
+  </div>
+
+  <!-- 中右侧靠近交互按钮（避让跳跃与右侧功能图标） -->
+  <div data-u-name="interactPanel" data-u-type="div" style="position:absolute; left:1120px; top:640px; width:280px; height:76px; z-index: 3;">
+    <div data-u-name="interactBtn" data-u-type="button" style="position:absolute; left:0px; top:0px; width:280px; height:76px;">
+      <img data-u-name="interactBtnSkin" data-u-type="image" src="../images/btnPrimarySkin.svg" style="position:absolute; left:0px; top:0px; width:280px; height:76px;" />
+      <div data-u-name="interactBtnLabel" data-u-type="text" style="position:absolute; left:18px; top:18px; width:244px; height:40px; font-size:24px; font-weight:bold; color:#263f38; text-align:center;">[E] 互动</div>
+    </div>
+  </div>
+
+  <!-- 底部对话整体根节点（符合草图：下方宽对话框 + 左侧竖向圆角动态立绘框） -->
+  <div data-u-name="dialogueRoot" data-u-type="div" style="position:absolute; left:48px; top:668px; width:1824px; height:376px; z-index: 10;">
+
+    <!-- 底部宽幅对话盒 -->
+    <div data-u-name="dialogueBoxPanel" data-u-type="div" style="position:absolute; left:204px; top:96px; width:1572px; height:268px; z-index: 1;">
+      <img data-u-name="dialogueBoxSkin" data-u-type="image" src="../images/dialogueBoxSkin.svg" style="position:absolute; left:0px; top:0px; width:1572px; height:268px;" />
+      <div data-u-name="speakerText" data-u-type="text" style="position:absolute; left:156px; top:24px; width:420px; height:44px; font-size:30px; font-weight:bold; color:#794f27; text-align:left;">阿木：</div>
+      <div data-u-name="bondBadgeText" data-u-type="text" style="position:absolute; left:596px; top:28px; width:440px; height:36px; font-size:22px; font-weight:bold; color:#3d765e; text-align:left;">抱月湾邻里</div>
+      <div data-u-name="bodyText" data-u-type="text" style="position:absolute; left:156px; top:84px; width:960px; height:152px; font-size:26px; color:#725d42; text-align:left;">我：海风吹过来的时候，这里的菜好像长得格外精神。</div>
+
+      <div data-u-name="closeBtn" data-u-type="button" style="position:absolute; left:1368px; top:22px; width:172px; height:54px; z-index:2;">
+        <img data-u-name="closeBtnSkin" data-u-type="image" src="../images/btnSecondarySkin.svg" style="position:absolute; left:0px; top:0px; width:172px; height:54px;" />
+        <div data-u-name="closeBtnLabel" data-u-type="text" style="position:absolute; left:14px; top:12px; width:144px; height:30px; font-size:22px; font-weight:bold; color:#794f27; text-align:center;">挥手告别</div>
+      </div>
+
+      <div data-u-name="giftBtn" data-u-type="button" style="position:absolute; left:1160px; top:176px; width:190px; height:64px; z-index:2;">
+        <img data-u-name="giftBtnSkin" data-u-type="image" src="../images/btnSecondarySkin.svg" style="position:absolute; left:0px; top:0px; width:190px; height:64px;" />
+        <div data-u-name="giftBtnLabel" data-u-type="text" style="position:absolute; left:14px; top:16px; width:162px; height:32px; font-size:23px; font-weight:bold; color:#794f27; text-align:center;">送出作物</div>
+      </div>
+
+      <div data-u-name="nextBtn" data-u-type="button" style="position:absolute; left:1368px; top:176px; width:172px; height:64px; z-index:2;">
+        <img data-u-name="nextBtnSkin" data-u-type="image" src="../images/btnPrimarySkin.svg" style="position:absolute; left:0px; top:0px; width:172px; height:64px;" />
+        <div data-u-name="nextBtnLabel" data-u-type="text" style="position:absolute; left:14px; top:16px; width:144px; height:32px; font-size:23px; font-weight:bold; color:#263f38; text-align:center;">继续对话</div>
+      </div>
+    </div>
+
+    <!-- 左侧叠加圆角角色动画卡片 -->
+    <div data-u-name="portraitCardPanel" data-u-type="div" style="position:absolute; left:24px; top:8px; width:280px; height:356px; z-index: 2;">
+      <img data-u-name="portraitCardSkin" data-u-type="image" src="../images/portraitCardSkin.svg" style="position:absolute; left:0px; top:0px; width:280px; height:356px;" />
+      <img data-u-name="amuFrame01" data-u-type="image" src="../images/amuFrame01.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="amuFrame02" data-u-type="image" src="../images/amuFrame02.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="amuFrame03" data-u-type="image" src="../images/amuFrame03.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="amuFrame04" data-u-type="image" src="../images/amuFrame04.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="amuFrame05" data-u-type="image" src="../images/amuFrame05.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="amuFrame06" data-u-type="image" src="../images/amuFrame06.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="mianmianFrame01" data-u-type="image" src="../images/mianmianFrame01.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="mianmianFrame02" data-u-type="image" src="../images/mianmianFrame02.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="mianmianFrame03" data-u-type="image" src="../images/mianmianFrame03.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="mianmianFrame04" data-u-type="image" src="../images/mianmianFrame04.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="ajuPortrait" data-u-type="image" src="../images/ajuPortrait.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="naibaoPortrait" data-u-type="image" src="../images/naibaoPortrait.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="moyuPortrait" data-u-type="image" src="../images/moyuPortrait.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="tuantuanPortrait" data-u-type="image" src="../images/tuantuanPortrait.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+      <img data-u-name="rongrongPortrait" data-u-type="image" src="../images/rongrongPortrait.png" style="position:absolute; left:16px; top:14px; width:248px; height:318px;" />
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

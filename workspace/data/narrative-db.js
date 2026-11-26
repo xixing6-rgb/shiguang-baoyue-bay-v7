@@ -1,0 +1,4690 @@
+window.SHIGUANG_DB = {
+  "meta": {
+    "title": "时光小筑 · 4× 扩容完整叙事数据库",
+    "version": "4.0.0",
+    "totalWalkableAreaM2": 14334,
+    "facilityCount": 42,
+    "residentCount": 9,
+    "collectibleCount": 26,
+    "blackboardLineCount": 86,
+    "datastoreByteLimit": 6000,
+    "antiExperiencePollutionRedlines": [
+      {
+        "id": "R1",
+        "name": "零缺席惩罚",
+        "rule": "好感度(0-255)缺席衰减恒为0，无倒扣与责备"
+      },
+      {
+        "id": "R2",
+        "name": "零失败状态与零倒计时",
+        "rule": "无Game Over、无饥饿死亡、无限时剥夺"
+      },
+      {
+        "id": "R3",
+        "name": "克制轻推边界",
+        "rule": "保留つまむ轻推与不配合喜剧，禁止强迫恋爱/服从面板"
+      },
+      {
+        "id": "R4",
+        "name": "可预测正向微回报",
+        "rule": "每次交互必有即时柔和视听回响，守住スキマ留白"
+      }
+    ],
+    "actionWhitelist": {
+      "official": [
+        "walk",
+        "run",
+        "greet",
+        "wave",
+        "sit",
+        "clap",
+        "cheer",
+        "dance",
+        "photo",
+        "water_bend"
+      ],
+      "procedural": [
+        "turn_to_player",
+        "hop_bounce",
+        "nod_tilt",
+        "hover_bob",
+        "door_open",
+        "pivot_spin",
+        "paper_pet_squash"
+      ],
+      "bubbles": [
+        "bubble_yellow",
+        "bubble_orange",
+        "bubble_pink",
+        "bubble_purple"
+      ],
+      "particles": [
+        "fx_heart",
+        "fx_sparkle",
+        "fx_petal",
+        "fx_ripple",
+        "fx_firefly"
+      ],
+      "audio": [
+        "voice_soft",
+        "voice_mech"
+      ],
+      "forbidden": [
+        "finger_ik",
+        "lip_sync_mouth",
+        "jump_action",
+        "climb_action"
+      ]
+    }
+  },
+  "saveSchema": {
+    "datastoreKey": "shiguang_town_save_v4",
+    "maxBytes": 6000,
+    "fields": {
+      "chapter": "string (prologue/ch1/ch2/ch3/ch4/epilogue)",
+      "warmFuzzies": "int >= 0",
+      "affection": "map<C01..C09, int 0..255> (init 25, decay 0)",
+      "charStages": "map<C01..C09, int 0..3> (compact <80B)",
+      "unlockedFlags": "csv bitset or compact keys",
+      "collectedMemories": "26-bit hex mask (~7 bytes for M01..M26)",
+      "pixelFlag12x12": "144-char base8/hex string (~160 bytes)",
+      "lingoPool": "array<string> (max 8 short phrases)",
+      "petName": "string (<= 16 chars)",
+      "weatherSeed": "int (deterministic RTC weather seed)",
+      "mendelBlueRose": "bool"
+    },
+    "estimatedMaxPayloadBytes": 1450
+  },
+  "environmentPresets": {
+    "afternoon": {
+      "label": "午后晴空 (14:00)",
+      "timeWindow": [
+        10.0,
+        16.0
+      ],
+      "skyboxUri": "hamlet-ugc/aigc_editor/MarsWorld_sky01.tga",
+      "mainLightColor": "#FFF3DE",
+      "mainLightStrength": 1.6,
+      "shadowStrength": 0.65,
+      "characterAmbient": "#E7F0DC",
+      "fogColor": "#CBEAF7",
+      "startFog": 45,
+      "endFog": 300,
+      "bloomIntensity": 0.45,
+      "lighthouseActive": false,
+      "nightMarketActive": false,
+      "firefliesActive": false
+    },
+    "dusk": {
+      "label": "黄昏暖阳 (17:30)",
+      "timeWindow": [
+        16.0,
+        19.5
+      ],
+      "skyboxUri": "hamlet-ugc/aigc_editor/MarsWorld_sky01_Sunset01.tga",
+      "mainLightColor": "#FFB677",
+      "mainLightStrength": 2.1,
+      "shadowStrength": 0.72,
+      "characterAmbient": "#D9A7A1",
+      "fogColor": "#F5B89E",
+      "startFog": 38,
+      "endFog": 260,
+      "bloomIntensity": 0.9,
+      "lighthouseActive": true,
+      "nightMarketActive": true,
+      "firefliesActive": false
+    },
+    "night": {
+      "label": "星夜暖灯 (21:00)",
+      "timeWindow": [
+        19.5,
+        24.0
+      ],
+      "skyboxUri": "hamlet-ugc/aigc_editor/MarsWorld_sky01_night01.tga",
+      "mainLightColor": "#7E96C9",
+      "mainLightStrength": 0.85,
+      "shadowStrength": 0.45,
+      "characterAmbient": "#6F78A8",
+      "fogColor": "#2A3A5C",
+      "startFog": 32,
+      "endFog": 230,
+      "bloomIntensity": 1.05,
+      "lighthouseActive": true,
+      "nightMarketActive": true,
+      "firefliesActive": true
+    }
+  },
+  "gravitySchedule": {
+    "ratio": "65/35",
+    "directorSoftBias": {
+      "triggerDelaySeconds": 8.0,
+      "scanRadiusMeters": 28.0,
+      "offscreenSpawnBandMeters": [
+        22.0,
+        28.0
+      ],
+      "weightMultiplier": 4.0,
+      "maxResidentsPerScreen": 6,
+      "forbidOnscreenTeleport": true
+    },
+    "slots": {
+      "afternoon": {
+        "label": "午后晴空 (10:00–16:00)",
+        "hotspotA": [
+          "F05",
+          "F06",
+          "F09",
+          "F12"
+        ],
+        "hotspotB": [
+          "F19",
+          "F26"
+        ],
+        "outerSlots": [
+          "F31",
+          "F02",
+          "F28",
+          "F15"
+        ]
+      },
+      "dusk": {
+        "label": "黄昏暖阳 (16:00–19:30)",
+        "hotspotA": [
+          "F16",
+          "F21",
+          "F22"
+        ],
+        "hotspotB": [
+          "F37",
+          "F39"
+        ],
+        "outerSlots": [
+          "F25",
+          "F06",
+          "F27"
+        ]
+      },
+      "night": {
+        "label": "星夜暖灯 (19:30–24:00)",
+        "hotspotA": [
+          "F25"
+        ],
+        "hotspotB": [
+          "F04",
+          "F05"
+        ],
+        "outerSlots": [
+          "F34",
+          "F32",
+          "F22",
+          "F39"
+        ]
+      }
+    }
+  },
+  "chapters": [
+    {
+      "id": "prologue",
+      "index": 0,
+      "title": "序幕：海风里的时光小筑",
+      "unlockedZones": [
+        "Zone0"
+      ],
+      "softGateToNext": {
+        "requiredFacilitiesVisited": [
+          "F08",
+          "F03"
+        ],
+        "requiredCollectibles": [
+          "M01"
+        ],
+        "minConversations": 2,
+        "description": "查看 F08 涂鸦黑板、在 F03 拾得泛黄回信 M01、并与至少 2 位居民对话后解开西巷栅栏"
+      },
+      "lightingProfile": "afternoon",
+      "keyBeats": [
+        "S0-01 码头初遇绵绵",
+        "S0-02 主木屋自动开门与壁炉暖光",
+        "S0-03 F16 望远镜远眺四座熄灭远景地标",
+        "S0-04 拾起首封未寄出明信片"
+      ]
+    },
+    {
+      "id": "ch1",
+      "index": 1,
+      "title": "第一章：未寄出的海风信",
+      "unlockedZones": [
+        "Zone0",
+        "ZoneW"
+      ],
+      "softGateToNext": {
+        "requiredFacilitiesVisited": [
+          "F19",
+          "F20",
+          "F22"
+        ],
+        "requiredEvents": [
+          "lighthouse_relight"
+        ],
+        "minPostcards": 3,
+        "description": "造访 F19 风铃邮局、发现阿橘档案柜、点亮 F22 西岬灯塔棱镜并收集至少 3 张明信片"
+      },
+      "lightingProfile": "dusk",
+      "keyBeats": [
+        "S1-01 迷糊水獭团团登场",
+        "S1-02 发现阿橘秘密收集的未寄信抽屉",
+        "S1-03 点亮西岬灯塔旋转琥珀光束并解锁 F42 单车快传"
+      ]
+    },
+    {
+      "id": "ch2",
+      "index": 2,
+      "title": "第二章：搁浅的白昼号与夏夜烤包香",
+      "unlockedZones": [
+        "Zone0",
+        "ZoneW",
+        "ZoneE"
+      ],
+      "softGateToNext": {
+        "requiredFacilitiesVisited": [
+          "F25",
+          "F26",
+          "F27"
+        ],
+        "requiredEvents": [
+          "lightship_relight",
+          "blue_rose_bred"
+        ],
+        "description": "参与 F25 微光夜市烤包集、在 F27 敲响白昼号船钟并由 F06 培育蓝玫瑰唤醒北麓藤蔓拱门"
+      },
+      "lightingProfile": "night",
+      "keyBeats": [
+        "S2-01 木工咔哒校准船坞跳板",
+        "S2-02 揭开草帽狐狸搁浅白昼号的秘密",
+        "S2-03 星夜烤包热区全员聚合并解锁 F40 摇橹渡船"
+      ]
+    },
+    {
+      "id": "ch3",
+      "index": 3,
+      "title": "第三章：玻璃顶下的四季年谱",
+      "unlockedZones": [
+        "Zone0",
+        "ZoneW",
+        "ZoneE",
+        "ZoneN"
+      ],
+      "softGateToNext": {
+        "requiredFacilitiesVisited": [
+          "F31",
+          "F33",
+          "F34"
+        ],
+        "requiredEvents": [
+          "chronicle_restored",
+          "vinyl_played"
+        ],
+        "minCollectibles": 10,
+        "description": "进入第二座室内 F31 记忆温室、帮阿木与绒绒拼合年谱、在 F33 播放黑胶并完成桥梁合龙准备"
+      },
+      "lightingProfile": "afternoon",
+      "keyBeats": [
+        "S3-01 走进玻璃顶记忆温室与社恐羊绒绒相遇",
+        "S3-02 揭晓 2D 纸片宠物与像素旗的由来",
+        "S3-03 体验 F35 双林间 5 秒快降木滑道"
+      ]
+    },
+    {
+      "id": "ch4",
+      "index": 4,
+      "title": "终章：潮汐退去后的回声音乐会",
+      "unlockedZones": [
+        "Zone0",
+        "ZoneW",
+        "ZoneE",
+        "ZoneN",
+        "ZoneS"
+      ],
+      "softGateToNext": {
+        "requiredFacilitiesVisited": [
+          "F34",
+          "F39"
+        ],
+        "requiredEvents": [
+          "pixel_flag_customized",
+          "lingo_injected",
+          "summit_bell_rung"
+        ],
+        "description": "挂起自定义 12×12 像素旗与流行语歌词，登顶 L3 古樟星穹台敲响铜钟召唤全员赴南屿合唱"
+      },
+      "lightingProfile": "dusk",
+      "keyBeats": [
+        "S4-01 西拱桥与东踏石合龙抱月大环",
+        "S4-02 L3 古樟台敲响黄昏铜钟",
+        "S4-03 全镇 9 居民与纸片宠齐聚 F39 回声大合唱"
+      ]
+    },
+    {
+      "id": "epilogue",
+      "index": 5,
+      "title": "终章后：潮汐无尽的日常回响",
+      "unlockedZones": [
+        "Zone0",
+        "ZoneW",
+        "ZoneE",
+        "ZoneN",
+        "ZoneS"
+      ],
+      "softGateToNext": null,
+      "lightingProfile": "cycle",
+      "keyBeats": [
+        "全岛 42 设施永久解锁",
+        "无尽三时段 65/35 怪友剧场",
+        "异步好友漂流书屋互访",
+        "全 26 件记忆与 81 玫瑰基因图鉴补全"
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "id": "Zone0",
+      "name": "核心老镇",
+      "subtitle": "海风里的时光小筑",
+      "bounds": {
+        "xMin": -32,
+        "xMax": 32,
+        "zMin": -28,
+        "zMax": 28
+      },
+      "areaM2": 3584,
+      "elevationRange": [
+        0.0,
+        3.6
+      ],
+      "unlockChapter": "prologue",
+      "description": "100% 零改动保留原 64m x 56m 滨海核心区，包含 F01–F18 全部日常设施。"
+    },
+    {
+      "id": "ZoneW",
+      "name": "西翼：风铃旧邮局与灯塔岬",
+      "subtitle": "停滞的过去与未寄出的告别",
+      "bounds": {
+        "xMin": -68,
+        "xMax": -32,
+        "zMin": -44,
+        "zMax": 34
+      },
+      "areaM2": 2550,
+      "elevationRange": [
+        0.0,
+        5.4
+      ],
+      "unlockChapter": "ch1",
+      "description": "涵盖风铃旧邮局、信箱画廊、风铃长廊、西岬 L3 灯塔、西北萌屋与西滩篝火角。"
+    },
+    {
+      "id": "ZoneE",
+      "name": "东翼：造船坊与微光夜市湾",
+      "subtitle": "被搁置的梦想与重燃的烟火",
+      "bounds": {
+        "xMin": 32,
+        "xMax": 68,
+        "zMin": -42,
+        "zMax": 32
+      },
+      "areaM2": 2550,
+      "elevationRange": [
+        -0.25,
+        3.6
+      ],
+      "unlockChapter": "ch2",
+      "description": "涵盖星夜微光夜市、红砖烤包窑炉、旧造船坊、搁浅的白昼号灯船、L-0.5 潮间带湿坪与茶花梯田。"
+    },
+    {
+      "id": "ZoneN",
+      "name": "北麓：溪谷图书馆与星穹崖",
+      "subtitle": "被封存的镇史与和解",
+      "bounds": {
+        "xMin": -54,
+        "xMax": 54,
+        "zMin": 28,
+        "zMax": 68
+      },
+      "areaM2": 4400,
+      "elevationRange": [
+        3.2,
+        5.4
+      ],
+      "unlockChapter": "ch3",
+      "description": "涵盖第二座可入室建筑记忆温室图书馆、萤火浅溪双桥、森林水车磨坊、秘密树洞、L3 古樟星穹台与双林间滑道。"
+    },
+    {
+      "id": "ZoneS",
+      "name": "南湾：星砂潮汐小屿与双桥",
+      "subtitle": "面向远方的新契约与共鸣",
+      "bounds": {
+        "xMin": -38,
+        "xMax": 28,
+        "zMin": -54,
+        "zMax": -34
+      },
+      "areaM2": 1250,
+      "elevationRange": [
+        0.15,
+        1.7
+      ],
+      "unlockChapter": "ch4",
+      "description": "涵盖弧形西拱桥、东潮汐踏石礁道、小屿摇橹渡口、漂流书屋与终章回声剧场。"
+    }
+  ],
+  "facilities": [
+    {
+      "id": "F01",
+      "name": "登岛小码头",
+      "zone": "Zone0",
+      "tier": "L0",
+      "pos": [
+        -6.0,
+        0.2,
+        -22.0
+      ],
+      "size": [
+        6.0,
+        5.0,
+        2.6
+      ],
+      "prefabNode": "n398",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "social": 0.45,
+        "curiosity": 0.65,
+        "relax": 0.55
+      },
+      "allowedAction": "wave",
+      "storyNode": "arrival_ferry_hub"
+    },
+    {
+      "id": "F02",
+      "name": "木质钓鱼栈桥",
+      "zone": "Zone0",
+      "tier": "L0",
+      "pos": [
+        10.0,
+        0.2,
+        -23.0
+      ],
+      "size": [
+        4.0,
+        8.0,
+        2.2
+      ],
+      "prefabNode": "n143",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 2,
+      "motives": {
+        "relax": 0.85,
+        "curiosity": 0.4
+      },
+      "allowedAction": "sit",
+      "storyNode": "fox_angler_pier"
+    },
+    {
+      "id": "F03",
+      "name": "漂流瓶沙滩拾贝带",
+      "zone": "Zone0",
+      "tier": "L0",
+      "pos": [
+        -18.0,
+        0.2,
+        -19.0
+      ],
+      "size": [
+        12.0,
+        5.0,
+        0.9
+      ],
+      "prefabNode": "n618",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "curiosity": 0.9,
+        "play": 0.55
+      },
+      "allowedAction": "greet",
+      "storyNode": "prologue_bottle_clue"
+    },
+    {
+      "id": "F04",
+      "name": "时光小筑主木屋",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        -10.0,
+        1.8,
+        -2.0
+      ],
+      "size": [
+        8.0,
+        6.0,
+        4.8
+      ],
+      "prefabNode": "n101",
+      "enterable": true,
+      "unlockChapter": "prologue",
+      "slotCapacity": 4,
+      "motives": {
+        "rest": 0.8,
+        "social": 0.7,
+        "warmth": 0.9
+      },
+      "allowedAction": "door_open",
+      "storyNode": "main_cottage_hearth"
+    },
+    {
+      "id": "F05",
+      "name": "户外咖啡茶桌露台",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        -2.0,
+        1.8,
+        -7.0
+      ],
+      "size": [
+        5.0,
+        4.0,
+        1.4
+      ],
+      "prefabNode": "n88",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 4,
+      "motives": {
+        "social": 0.88,
+        "hunger": 0.75,
+        "rest": 0.6
+      },
+      "allowedAction": "sit",
+      "storyNode": "terrace_tea_chat"
+    },
+    {
+      "id": "F06",
+      "name": "孟德尔杂交花圃",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        5.0,
+        1.8,
+        -8.0
+      ],
+      "size": [
+        6.0,
+        4.0,
+        1.0
+      ],
+      "prefabNode": "n153",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "nature": 0.95,
+        "curiosity": 0.65
+      },
+      "allowedAction": "water_bend",
+      "storyNode": "mendel_blue_rose_gate"
+    },
+    {
+      "id": "F07",
+      "name": "12×12像素小鱼旗杆",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        1.0,
+        1.8,
+        -11.0
+      ],
+      "size": [
+        2.0,
+        2.0,
+        4.2
+      ],
+      "prefabNode": "n207",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.75,
+        "play": 0.6
+      },
+      "allowedAction": "clap",
+      "storyNode": "ugc_pixel_flag"
+    },
+    {
+      "id": "F08",
+      "name": "庭院涂鸦留言黑板",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        -6.0,
+        1.8,
+        -10.0
+      ],
+      "size": [
+        2.0,
+        1.5,
+        1.8
+      ],
+      "prefabNode": "n79",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "curiosity": 0.85,
+        "social": 0.6
+      },
+      "allowedAction": "photo",
+      "storyNode": "ugc_chalkboard_lingo"
+    },
+    {
+      "id": "F09",
+      "name": "中心心愿喷泉",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        14.0,
+        1.8,
+        -1.0
+      ],
+      "size": [
+        6.0,
+        6.0,
+        2.2
+      ],
+      "prefabNode": "n253",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 5,
+      "motives": {
+        "social": 0.9,
+        "curiosity": 0.75,
+        "warmth": 0.85
+      },
+      "allowedAction": "cheer",
+      "storyNode": "warm_fuzzies_fountain"
+    },
+    {
+      "id": "F10",
+      "name": "复古马卡龙自动售货机",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        19.0,
+        1.8,
+        5.0
+      ],
+      "size": [
+        2.5,
+        2.0,
+        2.4
+      ],
+      "prefabNode": "n653",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 2,
+      "motives": {
+        "hunger": 0.85,
+        "curiosity": 0.55
+      },
+      "allowedAction": "hop_bounce",
+      "storyNode": "weird_soda_machine"
+    },
+    {
+      "id": "F11",
+      "name": "广场八卦长椅与花盆组",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        11.0,
+        1.8,
+        5.0
+      ],
+      "size": [
+        5.0,
+        2.5,
+        1.2
+      ],
+      "prefabNode": "n667",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 4,
+      "motives": {
+        "social": 0.85,
+        "rest": 0.75
+      },
+      "allowedAction": "sit",
+      "storyNode": "plaza_gossip_bench"
+    },
+    {
+      "id": "F12",
+      "name": "露天海风条纹咖啡小卖部",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        23.0,
+        1.8,
+        -4.0
+      ],
+      "size": [
+        5.0,
+        4.0,
+        3.4
+      ],
+      "prefabNode": "n388",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 4,
+      "motives": {
+        "hunger": 0.92,
+        "social": 0.8
+      },
+      "allowedAction": "greet",
+      "storyNode": "corgi_bakery_stall"
+    },
+    {
+      "id": "F13",
+      "name": "居民萌屋组团（老镇3栋）",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        -24.0,
+        1.8,
+        4.0
+      ],
+      "size": [
+        5.0,
+        4.5,
+        4.2
+      ],
+      "prefabNode": "n259",
+      "subAnchors": [
+        {
+          "id": "F13a",
+          "name": "琥珀屋",
+          "pos": [
+            -24.0,
+            1.8,
+            4.0
+          ],
+          "node": "n259"
+        },
+        {
+          "id": "F13b",
+          "name": "鼠尾草屋",
+          "pos": [
+            -23.0,
+            1.8,
+            11.0
+          ],
+          "node": "n300"
+        },
+        {
+          "id": "F13c",
+          "name": "海风屋",
+          "pos": [
+            24.0,
+            1.8,
+            8.0
+          ],
+          "node": "n342"
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "rest": 0.75,
+        "social": 0.45
+      },
+      "allowedAction": "wave",
+      "storyNode": "resident_alley_homes"
+    },
+    {
+      "id": "F14",
+      "name": "社区秋千与小吉他亭",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        -22.0,
+        1.8,
+        -6.0
+      ],
+      "size": [
+        5.0,
+        5.0,
+        3.2
+      ],
+      "prefabNode": "n408",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "play": 0.85,
+        "music": 0.88,
+        "social": 0.65
+      },
+      "allowedAction": "dance",
+      "storyNode": "swing_guitar_nook"
+    },
+    {
+      "id": "F15",
+      "name": "北高台八角木质风车塔",
+      "zone": "Zone0",
+      "tier": "L2",
+      "pos": [
+        -12.0,
+        3.6,
+        20.0
+      ],
+      "size": [
+        5.0,
+        5.0,
+        8.5
+      ],
+      "prefabNode": "n215",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.7,
+        "relax": 0.6
+      },
+      "allowedAction": "pivot_spin",
+      "storyNode": "windmill_owl_perch"
+    },
+    {
+      "id": "F16",
+      "name": "日落观景望远镜木亭",
+      "zone": "Zone0",
+      "tier": "L2",
+      "pos": [
+        -2.0,
+        3.6,
+        18.0
+      ],
+      "size": [
+        5.0,
+        3.0,
+        3.5
+      ],
+      "prefabNode": "n476",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "curiosity": 0.9,
+        "social": 0.75,
+        "relax": 0.85
+      },
+      "allowedAction": "photo",
+      "storyNode": "sightline_telescope"
+    },
+    {
+      "id": "F17",
+      "name": "三果实标志果树林",
+      "zone": "Zone0",
+      "tier": "L2",
+      "pos": [
+        14.0,
+        3.6,
+        19.0
+      ],
+      "size": [
+        14.0,
+        9.0,
+        4.4
+      ],
+      "prefabNode": "n677",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "hunger": 0.75,
+        "nature": 0.85
+      },
+      "allowedAction": "cheer",
+      "storyNode": "three_fruit_orchard"
+    },
+    {
+      "id": "F18",
+      "name": "时光石与纸片宠物打卡坪",
+      "zone": "Zone0",
+      "tier": "L2",
+      "pos": [
+        23.0,
+        3.6,
+        17.0
+      ],
+      "size": [
+        7.0,
+        6.0,
+        2.2
+      ],
+      "prefabNode": "n806",
+      "enterable": false,
+      "unlockChapter": "prologue",
+      "slotCapacity": 3,
+      "motives": {
+        "play": 0.8,
+        "curiosity": 0.75,
+        "warmth": 0.85
+      },
+      "allowedAction": "paper_pet_squash",
+      "storyNode": "paper_pet_monument"
+    },
+    {
+      "id": "F19",
+      "name": "风铃旧邮局",
+      "zone": "ZoneW",
+      "tier": "L1",
+      "pos": [
+        -44.0,
+        1.8,
+        4.0
+      ],
+      "size": [
+        9.0,
+        7.0,
+        5.5
+      ],
+      "prefabNode": "F19_PostOffice",
+      "enterable": true,
+      "unlockChapter": "ch1",
+      "slotCapacity": 4,
+      "motives": {
+        "social": 0.85,
+        "curiosity": 0.9,
+        "warmth": 0.88
+      },
+      "allowedAction": "greet",
+      "storyNode": "ch1_post_office_archive"
+    },
+    {
+      "id": "F20",
+      "name": "阶梯信箱画廊与邮包棚",
+      "zone": "ZoneW",
+      "tier": "L1",
+      "pos": [
+        -38.0,
+        1.8,
+        -8.0
+      ],
+      "size": [
+        6.0,
+        4.0,
+        3.2
+      ],
+      "prefabNode": "F20_MailboxGallery",
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 3,
+      "motives": {
+        "curiosity": 0.82,
+        "social": 0.65
+      },
+      "allowedAction": "clap",
+      "storyNode": "ch1_stamp_wall"
+    },
+    {
+      "id": "F21",
+      "name": "海岬风铃长廊与信号旗台",
+      "zone": "ZoneW",
+      "tier": "L2",
+      "pos": [
+        -50.0,
+        3.6,
+        -14.0
+      ],
+      "size": [
+        8.0,
+        4.0,
+        3.8
+      ],
+      "prefabNode": "F21_WindchimeCorridor",
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 3,
+      "motives": {
+        "relax": 0.8,
+        "music": 0.75,
+        "curiosity": 0.7
+      },
+      "allowedAction": "wave",
+      "storyNode": "ch1_cape_peek_walk"
+    },
+    {
+      "id": "F22",
+      "name": "西岬旧灯塔与星象崖台",
+      "zone": "ZoneW",
+      "tier": "L3",
+      "pos": [
+        -56.0,
+        5.4,
+        -24.0
+      ],
+      "size": [
+        7.0,
+        7.0,
+        11.5
+      ],
+      "prefabNode": "F22_WestLighthouse",
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 4,
+      "motives": {
+        "curiosity": 0.95,
+        "warmth": 0.9,
+        "social": 0.75
+      },
+      "allowedAction": "pivot_spin",
+      "storyNode": "ch1_lighthouse_relight"
+    },
+    {
+      "id": "F23",
+      "name": "西北山崖萌屋组（2栋）",
+      "zone": "ZoneW",
+      "tier": "L2",
+      "pos": [
+        -48.0,
+        3.6,
+        20.0
+      ],
+      "size": [
+        5.5,
+        4.5,
+        4.2
+      ],
+      "prefabNode": "F23_CliffCottages",
+      "subAnchors": [
+        {
+          "id": "F23a",
+          "name": "水獭团团小屋",
+          "pos": [
+            -48.0,
+            3.6,
+            20.0
+          ]
+        },
+        {
+          "id": "F23b",
+          "name": "海岬客舍",
+          "pos": [
+            -58.0,
+            3.6,
+            14.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 2,
+      "motives": {
+        "rest": 0.8,
+        "social": 0.5
+      },
+      "allowedAction": "wave",
+      "storyNode": "otter_postman_home"
+    },
+    {
+      "id": "F24",
+      "name": "西滩漂流木篝火角（秘境#1）",
+      "zone": "ZoneW",
+      "tier": "L0",
+      "pos": [
+        -42.0,
+        0.3,
+        -30.0
+      ],
+      "size": [
+        6.0,
+        5.0,
+        1.4
+      ],
+      "prefabNode": "F24_DriftwoodCampfire",
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 4,
+      "motives": {
+        "warmth": 0.95,
+        "social": 0.85,
+        "hunger": 0.65
+      },
+      "allowedAction": "sit",
+      "storyNode": "pocket_west_campfire"
+    },
+    {
+      "id": "F25",
+      "name": "微光海滨夜市与烤包窑炉剧场",
+      "zone": "ZoneE",
+      "tier": "L1",
+      "pos": [
+        44.0,
+        1.8,
+        -4.0
+      ],
+      "size": [
+        14.0,
+        11.0,
+        4.2
+      ],
+      "prefabNode": "F25_NightMarketKiln",
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 6,
+      "motives": {
+        "hunger": 0.98,
+        "social": 0.96,
+        "warmth": 0.92
+      },
+      "allowedAction": "dance",
+      "storyNode": "ch2_saloon_bakeoff"
+    },
+    {
+      "id": "F26",
+      "name": "旧造船木工坊与船台滑道",
+      "zone": "ZoneE",
+      "tier": "L0-L1",
+      "pos": [
+        54.0,
+        1.2,
+        -18.0
+      ],
+      "size": [
+        10.0,
+        8.0,
+        5.0
+      ],
+      "prefabNode": "F26_OldBoatyard",
+      "subAnchors": [
+        {
+          "id": "F26_dock",
+          "name": "东湾渡口码头",
+          "pos": [
+            48.0,
+            0.2,
+            -24.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 4,
+      "motives": {
+        "curiosity": 0.85,
+        "craft": 0.92,
+        "social": 0.65
+      },
+      "allowedAction": "nod_tilt",
+      "storyNode": "ch2_boatyard_repair"
+    },
+    {
+      "id": "F27",
+      "name": "搁浅的白昼号潮汐灯船",
+      "zone": "ZoneE",
+      "tier": "L0",
+      "pos": [
+        52.0,
+        0.2,
+        -32.0
+      ],
+      "size": [
+        11.0,
+        5.0,
+        9.5
+      ],
+      "prefabNode": "F27_DaylightLightship",
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 4,
+      "motives": {
+        "curiosity": 0.95,
+        "warmth": 0.9,
+        "relax": 0.7
+      },
+      "allowedAction": "cheer",
+      "storyNode": "ch2_lightship_bell"
+    },
+    {
+      "id": "F28",
+      "name": "潮间带生态湿坪与玻璃礁池（秘境#2）",
+      "zone": "ZoneE",
+      "tier": "L-0.5",
+      "pos": [
+        36.0,
+        -0.25,
+        -26.0
+      ],
+      "size": [
+        14.0,
+        10.0,
+        1.5
+      ],
+      "prefabNode": "F28_TidepoolWetland",
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 3,
+      "motives": {
+        "nature": 0.9,
+        "curiosity": 0.88,
+        "play": 0.72
+      },
+      "allowedAction": "water_bend",
+      "storyNode": "pocket_tidepool_glass"
+    },
+    {
+      "id": "F29",
+      "name": "东山梯田茶花与纸风筝坪",
+      "zone": "ZoneE",
+      "tier": "L2",
+      "pos": [
+        48.0,
+        3.6,
+        14.0
+      ],
+      "size": [
+        12.0,
+        9.0,
+        2.8
+      ],
+      "prefabNode": "F29_CamelliaKiteTerrace",
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 3,
+      "motives": {
+        "nature": 0.86,
+        "play": 0.84,
+        "relax": 0.75
+      },
+      "allowedAction": "wave",
+      "storyNode": "camellia_paper_kite"
+    },
+    {
+      "id": "F30",
+      "name": "东岸工坊与画室萌屋（2栋）",
+      "zone": "ZoneE",
+      "tier": "L1-L2",
+      "pos": [
+        42.0,
+        3.6,
+        24.0
+      ],
+      "size": [
+        5.5,
+        4.5,
+        4.2
+      ],
+      "prefabNode": "F30_StudioCottages",
+      "subAnchors": [
+        {
+          "id": "F30a",
+          "name": "木工小浣熊工坊屋",
+          "pos": [
+            42.0,
+            3.6,
+            24.0
+          ]
+        },
+        {
+          "id": "F30b",
+          "name": "羊画师芥末画室屋",
+          "pos": [
+            56.0,
+            1.8,
+            4.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 2,
+      "motives": {
+        "rest": 0.78,
+        "craft": 0.85
+      },
+      "allowedAction": "clap",
+      "storyNode": "east_studio_homes"
+    },
+    {
+      "id": "F31",
+      "name": "溪谷记忆温室与森林图书馆",
+      "zone": "ZoneN",
+      "tier": "L2",
+      "pos": [
+        -16.0,
+        3.6,
+        42.0
+      ],
+      "size": [
+        12.0,
+        9.0,
+        6.2
+      ],
+      "prefabNode": "F31_MemoryGreenhouse",
+      "enterable": true,
+      "unlockChapter": "ch3",
+      "slotCapacity": 5,
+      "motives": {
+        "curiosity": 0.96,
+        "nature": 0.9,
+        "warmth": 0.92
+      },
+      "allowedAction": "door_open",
+      "storyNode": "ch3_greenhouse_chronicle"
+    },
+    {
+      "id": "F32",
+      "name": "萤火浅溪与双木拱溪桥",
+      "zone": "ZoneN",
+      "tier": "L2",
+      "pos": [
+        10.0,
+        3.2,
+        35.0
+      ],
+      "size": [
+        32.0,
+        4.0,
+        2.2
+      ],
+      "prefabNode": "F32_FireflyCreek",
+      "subAnchors": [
+        {
+          "id": "F32W",
+          "name": "西溪木拱桥",
+          "pos": [
+            -2.0,
+            3.2,
+            35.0
+          ]
+        },
+        {
+          "id": "F32E",
+          "name": "东溪木拱桥",
+          "pos": [
+            18.0,
+            3.2,
+            35.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch3",
+      "slotCapacity": 3,
+      "motives": {
+        "relax": 0.88,
+        "nature": 0.85,
+        "play": 0.7
+      },
+      "allowedAction": "walk",
+      "storyNode": "ch3_firefly_creek_night"
+    },
+    {
+      "id": "F33",
+      "name": "森林水车磨坊与旧留声亭（秘境#3）",
+      "zone": "ZoneN",
+      "tier": "L2",
+      "pos": [
+        26.0,
+        3.6,
+        42.0
+      ],
+      "size": [
+        7.0,
+        6.0,
+        4.8
+      ],
+      "prefabNode": "F33_ForestWatermill",
+      "enterable": false,
+      "unlockChapter": "ch3",
+      "slotCapacity": 3,
+      "motives": {
+        "music": 0.96,
+        "relax": 0.86,
+        "curiosity": 0.78
+      },
+      "allowedAction": "pivot_spin",
+      "storyNode": "pocket_vinyl_watermill"
+    },
+    {
+      "id": "F34",
+      "name": "古樟星穹钟楼与全景观测台",
+      "zone": "ZoneN",
+      "tier": "L3",
+      "pos": [
+        0.0,
+        5.4,
+        58.0
+      ],
+      "size": [
+        12.0,
+        10.0,
+        12.5
+      ],
+      "prefabNode": "F34_CamphorBellTower",
+      "enterable": false,
+      "unlockChapter": "ch3",
+      "slotCapacity": 5,
+      "motives": {
+        "curiosity": 0.95,
+        "warmth": 0.94,
+        "social": 0.85
+      },
+      "allowedAction": "cheer",
+      "storyNode": "ch4_summit_bell_call"
+    },
+    {
+      "id": "F35",
+      "name": "东西双林间快降木滑道",
+      "zone": "ZoneN",
+      "tier": "L3->L1",
+      "pos": [
+        -26.0,
+        4.5,
+        35.0
+      ],
+      "size": [
+        2.4,
+        35.0,
+        3.2
+      ],
+      "prefabNode": "F35_TimberSlides",
+      "subAnchors": [
+        {
+          "id": "F35W",
+          "name": "西林间滑道入口",
+          "pos": [
+            -26.0,
+            4.5,
+            35.0
+          ],
+          "exitPos": [
+            -34.0,
+            1.8,
+            12.0
+          ]
+        },
+        {
+          "id": "F35E",
+          "name": "东林间滑道入口",
+          "pos": [
+            27.0,
+            4.5,
+            36.0
+          ],
+          "exitPos": [
+            36.0,
+            1.8,
+            14.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch3",
+      "slotCapacity": 2,
+      "motives": {
+        "play": 0.94
+      },
+      "allowedAction": "sit",
+      "storyNode": "hillside_quick_slide"
+    },
+    {
+      "id": "F36",
+      "name": "北林秘密树洞邮筒与回忆相册墙（秘境#4）",
+      "zone": "ZoneN",
+      "tier": "L2.5",
+      "pos": [
+        -36.0,
+        4.2,
+        46.0
+      ],
+      "size": [
+        6.0,
+        5.0,
+        3.5
+      ],
+      "prefabNode": "F36_TreeHollowNook",
+      "enterable": false,
+      "unlockChapter": "ch3",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.92,
+        "warmth": 0.9
+      },
+      "allowedAction": "photo",
+      "storyNode": "pocket_tree_hollow_album"
+    },
+    {
+      "id": "F37",
+      "name": "弧形西跨海木拱桥",
+      "zone": "ZoneS",
+      "tier": "L0",
+      "pos": [
+        -28.0,
+        1.0,
+        -35.0
+      ],
+      "size": [
+        18.0,
+        2.8,
+        3.0
+      ],
+      "prefabNode": "F37_WestSeaBridge",
+      "enterable": false,
+      "unlockChapter": "ch4",
+      "slotCapacity": 3,
+      "motives": {
+        "social": 0.72,
+        "relax": 0.8
+      },
+      "allowedAction": "walk",
+      "storyNode": "ch4_west_bridge_completion"
+    },
+    {
+      "id": "F38",
+      "name": "东潮汐踏石礁道",
+      "zone": "ZoneS",
+      "tier": "L0",
+      "pos": [
+        22.0,
+        0.15,
+        -36.0
+      ],
+      "size": [
+        18.0,
+        2.6,
+        1.2
+      ],
+      "prefabNode": "F38_EastTidalStones",
+      "enterable": false,
+      "unlockChapter": "ch4",
+      "slotCapacity": 3,
+      "motives": {
+        "nature": 0.8,
+        "play": 0.75
+      },
+      "allowedAction": "walk",
+      "storyNode": "ch4_east_tidal_closure"
+    },
+    {
+      "id": "F39",
+      "name": "潮汐风铃回声剧场与海风拱门",
+      "zone": "ZoneS",
+      "tier": "L1",
+      "pos": [
+        -2.0,
+        1.4,
+        -45.0
+      ],
+      "size": [
+        10.0,
+        9.0,
+        6.5
+      ],
+      "prefabNode": "F39_EchoAmphitheater",
+      "enterable": false,
+      "unlockChapter": "ch4",
+      "slotCapacity": 9,
+      "motives": {
+        "music": 0.98,
+        "social": 0.98,
+        "warmth": 0.98
+      },
+      "allowedAction": "dance",
+      "storyNode": "ch4_echo_concert_stage"
+    },
+    {
+      "id": "F40",
+      "name": "小屿北埠渡口（含摇橹小船）",
+      "zone": "ZoneS",
+      "tier": "L0",
+      "pos": [
+        -5.0,
+        0.2,
+        -36.0
+      ],
+      "size": [
+        5.0,
+        4.0,
+        2.2
+      ],
+      "prefabNode": "F40_SouthFerryPier",
+      "enterable": false,
+      "unlockChapter": "ch2",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.65,
+        "relax": 0.7
+      },
+      "allowedAction": "wave",
+      "storyNode": "ferry_island_dock"
+    },
+    {
+      "id": "F41",
+      "name": "星砂沙洲迷你漂流书屋（秘境#5）",
+      "zone": "ZoneS",
+      "tier": "L0",
+      "pos": [
+        10.0,
+        0.25,
+        -47.0
+      ],
+      "size": [
+        2.5,
+        2.0,
+        2.6
+      ],
+      "prefabNode": "F41_MiniBookBooth",
+      "enterable": false,
+      "unlockChapter": "ch4",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.9,
+        "warmth": 0.88
+      },
+      "allowedAction": "greet",
+      "storyNode": "pocket_async_book_booth"
+    },
+    {
+      "id": "F42",
+      "name": "复古薄荷绿邮差单车驿站（4区枢纽）",
+      "zone": "Zone0",
+      "tier": "L1",
+      "pos": [
+        6.0,
+        1.8,
+        3.0
+      ],
+      "size": [
+        2.4,
+        1.2,
+        2.3
+      ],
+      "prefabNode": "F42_PostalBikeStop",
+      "subAnchors": [
+        {
+          "id": "F42_Zone0",
+          "name": "老镇广场站",
+          "pos": [
+            6.0,
+            1.8,
+            3.0
+          ]
+        },
+        {
+          "id": "F42_ZoneW",
+          "name": "西风铃邮局站",
+          "pos": [
+            -38.0,
+            1.8,
+            -8.0
+          ]
+        },
+        {
+          "id": "F42_ZoneE",
+          "name": "东微光夜市站",
+          "pos": [
+            40.0,
+            1.8,
+            5.0
+          ]
+        },
+        {
+          "id": "F42_ZoneN",
+          "name": "北森林图书馆站",
+          "pos": [
+            -12.0,
+            3.6,
+            32.0
+          ]
+        }
+      ],
+      "enterable": false,
+      "unlockChapter": "ch1",
+      "slotCapacity": 2,
+      "motives": {
+        "curiosity": 0.6,
+        "social": 0.55
+      },
+      "allowedAction": "hop_bounce",
+      "storyNode": "ch1_fast_travel_network"
+    }
+  ],
+  "residents": [
+    {
+      "id": "C01",
+      "name": "阿木",
+      "title": "镇史年谱守护者",
+      "species": "眼镜棕熊",
+      "personality4Axis": {
+        "code": "ICSG",
+        "extroversion": "I",
+        "confidence": "C",
+        "independence": "S",
+        "agreeableness": "G",
+        "archetype": "沉稳温和的林间图书管理员"
+      },
+      "quirk": {
+        "id": "collector_nostalgia",
+        "name": "年谱整理强迫 & 摘镜迷糊",
+        "behaviorHint": "在书架与花圃旁高频整理笔记，轻推放下后会礼貌扶正眼镜并原地观察 2 秒"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 0.78,
+        "sizeOffset": -0.1,
+        "speed": 0.9
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F04",
+      "storyFocusFacility": "F31",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F31": 0.42,
+          "F04": 0.25,
+          "F09": 0.2,
+          "F05": 0.13
+        },
+        "dusk": {
+          "F16": 0.4,
+          "F21": 0.25,
+          "F31": 0.22,
+          "F04": 0.13
+        },
+        "night": {
+          "F04": 0.4,
+          "F25": 0.32,
+          "F31": 0.18,
+          "F34": 0.1
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "蜂蜜肉桂卷",
+          "手冲蓝山琥珀咖"
+        ],
+        "like": [
+          "焦糖布丁三明治",
+          "烘焙玄米茶"
+        ],
+        "dislike": [
+          "零度海盐汽水"
+        ],
+        "soulLeave": [
+          "超辣海芥末鱿鱼丝"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "介绍时光小筑的来历，送出主木屋茶桌问候"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "开始向主角打听沙滩漂流瓶里的旧日记"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "给出专属昵称并请求帮忙挑选老木屋茶叶"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "揭露《四季年谱》缺失的冬页故事与纸片宠起源"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "解锁纪念相片掉落（affection/25%），托付玻璃温室守护钥匙"
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "绵绵",
+      "title": "杂交花圃引路人",
+      "species": "垂耳白兔",
+      "personality4Axis": {
+        "code": "EDRG",
+        "extroversion": "E",
+        "confidence": "D",
+        "independence": "R",
+        "agreeableness": "G",
+        "archetype": "元气却易羞怯的花语少女"
+      },
+      "quirk": {
+        "id": "flower_whisperer",
+        "name": "对花朵碎碎念 & 羞怯遮耳",
+        "behaviorHint": "靠近花株时会触发 water_bend 对花朵小声说话，被夸奖会原地小跳 hop_bounce"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 1.32,
+        "sizeOffset": 0.12,
+        "speed": 1.1
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F13b",
+      "storyFocusFacility": "F06",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F06": 0.45,
+          "F09": 0.25,
+          "F05": 0.18,
+          "F29": 0.12
+        },
+        "dusk": {
+          "F06": 0.35,
+          "F16": 0.3,
+          "F37": 0.2,
+          "F29": 0.15
+        },
+        "night": {
+          "F25": 0.42,
+          "F04": 0.33,
+          "F32": 0.15,
+          "F31": 0.1
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "草莓奶油泡芙",
+          "薄荷洋甘菊花茶"
+        ],
+        "like": [
+          "云朵舒芙蕾",
+          "海风蜜桃冰茶"
+        ],
+        "dislike": [
+          "炙烤秋刀鱼饭团"
+        ],
+        "soulLeave": [
+          "黑蒜炭烤章鱼丸"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "在码头与花圃欢迎主角，示范 3 基因花卉浇水"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "每天把多余的杂交花种子悄悄放在庭院台阶"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "坦白每天帮阿木换鲜花茶的小小照料习惯"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "与主角共创蓝玫瑰基因配方解锁北麓花藤门"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "以主角自创流行语命名全岛新品系花朵并赠纪念照"
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "阿橘",
+      "title": "未寄信件收藏家",
+      "species": "面瘫橘猫",
+      "personality4Axis": {
+        "code": "ICSK",
+        "extroversion": "I",
+        "confidence": "C",
+        "independence": "S",
+        "agreeableness": "K",
+        "archetype": "冷面吐槽但默默拾遗的诗人猫"
+      },
+      "quirk": {
+        "id": "deadpan_applause",
+        "name": "全场合面瘫慢拍鼓掌",
+        "behaviorHint": "无论发生多离谱的事或被玩家轻推抓起，都保持零表情缓缓 clap 两声再装作无事发生"
+      },
+      "voiceProfile": {
+        "mode": "mech_tts",
+        "basePitch": 0.95,
+        "sizeOffset": 0.0,
+        "speed": 0.88
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F13a",
+      "storyFocusFacility": "F19",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F11": 0.35,
+          "F09": 0.25,
+          "F19": 0.28,
+          "F08": 0.12
+        },
+        "dusk": {
+          "F19": 0.35,
+          "F22": 0.3,
+          "F37": 0.2,
+          "F16": 0.15
+        },
+        "night": {
+          "F25": 0.45,
+          "F04": 0.25,
+          "F39": 0.18,
+          "F19": 0.12
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "炙烤秋刀鱼饭团",
+          "零度海盐汽水"
+        ],
+        "like": [
+          "红豆奶油铜锣烧",
+          "海盐烤玉米"
+        ],
+        "dislike": [
+          "草莓奶油泡芙"
+        ],
+        "soulLeave": [
+          "柠檬薄荷酸奶冻"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "只用冷冰冰的电子音说“啪、啪，欢迎”"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "开始毒舌点评玩家涂鸦黑板上的流行语与像素旗"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "被撞见在旧邮局用爪子整整齐齐码放未寄出明信片"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "允许主角查阅自己的“全镇未出口心事秘藏抽屉”"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "破例在终章音乐会第一排严肃连拍三下并赠纪念照"
+        }
+      ]
+    },
+    {
+      "id": "C04",
+      "name": "奶包",
+      "title": "微光夜市烘焙大厨",
+      "species": "吃包柯基",
+      "personality4Axis": {
+        "code": "ECRG",
+        "extroversion": "E",
+        "confidence": "C",
+        "independence": "R",
+        "agreeableness": "G",
+        "archetype": "热心肠又馋嘴的派对号召官"
+      },
+      "quirk": {
+        "id": "big_stomach",
+        "name": "大胃王（6格饱腹）",
+        "behaviorHint": "饱腹上限翻倍，路过任何食品摊或窑炉必定触发 cheer，在夜市中主动邀请全镇围炉吃包"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 1.12,
+        "sizeOffset": 0.04,
+        "speed": 1.22
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F13c",
+      "storyFocusFacility": "F25",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F12": 0.42,
+          "F09": 0.28,
+          "F05": 0.18,
+          "F10": 0.12
+        },
+        "dusk": {
+          "F25": 0.55,
+          "F12": 0.25,
+          "F16": 0.2
+        },
+        "night": {
+          "F25": 0.65,
+          "F04": 0.2,
+          "F24": 0.15
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "窑烤黄油蜜瓜包",
+          "热可可棉花糖"
+        ],
+        "like": [
+          "蜂蜜肉桂卷",
+          "草莓奶油泡芙",
+          "海盐烤玉米"
+        ],
+        "dislike": [
+          "冷萃茉莉苏打"
+        ],
+        "soulLeave": [
+          "苦瓜海带清汤"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "在咖啡亭向主角派发第一份刚出炉的试用装小圆包"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "拿出涂满面粉的《十种面包测评手绘榜》请主角试吃"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "带队重开东湾微光夜市窑炉，让冷清海湾重新飘香"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "烤出“谁也别想一个人悄悄伤心”九拼星砂大面包"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "授予主角“名誉窑炉首席试吃官”徽章与纪念合照"
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "name": "墨羽",
+      "title": "昔日夜行星象信使",
+      "species": "悬浮猫头鹰",
+      "personality4Axis": {
+        "code": "IDSK",
+        "extroversion": "I",
+        "confidence": "D",
+        "independence": "S",
+        "agreeableness": "K",
+        "archetype": "昼伏夜出半空漂浮的星象学家"
+      },
+      "quirk": {
+        "id": "levitating_night_owl",
+        "name": "半空悬浮（+0.25m）& 夜猫子",
+        "behaviorHint": "全身悬浮做 hover_bob 轻微上下摆动；白天常在风车打盹，入夜后精神百倍"
+      },
+      "voiceProfile": {
+        "mode": "mech_tts",
+        "basePitch": 1.04,
+        "sizeOffset": 0.08,
+        "speed": 0.84
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F15",
+      "storyFocusFacility": "F22",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F15": 0.5,
+          "F16": 0.25,
+          "F31": 0.15,
+          "F09": 0.1
+        },
+        "dusk": {
+          "F22": 0.5,
+          "F16": 0.3,
+          "F21": 0.2
+        },
+        "night": {
+          "F34": 0.45,
+          "F22": 0.3,
+          "F25": 0.15,
+          "F39": 0.1
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "星砂蓝莓松饼",
+          "冷萃茉莉苏打"
+        ],
+        "like": [
+          "手冲蓝山琥珀咖",
+          "云朵舒芙蕾"
+        ],
+        "dislike": [
+          "窑烤黄油蜜瓜包"
+        ],
+        "soulLeave": [
+          "蒜香黄油法棍"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "在风车高台睁开一只眼，提醒你“今天的海风偏南”"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "解释为什么自己懒得踩地走路，其实是怕踩碎星砂"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "领路寻回西岬灯塔失落的黄铜棱镜，恢复十二秒扫描光束"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "在北麓星穹台分享“昔日夜航送远方信件”的星图航线"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "以主角的名字命名本季度第一颗亮起的流星并赠纪念照"
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "name": "阿澈",
+      "title": "退休的白昼号船长",
+      "species": "草帽狐狸",
+      "personality4Axis": {
+        "code": "ICRK",
+        "extroversion": "I",
+        "confidence": "C",
+        "independence": "R",
+        "agreeableness": "K",
+        "archetype": "口硬心软的护湾老船长"
+      },
+      "quirk": {
+        "id": "tide_watcher",
+        "name": "看潮汐发呆 & 傲娇压草帽",
+        "behaviorHint": "常在栈桥与船舷 sit 垂钓，被道谢时立刻 turn_to_player 压低帽檐转移话题"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 0.92,
+        "sizeOffset": -0.03,
+        "speed": 0.95
+      },
+      "unlockChapter": "prologue",
+      "homeFacility": "F02",
+      "storyFocusFacility": "F27",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F02": 0.4,
+          "F26": 0.25,
+          "F28": 0.2,
+          "F01": 0.15
+        },
+        "dusk": {
+          "F27": 0.45,
+          "F37": 0.3,
+          "F24": 0.15,
+          "F02": 0.1
+        },
+        "night": {
+          "F25": 0.4,
+          "F27": 0.35,
+          "F24": 0.15,
+          "F04": 0.1
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "海盐烤玉米",
+          "冰镇麦芽苹果汁"
+        ],
+        "like": [
+          "炙烤秋刀鱼饭团",
+          "零度海盐汽水"
+        ],
+        "dislike": [
+          "暖心香草热牛奶"
+        ],
+        "soulLeave": [
+          "超甜彩虹糖霜甜甜圈"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "坐在木质栈桥头甩着没挂鱼饵的空钓钩，嘴硬说“鱼不在家”"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "默许主角踩上他擦得发亮的船坞木跳板"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "坦言亲手搁浅“白昼号”是为了留住岸边最后一份人情味"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "重挂白昼号桅灯并亲手掌舵 F40 摇橹小渡船"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "把“白昼号”备用船钟钥匙与珍藏海图纪念照送给主角"
+        }
+      ]
+    },
+    {
+      "id": "C07",
+      "name": "团团",
+      "title": "迷糊邮差与单车驿站长",
+      "species": "水獭邮差",
+      "personality4Axis": {
+        "code": "EDRK",
+        "extroversion": "E",
+        "confidence": "D",
+        "independence": "R",
+        "agreeableness": "K",
+        "archetype": "手忙脚乱却满怀赤诚的小邮差"
+      },
+      "quirk": {
+        "id": "absentminded_drop",
+        "name": "迷糊丢三落四",
+        "behaviorHint": "走几步就会停下摸口袋，频繁触发 bubble_orange 求助找信，奔跑速度偏快"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 1.2,
+        "sizeOffset": 0.05,
+        "speed": 1.28
+      },
+      "unlockChapter": "ch1",
+      "homeFacility": "F23a",
+      "storyFocusFacility": "F19",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F19": 0.42,
+          "F20": 0.25,
+          "F42": 0.18,
+          "F09": 0.15
+        },
+        "dusk": {
+          "F21": 0.35,
+          "F22": 0.25,
+          "F19": 0.25,
+          "F37": 0.15
+        },
+        "night": {
+          "F25": 0.45,
+          "F04": 0.25,
+          "F19": 0.15,
+          "F24": 0.15
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "焦糖布丁三明治",
+          "海风蜜桃冰茶"
+        ],
+        "like": [
+          "窑烤黄油蜜瓜包",
+          "热可可棉花糖"
+        ],
+        "dislike": [
+          "烘焙玄米茶"
+        ],
+        "soulLeave": [
+          "干嚼浓缩咖啡豆"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "在西巷尽头撞翻邮包，把“没贴邮票的信”撒了一地"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "学会骑上薄荷绿复古单车，在 4 区铺设 F42 快传牌"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "和阿橘组成“冷面整理员 × 迷糊速递员”双人邮政搭档"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "把历年逾期明信片改造成“跨时空慢递信箱画廊”"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "发行主角头像的 12×12 像素纪念邮票并送上合照"
+        }
+      ]
+    },
+    {
+      "id": "C08",
+      "name": "咔哒",
+      "title": "直角强迫症首席木匠",
+      "species": "木工小浣熊",
+      "personality4Axis": {
+        "code": "ICSG",
+        "extroversion": "I",
+        "confidence": "C",
+        "independence": "S",
+        "agreeableness": "G",
+        "archetype": "嘴上嫌歪却把全岛桥梁修得稳稳当当的匠人"
+      },
+      "quirk": {
+        "id": "symmetry_ocd",
+        "name": "直角对称强迫症",
+        "behaviorHint": "看见歪斜指路牌 P03 或没摆正的椅子会原地 nod_tilt 叹气并伸手对齐"
+      },
+      "voiceProfile": {
+        "mode": "mech_tts",
+        "basePitch": 0.98,
+        "sizeOffset": 0.0,
+        "speed": 1.08
+      },
+      "unlockChapter": "ch2",
+      "homeFacility": "F30a",
+      "storyFocusFacility": "F26",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F26": 0.45,
+          "F37": 0.2,
+          "F09": 0.2,
+          "F30": 0.15
+        },
+        "dusk": {
+          "F37": 0.35,
+          "F26": 0.25,
+          "F22": 0.2,
+          "F25": 0.2
+        },
+        "night": {
+          "F25": 0.45,
+          "F04": 0.25,
+          "F33": 0.15,
+          "F30": 0.15
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "红豆奶油铜锣烧",
+          "烘焙玄米茶"
+        ],
+        "like": [
+          "蜂蜜肉桂卷",
+          "海盐烤玉米"
+        ],
+        "dislike": [
+          "云朵舒芙蕾"
+        ],
+        "soulLeave": [
+          "流心粘手麦芽糖"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "拿着量角器检查东桥栏杆，嫌弃全镇路标全歪了五度"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "帮白昼号船坞刨平跳板，嘴上却说“只是顺便”"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "亲手架起弧形西拱桥 F37 与北坡 5 秒下行木滑道 F35"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "在 F39 回声拱门前宣布“自然弧度其实比直线更好听”"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "亲手雕一只对称度 99.9% 的迷你木船模型随照相送出"
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "name": "绒绒",
+      "title": "纸片画师与流行语策划",
+      "species": "社恐小羊",
+      "personality4Axis": {
+        "code": "IDRG",
+        "extroversion": "I",
+        "confidence": "D",
+        "independence": "R",
+        "agreeableness": "G",
+        "archetype": "平时怯生生、一旦拿起画笔就自带 T 台光环的绘本画师"
+      },
+      "quirk": {
+        "id": "shy_runway_walk",
+        "name": "社恐但画笔上头走秀步态",
+        "behaviorHint": "空手时怯怯招手，谈到 2D 纸片宠或像素旗立刻切换成夸张 T 台 dance 步态"
+      },
+      "voiceProfile": {
+        "mode": "animalese",
+        "basePitch": 1.26,
+        "sizeOffset": 0.06,
+        "speed": 0.96
+      },
+      "unlockChapter": "ch3",
+      "homeFacility": "F30b",
+      "storyFocusFacility": "F31",
+      "initialAffection": 25,
+      "charStageMax": 3,
+      "gravityWeights": {
+        "afternoon": {
+          "F31": 0.4,
+          "F18": 0.25,
+          "F29": 0.2,
+          "F30": 0.15
+        },
+        "dusk": {
+          "F16": 0.3,
+          "F39": 0.3,
+          "F29": 0.25,
+          "F31": 0.15
+        },
+        "night": {
+          "F25": 0.35,
+          "F39": 0.3,
+          "F04": 0.2,
+          "F41": 0.15
+        }
+      },
+      "foodPreferences": {
+        "superLove": [
+          "云朵舒芙蕾",
+          "暖心香草热牛奶"
+        ],
+        "like": [
+          "草莓奶油泡芙",
+          "焦糖布丁三明治"
+        ],
+        "dislike": [
+          "冰镇麦芽苹果汁"
+        ],
+        "soulLeave": [
+          "盐渍酸梅汽水"
+        ]
+      },
+      "bondTiers": [
+        {
+          "tier": 1,
+          "range": [
+            0,
+            29
+          ],
+          "label": "陌邻初识",
+          "summary": "躲在温室玻璃柱后面只露出一只小耳朵偷看主角的纸片宠"
+        },
+        {
+          "tier": 2,
+          "range": [
+            30,
+            59
+          ],
+          "label": "海岸点头友",
+          "summary": "教你给 2D 纸片立牌加粗奶油白描边，消除涂鸦羞耻感"
+        },
+        {
+          "tier": 3,
+          "range": [
+            60,
+            99
+          ],
+          "label": "茶桌搭子",
+          "summary": "把大家寄不出去的心情画成迷你漂流书屋里的水彩插页"
+        },
+        {
+          "tier": 4,
+          "range": [
+            100,
+            149
+          ],
+          "label": "心照不宣的怪友",
+          "summary": "筹备终章回声音乐会的 12×12 像素旗舞台旗阵"
+        },
+        {
+          "tier": 5,
+          "range": [
+            150,
+            255
+          ],
+          "label": "琥珀星砂挚友",
+          "summary": "把全镇 9 位居民和你的身影绘成限量纸片立体明信片相赠"
+        }
+      ]
+    }
+  ],
+  "collectibles": [
+    {
+      "id": "M01",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "风铃绳断掉的那天",
+      "facilityId": "F03",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C07",
+      "excerpt": "寄信人没署名，背面只画了一串断掉的玻璃风铃和一句：‘等风停了，我想亲手把这句谢谢递给你。’"
+    },
+    {
+      "id": "M02",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "给不敢开口的阿澈",
+      "facilityId": "F19",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C03",
+      "excerpt": "阿橘在角落批注：‘收件人每天都在栈桥钓鱼，发件人其实就站在咖啡亭对面五米处。’"
+    },
+    {
+      "id": "M03",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "致第37次烤糊面包的自己",
+      "facilityId": "F20",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C04",
+      "excerpt": "奶包在油渍纸边写道：‘今天又焦了一盘！但只要说是焦糖风味，阿橘就会面无表情吃两块。’"
+    },
+    {
+      "id": "M04",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "来自海平线另一端的回信",
+      "facilityId": "F21",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C05",
+      "excerpt": "一张贴着远方邮票的蓝纸卡：‘别怕海湾安静，我们在外面也在照着同一轮月亮晒太阳。’"
+    },
+    {
+      "id": "M05",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "灯塔棱镜维修备忘录",
+      "facilityId": "F22",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C05",
+      "excerpt": "旧灯塔守夜人字迹：‘每周五擦拭黄铜圈，记住，光束不是为了催船走，而是告诉回来的路在左转。’"
+    },
+    {
+      "id": "M06",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "画着歪嘴猫的空白明信片",
+      "facilityId": "F23",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C03",
+      "excerpt": "收件人栏空白，只盖了团团迷糊盖倒的邮戳，像一只突然鼓掌的小猫头。"
+    },
+    {
+      "id": "M07",
+      "category": "postcard",
+      "categoryLabel": "未寄出的明信片",
+      "title": "寄给十年后的时光小筑",
+      "facilityId": "F36",
+      "zone": "ZoneN",
+      "unlockChapter": "ch3",
+      "residentId": "C01",
+      "excerpt": "‘希望十年后主木屋门口的花圃还在开，还有人愿意花二十分钟坐下来看一朵花慢悠悠长大。’"
+    },
+    {
+      "id": "M08",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "浪花卷回来的草帽草图",
+      "facilityId": "F03",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C06",
+      "excerpt": "铅笔画的草帽边角微微发黄，写着：‘风大的时候就把帽檐压低，假装没听见别人在夸你。’"
+    },
+    {
+      "id": "M09",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "写给陌生旅人的天气预报",
+      "facilityId": "F01",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C02",
+      "excerpt": "‘无论你今天几点踏上 F01 码头，这里的云都允许你迟到、也允许你什么任务都不做。’"
+    },
+    {
+      "id": "M10",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "半夜三点的潮汐心情",
+      "facilityId": "F24",
+      "zone": "ZoneW",
+      "unlockChapter": "ch1",
+      "residentId": "C05",
+      "excerpt": "‘今天浮在半空数了四十七颗星星。如果明天还困，就在风车棚顶借个角落继续做梦。’"
+    },
+    {
+      "id": "M11",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "白昼号首航乘客签名单",
+      "facilityId": "F27",
+      "zone": "ZoneE",
+      "unlockChapter": "ch2",
+      "residentId": "C06",
+      "excerpt": "泛水痕的牛皮纸上写满了老镇第一批远行年轻人的名字，最后一栏空着：‘等大家回来再补签。’"
+    },
+    {
+      "id": "M12",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "浅水礁池里的海玻璃诗",
+      "facilityId": "F28",
+      "zone": "ZoneE",
+      "unlockChapter": "ch2",
+      "residentId": "C08",
+      "excerpt": "‘尖锐的玻璃块在潮间带打磨三个冬天后，也会变成一颗谁都想揣进兜里的薄荷绿鹅卵石。’"
+    },
+    {
+      "id": "M13",
+      "category": "bottle",
+      "categoryLabel": "漂流瓶长笺",
+      "title": "星砂沙洲的匿名交换日记",
+      "facilityId": "F41",
+      "zone": "ZoneS",
+      "unlockChapter": "ch4",
+      "residentId": "C09",
+      "excerpt": "前一位旅人留下一句：‘昨天不小心把我画得很丑的纸片猫放进了小镇，结果全村都夸它很时髦。’"
+    },
+    {
+      "id": "M14",
+      "category": "vinyl",
+      "categoryLabel": "黑胶唱片",
+      "title": "Skima·午后三点的风铃与蝉",
+      "facilityId": "F14",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C02",
+      "excerpt": "极简稀疏的三轨吉他与木琴采样，曲间刻意留出长长的海浪白噪音缝隙（スキマ）。"
+    },
+    {
+      "id": "M15",
+      "category": "vinyl",
+      "categoryLabel": "黑胶唱片",
+      "title": "琥珀窑炉爵士小调",
+      "facilityId": "F25",
+      "zone": "ZoneE",
+      "unlockChapter": "ch2",
+      "residentId": "C04",
+      "excerpt": "听起来像面包窑炉劈啪作响的轻快小调，仔细听里面藏着柯基啃面包的伴奏节拍。"
+    },
+    {
+      "id": "M16",
+      "category": "vinyl",
+      "categoryLabel": "黑胶唱片",
+      "title": "雨落玻璃穹顶圆舞曲",
+      "facilityId": "F31",
+      "zone": "ZoneN",
+      "unlockChapter": "ch3",
+      "residentId": "C01",
+      "excerpt": "雨点轻敲温室弧形玻璃的节律，夹杂着书页翻动和阿木轻轻喝茶的温暖环境音。"
+    },
+    {
+      "id": "M17",
+      "category": "vinyl",
+      "categoryLabel": "黑胶唱片",
+      "title": "白昼号归港海风协奏曲",
+      "facilityId": "F33",
+      "zone": "ZoneN",
+      "unlockChapter": "ch3",
+      "residentId": "C06",
+      "excerpt": "旧留声机里的铜铃合唱声，插进磨坊留声亭后全镇的风车与风铃似乎都会悄悄跟拍。"
+    },
+    {
+      "id": "M18",
+      "category": "chronicle",
+      "categoryLabel": "四季年谱残页",
+      "title": "春页·孟德尔蓝玫瑰实验录",
+      "facilityId": "F06",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C02",
+      "excerpt": "绵绵用彩色蜡笔画下的四对等位基因杂交草图，末尾红笔圈出唯一纯合蓝玫瑰基因型 RRYYwwss。"
+    },
+    {
+      "id": "M19",
+      "category": "chronicle",
+      "categoryLabel": "四季年谱残页",
+      "title": "夏页·白昼号最后一次靠岸",
+      "facilityId": "F26",
+      "zone": "ZoneE",
+      "unlockChapter": "ch2",
+      "residentId": "C08",
+      "excerpt": "咔哒记录船台木楔精准角度 `11.5°` 的草稿纸，页角写着：‘船长说先别拆，大家迟早会再乘凉。’"
+    },
+    {
+      "id": "M20",
+      "category": "chronicle",
+      "categoryLabel": "四季年谱残页",
+      "title": "秋页·茶花梯田与风筝约定",
+      "facilityId": "F29",
+      "zone": "ZoneE",
+      "unlockChapter": "ch2",
+      "residentId": "C09",
+      "excerpt": "‘每当东北风刮过梯田茶花，就把纸风筝放上天，让山海另一端也看见今天的风向。’"
+    },
+    {
+      "id": "M21",
+      "category": "chronicle",
+      "categoryLabel": "四季年谱残页",
+      "title": "冬页·为什么大家都画成纸片宠物",
+      "facilityId": "F18",
+      "zone": "Zone0",
+      "unlockChapter": "ch3",
+      "residentId": "C09",
+      "excerpt": "‘把思念剪成白边硬纸牌插在时光石旁，即使人去了很远，纸片小兽也会原地摇头晃脑等你回来。’"
+    },
+    {
+      "id": "M22",
+      "category": "chronicle",
+      "categoryLabel": "四季年谱残页",
+      "title": "合订扉页·月牙湾三十周年星图",
+      "facilityId": "F34",
+      "zone": "ZoneN",
+      "unlockChapter": "ch3",
+      "residentId": "C01",
+      "excerpt": "老镇三十年前第一晚的星空拓印，标注着西岬灯塔与南屿风铃拱门的几何中轴呼应。"
+    },
+    {
+      "id": "M23",
+      "category": "relic",
+      "categoryLabel": "海岸旧物记忆",
+      "title": "磨圆的琥珀色海玻璃",
+      "facilityId": "F02",
+      "zone": "Zone0",
+      "unlockChapter": "prologue",
+      "residentId": "C06",
+      "excerpt": "阿澈假装在钓鱼，其实是借着水光挑拣被潮水磨掉棱角的旧酒瓶碎玻璃。"
+    },
+    {
+      "id": "M24",
+      "category": "relic",
+      "categoryLabel": "海岸旧物记忆",
+      "title": "刻着“正”字的水獭黄铜铃",
+      "facilityId": "F42",
+      "zone": "Zone0",
+      "unlockChapter": "ch1",
+      "residentId": "C07",
+      "excerpt": "挂在薄荷绿复古邮差单车车把上的旧铃铛，每骑跨一次区就清脆叮当一声，记录旅人归途次数。"
+    },
+    {
+      "id": "M25",
+      "category": "relic",
+      "categoryLabel": "海岸旧物记忆",
+      "title": "小浣熊的双面木工铅笔",
+      "facilityId": "F37",
+      "zone": "ZoneS",
+      "unlockChapter": "ch4",
+      "residentId": "C08",
+      "excerpt": "一头写着“0.01°误差也不许”，另一头悄悄用橡皮擦画了一个小小的歪笑脸。"
+    },
+    {
+      "id": "M26",
+      "category": "relic",
+      "categoryLabel": "海岸旧物记忆",
+      "title": "挂在回声拱门上的第一枚贝壳",
+      "facilityId": "F39",
+      "zone": "ZoneS",
+      "unlockChapter": "ch4",
+      "residentId": "C03",
+      "excerpt": "风吹过扇贝壳会发出极柔的三度音程，那是当年建起风铃湾时敲响的第一声和弦。"
+    }
+  ],
+  "blackboardLines": [
+    {
+      "id": "BB01",
+      "residentId": "C02",
+      "conditions": {
+        "chapter": "prologue",
+        "zone": "Zone0"
+      },
+      "priority": 90,
+      "cooldownSeconds": 120,
+      "action": "wave",
+      "bubble": null,
+      "text": "呀，渡船靠岸的声音比平时轻呢——欢迎来到时光小筑，今天想先去看看花圃还是主木屋呀？"
+    },
+    {
+      "id": "BB02",
+      "residentId": "C01",
+      "conditions": {
+        "chapter": "prologue",
+        "facilityId": "F04"
+      },
+      "priority": 92,
+      "cooldownSeconds": 150,
+      "action": "greet",
+      "bubble": null,
+      "text": "主木屋的门感应到你会自己打开，没有房贷也没有倒计时，想在壁炉旁坐多久都可以。"
+    },
+    {
+      "id": "BB03",
+      "residentId": "C03",
+      "conditions": {
+        "chapter": "prologue",
+        "facilityId": "F11"
+      },
+      "priority": 88,
+      "cooldownSeconds": 120,
+      "action": "clap",
+      "bubble": null,
+      "text": "……啪、啪。这就是我能给出的最大热情欢迎了。黑板写歪的事一会儿记得自己看看。"
+    },
+    {
+      "id": "BB04",
+      "residentId": "C04",
+      "conditions": {
+        "chapter": "prologue",
+        "facilityId": "F12"
+      },
+      "priority": 85,
+      "cooldownSeconds": 120,
+      "action": "cheer",
+      "bubble": "bubble_yellow",
+      "text": "刚出炉的海风可颂！趁现在还没被阿澈抢走最后一块，快尝一口吧！"
+    },
+    {
+      "id": "BB05",
+      "residentId": "C05",
+      "conditions": {
+        "chapter": "prologue",
+        "facilityId": "F15"
+      },
+      "priority": 84,
+      "cooldownSeconds": 180,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "从风车塔顶往下看，西海角那座黑着灯的旧灯塔，好像还留着当年的一点点棱镜反光。"
+    },
+    {
+      "id": "BB06",
+      "residentId": "C06",
+      "conditions": {
+        "chapter": "prologue",
+        "facilityId": "F02"
+      },
+      "priority": 86,
+      "cooldownSeconds": 150,
+      "action": "sit",
+      "bubble": null,
+      "text": "鱼今天大概也在休假……别盯着我的草帽看，我只是顺便晒晒太阳。"
+    },
+    {
+      "id": "BB07",
+      "residentId": "C01",
+      "conditions": {
+        "facilityId": "F16",
+        "timeSlot": "dusk"
+      },
+      "priority": 95,
+      "cooldownSeconds": 180,
+      "action": "photo",
+      "bubble": null,
+      "text": "傍晚站在望远镜前，西边灯塔、东边白昼号、北边玻璃温室和南边回声拱门刚好同时映进眼睛。"
+    },
+    {
+      "id": "BB08",
+      "residentId": "C02",
+      "conditions": {
+        "yesterdayAction": "watered_flower",
+        "weather": "sunny"
+      },
+      "priority": 98,
+      "cooldownSeconds": 200,
+      "action": "hop_bounce",
+      "bubble": null,
+      "text": "听说你昨天顶着大太阳给孟德尔花圃连浇了三遍水！今天清晨居然冒出了亮晶晶的花苞呢！"
+    },
+    {
+      "id": "BB09",
+      "residentId": "C02",
+      "conditions": {
+        "yesterdayAction": "watered_flower",
+        "weather": "rain"
+      },
+      "priority": 100,
+      "cooldownSeconds": 200,
+      "action": "water_bend",
+      "bubble": null,
+      "text": "昨天明明下着小雨你还是来花圃照顾花朵了，它们偷偷跟我说它们今天特别精神。"
+    },
+    {
+      "id": "BB10",
+      "residentId": "C03",
+      "conditions": {
+        "yesterdayAction": "nudged_resident"
+      },
+      "priority": 96,
+      "cooldownSeconds": 180,
+      "action": "clap",
+      "bubble": "bubble_purple",
+      "text": "昨天有人把我整只拎起来放在咖啡桌上。我考虑了三秒，决定面无表情地鼓掌回敬你。"
+    },
+    {
+      "id": "BB11",
+      "residentId": "C04",
+      "conditions": {
+        "yesterdayAction": "fed_bun"
+      },
+      "priority": 94,
+      "cooldownSeconds": 160,
+      "action": "dance",
+      "bubble": "bubble_yellow",
+      "text": "昨天那只烤包香气我记到今天早上！顺便说我的大胃王饱腹槽今天还空着五格哦！"
+    },
+    {
+      "id": "BB12",
+      "residentId": "C06",
+      "conditions": {
+        "yesterdayAction": "fished_at_pier"
+      },
+      "priority": 93,
+      "cooldownSeconds": 180,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "听说你昨天在栈桥坐了好久也没钓到鱼。别灰心，这说明海里的鱼很信任你不会打扰它们。"
+    },
+    {
+      "id": "BB13",
+      "residentId": "C01",
+      "conditions": {
+        "yesterdayAction": "changed_flag"
+      },
+      "priority": 92,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": null,
+      "text": "昨天主庭院旗杆换上的新 12×12 像素小旗，被阿橘偷偷抄进他的《奇怪但时髦小报》里了。"
+    },
+    {
+      "id": "BB14",
+      "residentId": "C03",
+      "conditions": {
+        "yesterdayAction": "changed_chalkboard"
+      },
+      "priority": 95,
+      "cooldownSeconds": 180,
+      "action": "turn_to_player",
+      "bubble": null,
+      "text": "黑板上昨天新写的“#lingo#”，我已经一字不差背下来了。今天全岛都会严肃复读这句话。"
+    },
+    {
+      "id": "BB15",
+      "residentId": "C05",
+      "conditions": {
+        "timeSlot": "afternoon",
+        "quirk": "levitating_night_owl"
+      },
+      "priority": 82,
+      "cooldownSeconds": 160,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "午后两点重力太重，所以我选择离地二十五厘米打盹。有事请找黄昏后的我。"
+    },
+    {
+      "id": "BB16",
+      "residentId": "C05",
+      "conditions": {
+        "timeSlot": "night"
+      },
+      "priority": 90,
+      "cooldownSeconds": 140,
+      "action": "hover_bob",
+      "bubble": "bubble_pink",
+      "text": "星夜模式上线。现在全镇的灯串和荧光都已经对准了你的散步路线。"
+    },
+    {
+      "id": "BB17",
+      "residentId": "C04",
+      "conditions": {
+        "timeSlot": "night",
+        "zone": "ZoneE"
+      },
+      "priority": 96,
+      "cooldownSeconds": 120,
+      "action": "cheer",
+      "bubble": "bubble_yellow",
+      "text": "欢迎来到星夜微光夜市！晚间 65% 的街坊都会被烤包窑炉吸过来，绝不让你一个人逛夜街！"
+    },
+    {
+      "id": "BB18",
+      "residentId": "C02",
+      "conditions": {
+        "facilityId": "F06"
+      },
+      "priority": 88,
+      "cooldownSeconds": 140,
+      "action": "water_bend",
+      "bubble": null,
+      "text": "记住啦，如果只给孤零零一株蓝玫瑰浇水、周围不放配对花朵，它会触发无性克隆留住纯正基因哦。"
+    },
+    {
+      "id": "BB19",
+      "residentId": "C07",
+      "conditions": {
+        "chapter": "ch1",
+        "zone": "ZoneW"
+      },
+      "priority": 95,
+      "cooldownSeconds": 120,
+      "action": "hop_bounce",
+      "bubble": "bubble_orange",
+      "text": "呜哇对不起对不起！风铃旧邮局里的信封被海风吹散了，你能帮我一起找回抽屉里的记忆吗？"
+    },
+    {
+      "id": "BB20",
+      "residentId": "C03",
+      "conditions": {
+        "chapter": "ch1",
+        "facilityId": "F19"
+      },
+      "priority": 98,
+      "cooldownSeconds": 150,
+      "action": "turn_to_player",
+      "bubble": null,
+      "text": "被发现了么……这些写给别人却没敢寄出的卡片，我觉得丢进海里太可惜，就顺手帮大家按颜色收着了。"
+    },
+    {
+      "id": "BB21",
+      "residentId": "C07",
+      "conditions": {
+        "facilityId": "F20"
+      },
+      "priority": 90,
+      "cooldownSeconds": 140,
+      "action": "wave",
+      "bubble": null,
+      "text": "这个阶梯信箱画廊每一格都对应一个人没说出口的小小心事——连阿橘都有一整排自己的贴纸呢！"
+    },
+    {
+      "id": "BB22",
+      "residentId": "C05",
+      "conditions": {
+        "chapter": "ch1",
+        "facilityId": "F22"
+      },
+      "priority": 99,
+      "cooldownSeconds": 150,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "黄铜棱镜装回去了。当灯塔暖光每十二秒扫过海湾一次，旧年的约定就像被海风重新熨平一样。"
+    },
+    {
+      "id": "BB23",
+      "residentId": "C07",
+      "conditions": {
+        "facilityId": "F42"
+      },
+      "priority": 94,
+      "cooldownSeconds": 120,
+      "action": "cheer",
+      "bubble": null,
+      "text": "铛铛！薄荷绿邮差单车驿站开通啦！以后横跨四个片区再也不怕走断腿，只需 1.5 秒伴着铃声直达！"
+    },
+    {
+      "id": "BB24",
+      "residentId": "C01",
+      "conditions": {
+        "chapter": "ch1",
+        "timeSlot": "dusk"
+      },
+      "priority": 88,
+      "cooldownSeconds": 150,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "西岬灯塔重新亮起来那刻，我看见阿澈在东边栈桥上悄悄把草帽摘下来看了一眼。"
+    },
+    {
+      "id": "BB25",
+      "residentId": "C06",
+      "conditions": {
+        "chapter": "ch1",
+        "timeSlot": "dusk"
+      },
+      "priority": 91,
+      "cooldownSeconds": 150,
+      "action": "turn_to_player",
+      "bubble": null,
+      "text": "西边那束光扫过来挺刺眼的……好吧，其实也挺暖和的，比黑着强多了。"
+    },
+    {
+      "id": "BB26",
+      "residentId": "C07",
+      "conditions": {
+        "zone": "ZoneW",
+        "weather": "breeze"
+      },
+      "priority": 85,
+      "cooldownSeconds": 160,
+      "action": "wave",
+      "bubble": null,
+      "text": "风铃长廊一刮海风就会叮叮当当响，我每次路过都会忘记自己原本要去送哪封信。"
+    },
+    {
+      "id": "BB27",
+      "residentId": "C03",
+      "conditions": {
+        "zone": "ZoneW",
+        "affectionMin": 60
+      },
+      "priority": 92,
+      "cooldownSeconds": 160,
+      "action": "clap",
+      "bubble": null,
+      "text": "既然你帮我守住了秘密抽屉，允许你在我的纸条末尾添一句你的口癖“#lingo#”。"
+    },
+    {
+      "id": "BB28",
+      "residentId": "C02",
+      "conditions": {
+        "zone": "ZoneW",
+        "facilityId": "F24"
+      },
+      "priority": 89,
+      "cooldownSeconds": 150,
+      "action": "sit",
+      "bubble": null,
+      "text": "西滩的漂流木篝火角特别适合看西拱桥方向的落日，好像整个世界的节奏都慢了半拍。"
+    },
+    {
+      "id": "BB29",
+      "residentId": "C07",
+      "conditions": {
+        "quirk": "absentminded_drop"
+      },
+      "priority": 80,
+      "cooldownSeconds": 140,
+      "action": "hop_bounce",
+      "bubble": "bubble_purple",
+      "text": "等等——我刚才手里明明攥着一把邮局钥匙，怎么一眨眼只剩一块饼干屑了？！"
+    },
+    {
+      "id": "BB30",
+      "residentId": "C04",
+      "conditions": {
+        "zone": "ZoneW"
+      },
+      "priority": 84,
+      "cooldownSeconds": 150,
+      "action": "greet",
+      "bubble": null,
+      "text": "听说邮局旁边那条路风吹过来特别香，我是顺着团团兜里掉出来的黄油饼干屑摸过来的！"
+    },
+    {
+      "id": "BB31",
+      "residentId": "C05",
+      "conditions": {
+        "facilityId": "F21"
+      },
+      "priority": 86,
+      "cooldownSeconds": 150,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "透过风铃长廊的木框刚好框住远处的西岬灯塔，这就叫绘本视角里的窥视构图。"
+    },
+    {
+      "id": "BB32",
+      "residentId": "C07",
+      "conditions": {
+        "affectionMin": 100
+      },
+      "priority": 95,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": "bubble_pink",
+      "text": "现在就算我把信弄混了，大家也都会笑着拆开然后说‘正好替远方朋友打个招呼’呢。"
+    },
+    {
+      "id": "BB33",
+      "residentId": "C08",
+      "conditions": {
+        "chapter": "ch2",
+        "zone": "ZoneE"
+      },
+      "priority": 96,
+      "cooldownSeconds": 120,
+      "action": "nod_tilt",
+      "bubble": "bubble_purple",
+      "text": "站住！东湾路牌歪了 `1.5°`，先让我掏出木工尺把它扶正再跟你打招呼！咔哒咔哒！"
+    },
+    {
+      "id": "BB34",
+      "residentId": "C06",
+      "conditions": {
+        "chapter": "ch2",
+        "facilityId": "F27"
+      },
+      "priority": 99,
+      "cooldownSeconds": 140,
+      "action": "turn_to_player",
+      "bubble": null,
+      "text": "别用那种眼神看白昼号。我用木楔把它卡在浅滩，只是因为不想再送走任何一个人了。"
+    },
+    {
+      "id": "BB35",
+      "residentId": "C04",
+      "conditions": {
+        "chapter": "ch2",
+        "facilityId": "F25"
+      },
+      "priority": 98,
+      "cooldownSeconds": 120,
+      "action": "dance",
+      "bubble": "bubble_yellow",
+      "text": "炉火点着了！全镇今晚都要来我这儿吃刚出炉的蜜瓜包！阿澈船长也别想躲在甲板上发呆！"
+    },
+    {
+      "id": "BB36",
+      "residentId": "C08",
+      "conditions": {
+        "facilityId": "F26"
+      },
+      "priority": 92,
+      "cooldownSeconds": 150,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "我把白昼号的跳板斜度修到 `11.5°`，就算不靠跳跃也能稳稳当当走上甲板敲响铜钟！"
+    },
+    {
+      "id": "BB37",
+      "residentId": "C06",
+      "conditions": {
+        "facilityId": "F40"
+      },
+      "priority": 94,
+      "cooldownSeconds": 140,
+      "action": "wave",
+      "bubble": null,
+      "text": "这艘摇橹小渡船虽小，从老镇码头划到南屿或东湾只要两秒钟，上来坐稳了，别晃。"
+    },
+    {
+      "id": "BB38",
+      "residentId": "C02",
+      "conditions": {
+        "chapter": "ch2",
+        "facilityId": "F06"
+      },
+      "priority": 95,
+      "cooldownSeconds": 150,
+      "action": "cheer",
+      "bubble": null,
+      "text": "成功啦！！孟德尔花圃绽放出第一株杂交蓝玫瑰了！北麓溪谷的花藤拱门正朝我们打开呢！"
+    },
+    {
+      "id": "BB39",
+      "residentId": "C08",
+      "conditions": {
+        "zone": "ZoneE",
+        "weather": "sunny"
+      },
+      "priority": 86,
+      "cooldownSeconds": 150,
+      "action": "greet",
+      "bubble": null,
+      "text": "阳光下的东湾浅水池 L-0.5 不会太深，只漫过脚踝十厘米，走起来哗啦哗啦真解压。"
+    },
+    {
+      "id": "BB40",
+      "residentId": "C04",
+      "conditions": {
+        "facilityId": "F25",
+        "timeSlot": "dusk"
+      },
+      "priority": 90,
+      "cooldownSeconds": 130,
+      "action": "cheer",
+      "bubble": null,
+      "text": "黄昏刚到我就开始预热红砖面包窑，方圆四十米很快就会飘满黄油麦芽香。"
+    },
+    {
+      "id": "BB41",
+      "residentId": "C06",
+      "conditions": {
+        "facilityId": "F28"
+      },
+      "priority": 88,
+      "cooldownSeconds": 160,
+      "action": "water_bend",
+      "bubble": null,
+      "text": "潮间带退潮后会留下很多打磨光滑的海玻璃，每一块都像别人忘在沙滩的一句晚安。"
+    },
+    {
+      "id": "BB42",
+      "residentId": "C08",
+      "conditions": {
+        "quirk": "symmetry_ocd"
+      },
+      "priority": 85,
+      "cooldownSeconds": 140,
+      "action": "nod_tilt",
+      "bubble": "bubble_purple",
+      "text": "你看，夜市的三排串灯我特意调成了等腰三角形，看着是不是整只浣熊都神清气爽了？"
+    },
+    {
+      "id": "BB43",
+      "residentId": "C03",
+      "conditions": {
+        "zone": "ZoneE",
+        "timeSlot": "night"
+      },
+      "priority": 91,
+      "cooldownSeconds": 140,
+      "action": "clap",
+      "bubble": null,
+      "text": "真受不了这群吵闹的家伙，全挤在烤包炉子前面……不过奶包烤的鱼肉包确实还不赖。"
+    },
+    {
+      "id": "BB44",
+      "residentId": "C05",
+      "conditions": {
+        "zone": "ZoneE",
+        "timeSlot": "night"
+      },
+      "priority": 89,
+      "cooldownSeconds": 150,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "白昼号桅杆那盏大灯点亮以后，连东海面的雾都变成了柔和的奶橘色。"
+    },
+    {
+      "id": "BB45",
+      "residentId": "C07",
+      "conditions": {
+        "zone": "ZoneE"
+      },
+      "priority": 84,
+      "cooldownSeconds": 140,
+      "action": "wave",
+      "bubble": null,
+      "text": "我把单车驿站也修到微光夜市旁边啦！买完烤包骑两圈就能回老镇！"
+    },
+    {
+      "id": "BB46",
+      "residentId": "C06",
+      "conditions": {
+        "affectionMin": 100
+      },
+      "priority": 97,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": "bubble_pink",
+      "text": "其实白昼号重新亮起桅灯那晚，我觉得就算大家不急着出海，能这样彼此守着海湾也很棒。"
+    },
+    {
+      "id": "BB47",
+      "residentId": "C09",
+      "conditions": {
+        "chapter": "ch3",
+        "zone": "ZoneN"
+      },
+      "priority": 96,
+      "cooldownSeconds": 130,
+      "action": "dance",
+      "bubble": "bubble_orange",
+      "text": "呀！被你发现了……只要握着画笔我就停不下来走台步，请、请千万别笑话我的纸片线条！"
+    },
+    {
+      "id": "BB48",
+      "residentId": "C01",
+      "conditions": {
+        "chapter": "ch3",
+        "facilityId": "F31"
+      },
+      "priority": 98,
+      "cooldownSeconds": 140,
+      "action": "greet",
+      "bubble": null,
+      "text": "欢迎踏入第二座室内空间——记忆温室图书馆。雨声落在弧形玻璃顶上的声音，能让人一口气读完一整章年谱。"
+    },
+    {
+      "id": "BB49",
+      "residentId": "C09",
+      "conditions": {
+        "facilityId": "F18"
+      },
+      "priority": 94,
+      "cooldownSeconds": 150,
+      "action": "paper_pet_squash",
+      "bubble": null,
+      "text": "当年离开的老朋友害怕被忘记，就把宠物剪成带奶油白边的 2D 纸片牌留在时光石旁陪我们散步。"
+    },
+    {
+      "id": "BB50",
+      "residentId": "C01",
+      "conditions": {
+        "facilityId": "F33"
+      },
+      "priority": 92,
+      "cooldownSeconds": 160,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "水车磨坊旁的旧留声亭支持插入收集到的黑胶唱片，换一首曲子，整片森林的呼吸就变柔和一分。"
+    },
+    {
+      "id": "BB51",
+      "residentId": "C09",
+      "conditions": {
+        "facilityId": "F35"
+      },
+      "priority": 93,
+      "cooldownSeconds": 150,
+      "action": "cheer",
+      "bubble": null,
+      "text": "咔哒刚修好的林间快速木滑道太好玩了！辛苦走盘山坡上去后，只要坐上去五秒就能咻地滑回山下！"
+    },
+    {
+      "id": "BB52",
+      "residentId": "C02",
+      "conditions": {
+        "zone": "ZoneN",
+        "weather": "rain"
+      },
+      "priority": 91,
+      "cooldownSeconds": 160,
+      "action": "hop_bounce",
+      "bubble": null,
+      "text": "下雨的时候躲进 F31 玻璃温室里面看苗床发芽，暖黄的灯光透过玻璃雾气简直像在绘本里！"
+    },
+    {
+      "id": "BB53",
+      "residentId": "C05",
+      "conditions": {
+        "zone": "ZoneN",
+        "timeSlot": "night"
+      },
+      "priority": 95,
+      "cooldownSeconds": 140,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "萤火浅溪晚上会有萤火虫沿着木拱桥飘出来，那也是黑夜环境色里最温柔的导航线。"
+    },
+    {
+      "id": "BB54",
+      "residentId": "C08",
+      "conditions": {
+        "facilityId": "F32"
+      },
+      "priority": 89,
+      "cooldownSeconds": 150,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "这两座横跨萤火浅溪的木拱桥我特意将坡度压在 `12°` 以内，散步绝不费鞋。"
+    },
+    {
+      "id": "BB55",
+      "residentId": "C01",
+      "conditions": {
+        "facilityId": "F36"
+      },
+      "priority": 96,
+      "cooldownSeconds": 180,
+      "action": "photo",
+      "bubble": null,
+      "text": "西北角树洞邮筒里藏着三十年前的旧合照，它们见证了时光小筑从一座孤单渡口长成现在的样子。"
+    },
+    {
+      "id": "BB56",
+      "residentId": "C09",
+      "conditions": {
+        "quirk": "shy_runway_walk"
+      },
+      "priority": 86,
+      "cooldownSeconds": 140,
+      "action": "dance",
+      "bubble": "bubble_yellow",
+      "text": "刚、刚才画完新纸片宠物太激动了，不知不觉又沿着长椅走了一个 T 台回旋……好丢人但好爽！"
+    },
+    {
+      "id": "BB57",
+      "residentId": "C03",
+      "conditions": {
+        "zone": "ZoneN"
+      },
+      "priority": 87,
+      "cooldownSeconds": 150,
+      "action": "clap",
+      "bubble": null,
+      "text": "图书馆很安静，很适合我一个人待着……除了羊绒绒突然开始走猫步的时候。"
+    },
+    {
+      "id": "BB58",
+      "residentId": "C04",
+      "conditions": {
+        "zone": "ZoneN"
+      },
+      "priority": 84,
+      "cooldownSeconds": 150,
+      "action": "greet",
+      "bubble": null,
+      "text": "听说北坡滑道滑下来正好能接上咖啡香，那我每天要从山上滑下来三次！"
+    },
+    {
+      "id": "BB59",
+      "residentId": "C07",
+      "conditions": {
+        "zone": "ZoneN"
+      },
+      "priority": 85,
+      "cooldownSeconds": 150,
+      "action": "wave",
+      "bubble": null,
+      "text": "我在图书馆外面也停了一辆薄荷单车！不过图书馆里禁止按车铃，我把铃铛用棉花包起来了。"
+    },
+    {
+      "id": "BB60",
+      "residentId": "C09",
+      "conditions": {
+        "affectionMin": 100
+      },
+      "priority": 97,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": "bubble_pink",
+      "text": "谢谢你没有觉得粗糙手绘的纸片小兽和 3D 世界格格不入，画得笨拙才更有我们的体温呀。"
+    },
+    {
+      "id": "BB61",
+      "residentId": "C05",
+      "conditions": {
+        "chapter": "ch4",
+        "facilityId": "F34"
+      },
+      "priority": 100,
+      "cooldownSeconds": 150,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "站在全岛最高点古樟星穹台往下望——中轴线直指星砂小屿的回声拱门，所有线头今天都在这里汇合了。"
+    },
+    {
+      "id": "BB62",
+      "residentId": "C08",
+      "conditions": {
+        "chapter": "ch4",
+        "facilityId": "F37"
+      },
+      "priority": 96,
+      "cooldownSeconds": 150,
+      "action": "cheer",
+      "bubble": null,
+      "text": "弧形西跨海木拱桥合龙！东踏石礁道也在退潮后全线贯通，现在环湾山海大环可以一口气走完！"
+    },
+    {
+      "id": "BB63",
+      "residentId": "C06",
+      "conditions": {
+        "chapter": "ch4",
+        "facilityId": "F39"
+      },
+      "priority": 98,
+      "cooldownSeconds": 150,
+      "action": "wave",
+      "bubble": null,
+      "text": "从南屿风铃拱门回望核心老镇和主木屋，感觉像第一次站在画框外面看自己的家一样。"
+    },
+    {
+      "id": "BB64",
+      "residentId": "C04",
+      "conditions": {
+        "chapter": "ch4",
+        "facilityId": "F39"
+      },
+      "priority": 95,
+      "cooldownSeconds": 130,
+      "action": "dance",
+      "bubble": "bubble_yellow",
+      "text": "回声音乐会开始啦！我带了九人份的窑烤蜜瓜包来当全场观众席零嘴！"
+    },
+    {
+      "id": "BB65",
+      "residentId": "C03",
+      "conditions": {
+        "chapter": "ch4",
+        "facilityId": "F39"
+      },
+      "priority": 97,
+      "cooldownSeconds": 140,
+      "action": "clap",
+      "bubble": null,
+      "text": "……啪、啪、啪。今天我决定多鼓掌一下。你们唱的那句“#lingo#”，回声听着竟然还不赖。"
+    },
+    {
+      "id": "BB66",
+      "residentId": "C09",
+      "conditions": {
+        "facilityId": "F41"
+      },
+      "priority": 95,
+      "cooldownSeconds": 160,
+      "action": "greet",
+      "bubble": null,
+      "text": "迷你漂流书屋里收着远方访客留下的短句，抽一张出来读一读，好像突然多了位没谋面的好友。"
+    },
+    {
+      "id": "BB67",
+      "residentId": "any",
+      "conditions": {
+        "directorSoftBias": true
+      },
+      "priority": 91,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": null,
+      "text": "咦，真巧呀——我正好顺路散步来这片区域看看海风和松果，没想到会撞见你！"
+    },
+    {
+      "id": "BB68",
+      "residentId": "any",
+      "conditions": {
+        "playerAbsentLong": true
+      },
+      "priority": 99,
+      "cooldownSeconds": 300,
+      "action": "wave",
+      "bubble": "bubble_pink",
+      "text": "好久不见啦！这里的好感度永远不会因为你忙碌而掉分，草坪上的花朵和我们一直按原样等你回来。"
+    },
+    {
+      "id": "BB69",
+      "residentId": "any",
+      "conditions": {
+        "affectionMin": 150
+      },
+      "priority": 95,
+      "cooldownSeconds": 220,
+      "action": "photo",
+      "bubble": "bubble_pink",
+      "text": "和你相处久了以后，连海风吹过耳边的节奏都变得熟悉。这张裱好的纪念照送给你留作记忆吧！"
+    },
+    {
+      "id": "BB70",
+      "residentId": "any",
+      "conditions": {
+        "weather": "sunny",
+        "timeSlot": "afternoon"
+      },
+      "priority": 65,
+      "cooldownSeconds": 160,
+      "action": "walk",
+      "bubble": null,
+      "text": "午后两点的高明度阳光洒在奶油绿草地上，整个人大脑里的杂音一下子安静下来了。"
+    },
+    {
+      "id": "BB71",
+      "residentId": "any",
+      "conditions": {
+        "weather": "breeze",
+        "timeSlot": "dusk"
+      },
+      "priority": 68,
+      "cooldownSeconds": 160,
+      "action": "wave",
+      "bubble": null,
+      "text": "傍晚五点半琥珀色的晚霞刚好斜斜打在主木屋窗格上，风铃都在替我们吹号角。"
+    },
+    {
+      "id": "BB72",
+      "residentId": "any",
+      "conditions": {
+        "weather": "rain"
+      },
+      "priority": 74,
+      "cooldownSeconds": 160,
+      "action": "water_bend",
+      "bubble": null,
+      "text": "下雨了也不用赶回室内任务，听听雨水打在草坪和栈桥上的声音，就是最好的背景白噪音。"
+    },
+    {
+      "id": "BB73",
+      "residentId": "any",
+      "conditions": {
+        "weather": "starlight",
+        "timeSlot": "night"
+      },
+      "priority": 75,
+      "cooldownSeconds": 160,
+      "action": "hover_bob",
+      "bubble": null,
+      "text": "星夜雾气柔柔地裹着灯塔与夜市暖灯，每走十米就有小路灯给你指路。"
+    },
+    {
+      "id": "BB74",
+      "residentId": "any",
+      "conditions": {
+        "bubble": "bubble_yellow"
+      },
+      "priority": 78,
+      "cooldownSeconds": 140,
+      "action": "hop_bounce",
+      "bubble": "bubble_yellow",
+      "text": "突然好想吃点香喷喷的东西或者换个新气象——你觉得今天的流行语“#lingo#”配什么甜点？"
+    },
+    {
+      "id": "BB75",
+      "residentId": "any",
+      "conditions": {
+        "bubble": "bubble_orange"
+      },
+      "priority": 79,
+      "cooldownSeconds": 140,
+      "action": "turn_to_player",
+      "bubble": "bubble_orange",
+      "text": "刚才有件事一直想找街坊聊聊但有点不好意思开口……你能轻推我一把或帮我递句话吗？"
+    },
+    {
+      "id": "BB76",
+      "residentId": "any",
+      "conditions": {
+        "bubble": "bubble_pink"
+      },
+      "priority": 82,
+      "cooldownSeconds": 160,
+      "action": "greet",
+      "bubble": "bubble_pink",
+      "text": "今天的海风太温柔了，忍不住想和你约定一个只有我们知道的暗号：“#lingo#”！"
+    },
+    {
+      "id": "BB77",
+      "residentId": "any",
+      "conditions": {
+        "bubble": "bubble_purple"
+      },
+      "priority": 83,
+      "cooldownSeconds": 140,
+      "action": "nod_tilt",
+      "bubble": "bubble_purple",
+      "text": "奇怪……刚才绕着长椅转了两圈以后突然忘记自己为什么站在这里，可能是海风把内存吹跑了！"
+    },
+    {
+      "id": "BB78",
+      "residentId": "any",
+      "conditions": {
+        "asyncVisitMemory": true
+      },
+      "priority": 92,
+      "cooldownSeconds": 200,
+      "action": "greet",
+      "bubble": null,
+      "text": "对了，昨天有位远方的串门旅人路过老镇，夸你挂在旗杆上的 12×12 像素小画特别有灵气呢！"
+    },
+    {
+      "id": "BB79",
+      "residentId": "C01",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "greet",
+      "bubble": null,
+      "text": "回声音乐会虽然散场了，但《时光小筑年谱》只要你每天来散五分钟步，就会永远有新故事写上去。"
+    },
+    {
+      "id": "BB80",
+      "residentId": "C02",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "hop_bounce",
+      "bubble": null,
+      "text": "现在四个海岬全部打通啦，今天要不要一起骑薄荷单车去东山梯田看茶花、再坐摇橹船回老镇？"
+    },
+    {
+      "id": "BB81",
+      "residentId": "C03",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "clap",
+      "bubble": null,
+      "text": "全镇 26 件记忆碎片如果收集齐了，我也不会放烟花，顶多再给你严肃地拍五下爪子。"
+    },
+    {
+      "id": "BB82",
+      "residentId": "C04",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "cheer",
+      "bubble": null,
+      "text": "没有主线期限以后最快乐啦！我打算把 465 种食物味道全都做成迷你试吃盘摆满心愿广场！"
+    },
+    {
+      "id": "BB83",
+      "residentId": "C06",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "wave",
+      "bubble": null,
+      "text": "白昼号的船钟随时欢迎你来敲响，只要大家都在，这座月牙湾就是永远不用返航的港湾。"
+    },
+    {
+      "id": "BB84",
+      "residentId": "C08",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "nod_tilt",
+      "bubble": null,
+      "text": "所有的桥都修得笔直又顺滑——好吧，为了纪念小羊的自由涂鸦，我特许这面 12×12 小旗歪着飘。"
+    },
+    {
+      "id": "BB85",
+      "residentId": "C09",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "paper_pet_squash",
+      "bubble": null,
+      "text": "不管纸片小宠物“#petName#”以后跟着你走多远，记得每隔几天回时光石前拍一张新合照哦！"
+    },
+    {
+      "id": "BB86",
+      "residentId": "C07",
+      "conditions": {
+        "chapter": "epilogue"
+      },
+      "priority": 86,
+      "cooldownSeconds": 180,
+      "action": "hop_bounce",
+      "bubble": null,
+      "text": "邮局以后只寄‘慢慢来也没关系’的慢递明信片！今天你要给哪位怪友发一封呢？"
+    }
+  ],
+  "traceryGrammar": {
+    "origin": [
+      "#newsHeadline#",
+      "#gossipBit#",
+      "#bottleEcho#"
+    ],
+    "newsHeadline": [
+      "【风铃湾整点怪闻】今日 #resident# 在 #facility# 一本正经地宣布：“全岛最新风尚是 #lingo#！” #quirkReaction#",
+      "【海风速报】据 #resident# 观测，昨晚星夜有人对着 #facility# 连续喊了三声“#lingo#”，海浪当场多回响了一秒！",
+      "【微光夜市食评】美食家 #resident# 表示，把 #foodItem# 配着“#lingo#”一起享用，幸福感直接提升 25%！"
+    ],
+    "gossipBit": [
+      "我刚才路过 #facility#，看到 #resident# 正和纸片宠物“#petName#”深情对视，两秒后双方严肃地同时 #actionPhrase#。",
+      "听说 #resident# 偷偷在 #facility# 练习怎么念“#lingo#”，结果把路过的海鸥都逗笑了。",
+      "今天 #weatherMood#，#resident# 说比起赶时间，更想在 #facility# 旁边挂一面写着“#flagTitle#”的小旗子。"
+    ],
+    "bottleEcho": [
+      "远方飘来的纸条写着：‘无论现实有多吵，风铃湾允许你只做 #lingo# 这一件微不足道的小事。’",
+      "星砂漂流书屋今日摘录：‘把旧友画成纸片宠物 #petName#，这样海风吹过 #facility# 时，他们就一直还在。’"
+    ],
+    "concertLyric": [
+      "♪ 晚霞落在潮汐线，大家一起把 #lingo# 挂上 #flagTitle# 飘起来 ♪",
+      "♪ #petName# 摇摇摆摆跟着散步，风铃湾把每封未寄出的信唱给远方 ♪"
+    ],
+    "resident": [
+      "阿木",
+      "绵绵",
+      "阿橘",
+      "奶包",
+      "墨羽",
+      "阿澈",
+      "团团",
+      "咔哒",
+      "绒绒"
+    ],
+    "facility": [
+      "心愿喷泉",
+      "风铃旧邮局",
+      "微光夜市烤包炉",
+      "白昼号灯船",
+      "记忆温室图书馆",
+      "古樟星穹台",
+      "潮汐回声剧场"
+    ],
+    "quirkReaction": [
+      "阿橘在旁边面瘫鼓了两下掌表示认可。",
+      "咔哒迅速掏出尺子确认该行为完全垂直于地平线。",
+      "墨羽原地悬浮升高了五厘米以示敬意。",
+      "绵绵害羞得用长耳朵把整张脸盖住了。",
+      "团团一激动从兜里掉出了三封去年的旧明信片。"
+    ],
+    "actionPhrase": [
+      "慢拍鼓掌",
+      "原地小跳",
+      "点头三下",
+      "压低草帽假装没看见"
+    ],
+    "weatherMood": [
+      "暖阳奶油绿正好",
+      "琥珀晚霞斜照",
+      "星夜碎灯初亮",
+      "微雨沙沙拍打木廊"
+    ],
+    "foodItem": [
+      "窑烤黄油蜜瓜包",
+      "海盐烤玉米",
+      "焦糖布丁三明治",
+      "草莓奶油泡芙",
+      "星砂蓝莓松饼",
+      "炙烤秋刀鱼饭团"
+    ],
+    "lingo": [
+      "慢一点也没关系"
+    ],
+    "petName": [
+      "小白喵"
+    ],
+    "flagTitle": [
+      "风铃湾小鱼旗"
+    ]
+  },
+  "foodMatrix": {
+    "totalProceduralFoods": 465,
+    "reactionTiers": [
+      {
+        "id": "super_love",
+        "label": "此生最爱（浮夸热舞）",
+        "affectionDelta": 15,
+        "warmFuzzies": 10,
+        "action": "dance",
+        "particle": "fx_heart"
+      },
+      {
+        "id": "like",
+        "label": "好喜欢（开心鼓掌）",
+        "affectionDelta": 9,
+        "warmFuzzies": 6,
+        "action": "cheer",
+        "particle": "fx_sparkle"
+      },
+      {
+        "id": "neutral",
+        "label": "还不错（温柔点头）",
+        "affectionDelta": 5,
+        "warmFuzzies": 3,
+        "action": "nod_tilt",
+        "particle": "fx_petal"
+      },
+      {
+        "id": "dislike",
+        "label": "不太合胃口（礼貌小退）",
+        "affectionDelta": 2,
+        "warmFuzzies": 1,
+        "action": "turn_to_player",
+        "particle": null
+      },
+      {
+        "id": "soul_leave",
+        "label": "此生最讨厌（搞笑灵魂出窍）",
+        "affectionDelta": 1,
+        "warmFuzzies": 4,
+        "action": "hover_bob",
+        "particle": "fx_ripple",
+        "note": "零惩罚：依然保留喜剧吐槽与微小暖心回馈"
+      }
+    ],
+    "signatureCatalog": [
+      {
+        "id": "FD01",
+        "name": "窑烤黄油蜜瓜包",
+        "category": "bakery",
+        "tags": [
+          "sweet",
+          "warm",
+          "butter"
+        ],
+        "origin": "F25"
+      },
+      {
+        "id": "FD02",
+        "name": "蜂蜜肉桂卷",
+        "category": "bakery",
+        "tags": [
+          "sweet",
+          "spice",
+          "warm"
+        ],
+        "origin": "F04"
+      },
+      {
+        "id": "FD03",
+        "name": "草莓奶油泡芙",
+        "category": "dessert",
+        "tags": [
+          "sweet",
+          "fruit",
+          "cream"
+        ],
+        "origin": "F12"
+      },
+      {
+        "id": "FD04",
+        "name": "炙烤秋刀鱼饭团",
+        "category": "savory",
+        "tags": [
+          "umami",
+          "sea",
+          "rice"
+        ],
+        "origin": "F02"
+      },
+      {
+        "id": "FD05",
+        "name": "海盐烤玉米",
+        "category": "savory",
+        "tags": [
+          "salty",
+          "warm",
+          "snack"
+        ],
+        "origin": "F25"
+      },
+      {
+        "id": "FD06",
+        "name": "星砂蓝莓松饼",
+        "category": "dessert",
+        "tags": [
+          "sweet",
+          "berry",
+          "night"
+        ],
+        "origin": "F34"
+      },
+      {
+        "id": "FD07",
+        "name": "焦糖布丁三明治",
+        "category": "bakery",
+        "tags": [
+          "sweet",
+          "soft"
+        ],
+        "origin": "F19"
+      },
+      {
+        "id": "FD08",
+        "name": "红豆奶油铜锣烧",
+        "category": "dessert",
+        "tags": [
+          "sweet",
+          "classic"
+        ],
+        "origin": "F26"
+      },
+      {
+        "id": "FD09",
+        "name": "云朵舒芙蕾",
+        "category": "dessert",
+        "tags": [
+          "fluffy",
+          "sweet"
+        ],
+        "origin": "F31"
+      },
+      {
+        "id": "FD10",
+        "name": "手冲蓝山琥珀咖",
+        "category": "drink",
+        "tags": [
+          "bitter",
+          "warm",
+          "coffee"
+        ],
+        "origin": "F12"
+      },
+      {
+        "id": "FD11",
+        "name": "薄荷洋甘菊花茶",
+        "category": "drink",
+        "tags": [
+          "floral",
+          "tea",
+          "calm"
+        ],
+        "origin": "F06"
+      },
+      {
+        "id": "FD12",
+        "name": "零度海盐汽水",
+        "category": "drink",
+        "tags": [
+          "fizzy",
+          "salty",
+          "cold"
+        ],
+        "origin": "F10"
+      },
+      {
+        "id": "FD13",
+        "name": "热可可棉花糖",
+        "category": "drink",
+        "tags": [
+          "sweet",
+          "warm",
+          "cocoa"
+        ],
+        "origin": "F24"
+      },
+      {
+        "id": "FD14",
+        "name": "冷萃茉莉苏打",
+        "category": "drink",
+        "tags": [
+          "floral",
+          "fizzy",
+          "cold"
+        ],
+        "origin": "F10"
+      },
+      {
+        "id": "FD15",
+        "name": "冰镇麦芽苹果汁",
+        "category": "drink",
+        "tags": [
+          "fruit",
+          "cold",
+          "malt"
+        ],
+        "origin": "F17"
+      },
+      {
+        "id": "FD16",
+        "name": "海风蜜桃冰茶",
+        "category": "drink",
+        "tags": [
+          "fruit",
+          "tea",
+          "sweet"
+        ],
+        "origin": "F17"
+      },
+      {
+        "id": "FD17",
+        "name": "烘焙玄米茶",
+        "category": "drink",
+        "tags": [
+          "roasted",
+          "tea",
+          "calm"
+        ],
+        "origin": "F33"
+      },
+      {
+        "id": "FD18",
+        "name": "暖心香草热牛奶",
+        "category": "drink",
+        "tags": [
+          "milk",
+          "warm",
+          "gentle"
+        ],
+        "origin": "F04"
+      },
+      {
+        "id": "FD19",
+        "name": "超辣海芥末鱿鱼丝",
+        "category": "weird",
+        "tags": [
+          "spicy",
+          "sea",
+          "chaos"
+        ],
+        "origin": "F10"
+      },
+      {
+        "id": "FD20",
+        "name": "黑蒜炭烤章鱼丸",
+        "category": "weird",
+        "tags": [
+          "garlic",
+          "sea",
+          "chaos"
+        ],
+        "origin": "F25"
+      },
+      {
+        "id": "FD21",
+        "name": "柠檬薄荷酸奶冻",
+        "category": "weird",
+        "tags": [
+          "sour",
+          "mint"
+        ],
+        "origin": "F10"
+      },
+      {
+        "id": "FD22",
+        "name": "苦瓜海带清汤",
+        "category": "weird",
+        "tags": [
+          "bitter",
+          "sea"
+        ],
+        "origin": "F28"
+      },
+      {
+        "id": "FD23",
+        "name": "蒜香黄油法棍",
+        "category": "bakery",
+        "tags": [
+          "garlic",
+          "crunchy"
+        ],
+        "origin": "F25"
+      },
+      {
+        "id": "FD24",
+        "name": "超甜彩虹糖霜甜甜圈",
+        "category": "weird",
+        "tags": [
+          "ultra_sweet"
+        ],
+        "origin": "F10"
+      }
+    ]
+  },
+  "mendelGenetics": {
+    "standard3Locus": {
+      "loci": [
+        "R",
+        "Y",
+        "W"
+      ],
+      "genotypeCount": 27,
+      "phenotypeMap": {
+        "RRYYWW": "奶霜白",
+        "RrYYWW": "晴空黄",
+        "rrYYWW": "暖金黄",
+        "RRyyWW": "珊瑚红",
+        "RryyWW": "樱桃粉",
+        "rryyWW": "丁香紫",
+        "RRYYww": "晴空蓝",
+        "rrYYww": "薄荷绿",
+        "rryyww": "星砂靛"
+      }
+    },
+    "rose4Locus": {
+      "loci": [
+        "R",
+        "Y",
+        "W",
+        "S"
+      ],
+      "genotypeCount": 81,
+      "pureBlueRoseGenotype": "RRYYwwss",
+      "keyCrossPath": [
+        {
+          "step": 1,
+          "parentA": "RRyyWWSS (商店白/红)",
+          "parentB": "rrYYWWSS (商店黄)",
+          "targetChild": "RrYyWWSS"
+        },
+        {
+          "step": 2,
+          "parentA": "RrYyWWSS",
+          "parentB": "RRyywwSS",
+          "targetChild": "RRyyWwSs (杂交红)"
+        },
+        {
+          "step": 3,
+          "parentA": "RRyyWwSs",
+          "parentB": "RRyyWwSs",
+          "targetChild": "RRYYwwss (纯合星砂蓝玫瑰)"
+        }
+      ]
+    },
+    "asexualCloneRule": "单株浇水且邻近半径 1.8m 内无同种配对花株时，触发有丝分裂无性克隆，100% 遗传亲本完全相同基因型。"
+  },
+  "worryBubbles": {
+    "yellow": {
+      "bubbleId": "bubble_yellow",
+      "label": "黄色烦恼（饮食 / 穿搭）",
+      "hex": "#FACC15",
+      "events": [
+        {
+          "id": "YB01",
+          "title": "今日烘焙选择困难症",
+          "prompt": "奶包在纠结今天先吃窑烤蜜瓜包还是蜂蜜肉桂卷，投喂任意面包即可治愈！"
+        },
+        {
+          "id": "YB02",
+          "title": "神秘自动售货机盲盒试探",
+          "prompt": "居民盯着 F10 马卡龙售货机发呆，想知道“零度海盐汽水”喝起来像不像海风。"
+        },
+        {
+          "id": "YB03",
+          "title": "想试听一首配今日穿搭的流行语",
+          "prompt": "居民觉得外套少了一句点睛口癖，借用涂鸦黑板流行语就会超开心。"
+        },
+        {
+          "id": "YB04",
+          "title": "下午茶点心搭配求助",
+          "prompt": "阿木看年谱看饿了，希望能在露台喝到温和不腻的热饮。"
+        }
+      ]
+    },
+    "orange": {
+      "bubbleId": "bubble_orange",
+      "label": "橙色烦恼（友谊 / 传话）",
+      "hex": "#FB923C",
+      "events": [
+        {
+          "id": "OB01",
+          "title": "害羞的邻里打招呼求助",
+          "prompt": "绒绒想感谢绵绵送的干花书签，但社恐不敢过去；可用轻推或帮忙口头传话。"
+        },
+        {
+          "id": "OB02",
+          "title": "失落旧信件的收件人确认",
+          "prompt": "团团又忘了这封没贴邮票的信归谁，帮他递给广场上的街坊试试。"
+        },
+        {
+          "id": "OB03",
+          "title": "强迫症木工的合影对称建议",
+          "prompt": "咔哒希望找一位居民一起在时光石前左右对称拍照。"
+        },
+        {
+          "id": "OB04",
+          "title": "想听听你对某位怪友的吐槽",
+          "prompt": "阿橘好奇你在岛上最喜欢哪只纸片宠物，会面瘫点评你的回答。"
+        }
+      ]
+    },
+    "pink": {
+      "bubbleId": "bubble_pink",
+      "label": "粉色烦恼（心动 / 记忆）",
+      "hex": "#F472B6",
+      "events": [
+        {
+          "id": "PB01",
+          "title": "秘密口头禅约定",
+          "prompt": "好感度 ≥100 的居民想与你约定专属秘密招呼语（遵循克制轻推边界，绝不强制指令）。"
+        },
+        {
+          "id": "PB02",
+          "title": "黄昏望远镜的风景分享",
+          "prompt": "居民想邀你去 F16 或 F22 一起看一次十二秒转完海湾的灯塔光束。"
+        },
+        {
+          "id": "PB03",
+          "title": "专属装裱纪念照的心意",
+          "prompt": "好感度 ≥150 后，居民酝酿把亲手装裱的记忆合照回礼送给你（概率 affection/25%）。"
+        },
+        {
+          "id": "PB04",
+          "title": "回声拱门的合唱邀约",
+          "prompt": "在南屿拱门前与高好感居民并肩站立，解锁一段双人轻声哼唱。"
+        }
+      ]
+    },
+    "purple": {
+      "bubbleId": "bubble_purple",
+      "label": "紫色烦恼（滑稽物理意外）",
+      "hex": "#A855F7",
+      "events": [
+        {
+          "id": "UB01",
+          "title": "悬浮卡棚事故",
+          "prompt": "墨羽夜间漂浮不小心挂在风车棚檐下，轻推一把即可恢复搞笑滑翔。"
+        },
+        {
+          "id": "UB02",
+          "title": "面瘫强制被抓后遗症",
+          "prompt": "阿橘被玩家抓起放下后原地进入“机械呆滞鼓掌循环”，再摸一下头就会走开。"
+        },
+        {
+          "id": "UB03",
+          "title": "指路牌 1.5° 倾斜恐慌",
+          "prompt": "咔哒盯着路边歪斜木牌 P03 浑身颤抖，帮他按 E 扶正路牌瞬间满血！"
+        },
+        {
+          "id": "UB04",
+          "title": "迷糊邮差自我绕晕",
+          "prompt": "团团在信箱画廊绕了三圈找自己，给他拍拍肩就能解锁喜剧吐槽台词。"
+        }
+      ]
+    }
+  }
+};

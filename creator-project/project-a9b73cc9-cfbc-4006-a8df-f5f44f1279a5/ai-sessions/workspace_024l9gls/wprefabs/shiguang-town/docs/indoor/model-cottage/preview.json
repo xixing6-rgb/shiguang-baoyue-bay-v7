@@ -1,0 +1,9 @@
+{
+  "views_checked": [
+    {
+      "name": "exterior",
+      "file": "wprefabs/shiguang-town/docs/indoor/model-cottage/exterior.png",
+      "checks": "检查+Z正面门廊与双级入户台阶、独立DoorPivot、双侧四格窗框与花箱、+X侧立面透视可见室内茶桌与书架、-Z背面封堵及5层陶瓦斜坡屋顶与烟囱"
+    }
+  ]
+}

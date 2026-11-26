@@ -1,0 +1,18 @@
+# External third-party repo (separate git repository: NVIDIA Kimodo)
+kimodo/
+
+# Duplicate zip backup (already unpacked in workspace/assets/3d-modeling-closeups/)
+*.zip
+
+# Raw un-decimated Tripo FBX sources (53-65 MB each; engine-ready <1.2 MB GLBs are in workspace/assets/models/tripo-optimized/)
+图片/模型/**/*.fbx
+图片/模型/**/*.fbm/
+
+# Python / OS / Editor temp & backup files
+**/__pycache__/
+*.pyc
+*.pyo
+**/.tmp/
+*.bak
+.DS_Store
+Thumbs.db

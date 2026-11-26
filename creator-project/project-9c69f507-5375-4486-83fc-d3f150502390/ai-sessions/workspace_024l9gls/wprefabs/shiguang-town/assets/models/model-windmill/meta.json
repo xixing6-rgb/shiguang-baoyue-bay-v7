@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-windmill",
+  "displayName": "北高台木质风车塔",
+  "summary": "5x5x8.5m八角形原木风车塔，含石砌基座、暖陶锥顶与独立BladesPivot四片木格帆布风叶。",
+  "nodeMergeBlacklist": [
+    "WindmillRoot/BladesPivot"
+  ]
+}

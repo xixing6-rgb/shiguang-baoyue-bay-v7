@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《时光小筑》4× 空间规划与 2.5D 轴测交互数字蓝图</title>
+  <style>
+    :root {
+      --bg: #FBF6EB;
+      --card: #FFFDF8;
+      --content: #F5ECDA;
+      --border: #DEC19B;
+      --fg: #3E3D52;
+      --muted: #6E6C85;
+      --primary: #B96A59;
+      --primary-fg: #FFF8EE;
+      --accent: #3F8EA8;
+      --mint: #7CC6E8;
+      --cream-green: #B7DDA8;
+      --sage-leaf: #93C794;
+      --warm-sand: #F5E6C8;
+      --amber: #FFD67A;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      line-height: 1.45; min-height: 100vh;
+    }
+    .container { max-width: 1440px; margin: 0 auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .card {
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 14px;
+      box-shadow: 0 4px 14px rgba(90, 88, 125, 0.07);
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .row-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      padding: 5px 10px; border-radius: 9px; border: 1.5px solid var(--border);
+      background: var(--content); color: var(--fg); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background 0.12s ease, transform 0.1s ease;
+    }
+    .btn:hover { background: #EEDFC2; }
+    .btn.active { background: var(--primary); color: var(--primary-fg); border-color: #964B3C; }
+    .btn.teal { background: #DDF2F7; border-color: #77B7CC; color: #245466; }
+    .btn.teal.active { background: #3F8EA8; color: #FFF; border-color: #2C6F86; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+      background: #E8F4E2; color: #366534; border: 1px solid #93C794;
+    }
+    .badge.warn { background: #FFF2CC; color: #7C4F0B; border-color: #E4BA8B; }
+    .badge.info { background: #E2F4FB; color: #215F78; border-color: #7CC6E8; }
+
+    .ctrl-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 10px;
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border);
+    }
+    .ctrl-group {
+      background: var(--content); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px;
+      display: flex; flex-direction: column; gap: 6px; font-size: 12px;
+    }
+    .ctrl-title { font-weight: 700; font-size: 11.5px; color: var(--muted); display: flex; justify-content: space-between; }
+    label.chk { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 11.5px; }
+    input[type="checkbox"] { accent-color: var(--primary); cursor: pointer; }
+    input[type="range"] { accent-color: var(--primary); cursor: pointer; width: 100%; }
+
+    .main-grid {
+      display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(350px, 1fr); gap: 12px; align-items: start;
+    }
+    @media (max-width: 1040px) { .main-grid { grid-template-columns: 1fr; } }
+
+    #planCanvas {
+      width: 100%; height: 560px; border-radius: 12px; border: 1.5px solid var(--border);
+      display: block; cursor: crosshair; touch-action: none; user-select: none;
+    }
+    #profileCanvas {
+      width: 100%; height: 185px; border-radius: 10px; border: 1.5px solid var(--border);
+      display: block;
+    }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11.5px; color: var(--muted); padding-top: 6px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.18); }
+
+    /* Inspector */
+    .inspector { display: flex; flex-direction: column; gap: 10px; }
+    .preview-box {
+      background: var(--warm-sand); border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      position: relative;
+    }
+    .preview-img {
+      width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; cursor: zoom-in;
+    }
+    .meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; font-size: 11.5px; }
+    .meta-cell { background: var(--content); border: 1px solid var(--border); border-radius: 9px; padding: 7px 9px; }
+    .meta-k { color: var(--muted); font-size: 10.5px; }
+    .meta-v { font-weight: 700; margin-top: 2px; font-family: ui-monospace, monospace; }
+    .list-scroll { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 4px; }
+    .list-item {
+      width: 100%; text-align: left; padding: 6px 9px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--card); color: var(--fg);
+      font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .list-item:hover { background: var(--content); }
+    .list-item.selected { border-color: var(--primary); background: #FCEFE4; font-weight: 700; }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed; inset: 0; background: rgba(45, 44, 62, 0.72); z-index: 60;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    #lightbox.hidden { display: none; }
+    #lightboxCard {
+      background: var(--card); border: 3px solid var(--border); border-radius: 18px;
+      padding: 16px; max-width: 640px; width: 100%; text-align: center;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    #lightboxImg { max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 12px; background: var(--warm-sand); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部规划摘要 & 交互控制器 -->
+    <header class="card">
+      <div class="row">
+        <div>
+          <div class="row-left">
+            <h1 style="font-size:18px;">📐 《时光小筑》4× 抱月海湾空间规划与 2.5D 轴测数字蓝图</h1>
+            <span class="badge">14,334 m² (3.999×)</span>
+            <span class="badge info">42 设施 · 9 居民 · 62 特写</span>
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-top:3px;">
+            包络盒 <strong>136m × 122m</strong>（<code>X:[-68,+68], Z:[-54,+68]</code>）· <strong>4+1 级微高差</strong>（L-0.5 -0.25m ~ L3 +5.4m）· <strong>385m 环湾外环 + 130m 核心内环 + 3 层捷径</strong>
+          </p>
+        </div>
+        <div class="row-left">
+          <button id="view2DBtn" class="btn active">🗺️ 2D 精确工程平面图</button>
+          <button id="viewIsoBtn" class="btn">🧊 2.5D 立体轴测鸟瞰</button>
+          <button id="resetCamBtn" class="btn" title="重置视角缩放与平移">⌖ 复位视角</button>
+        </div>
+      </div>
+
+      <div class="ctrl-bar">
+        <!-- 5 大片区开关 -->
+        <div class="ctrl-group">
+          <div class="ctrl-title"><span>1. 五大片区图层开关</span><span id="zoneAreaBadge">14,334 m²</span></div>
+          <div class="row-left">
+            <label class="chk"><input type="checkbox" class="zone-chk" value="Zone0" checked /> Zone0 核心老镇</label>
+            <label class="chk"><input type="checkbox" class="zone-chk" value="ZoneW" checked /> ZoneW 西翼邮局灯塔</label>
+            <label class="chk"><input type="checkbox" class="zone-chk" value="ZoneE" checked /> ZoneE 东湾夜市船坞</label>
+            <label class="chk"><input type="checkbox" class="zone-chk" value="ZoneN" checked /> ZoneN 北麓温室星穹</label>
+            <label class="chk"><input type="checkbox" class="zone-chk" value="ZoneS" checked /> ZoneS 南屿双桥</label>
+          </div>
+        </div>
+
+        <!-- 高差过滤与工程验证层 -->
+        <div class="ctrl-group">
+          <div class="ctrl-title"><span>2. 高差层级高亮 &amp; 35° 遮挡安全验证</span></div>
+          <div class="row-left">
+            <select id="tierFilter" style="font-size:11.5px;padding:3px 7px;border-radius:7px;border:1px solid var(--border);background:var(--card);">
+              <option value="all">高差过滤：全部显示 (L-0.5~L3)</option>
+              <option value="L-0.5">仅高亮 L-0.5 潮间带 (-0.25m)</option>
+              <option value="L0">仅高亮 L0 海滨层 (+0.2m)</option>
+              <option value="L1">仅高亮 L1 主生活层 (+1.8m)</option>
+              <option value="L2">仅高亮 L2 溪谷台地 (+3.6m)</option>
+              <option value="L3">仅高亮 L3 双制高点 (+5.4m)</option>
+            </select>
+            <label class="chk"><input id="layerTopo" type="checkbox" checked /> 环线与捷径</label>
+            <label class="chk"><input id="layerBlind" type="checkbox" checked /> 35°北向1.43×H遮挡安全层</label>
+          </div>
+        </div>
+
+        <!-- 章节演进滑块 -->
+        <div class="ctrl-group">
+          <div class="ctrl-title">
+            <span>3. 章节演进滑块</span>
+            <strong id="chapSliderLabel" style="color:var(--primary);">终章后（全岛合龙）</strong>
+          </div>
+          <input id="chapSlider" type="range" min="0" max="5" step="1" value="5" />
+          <div id="chapSliderDesc" style="font-size:11px;color:var(--muted);"></div>
+        </div>
+
+        <!-- 三时段 65/35 居民引力热力圈 -->
+        <div class="ctrl-group">
+          <div class="ctrl-title">
+            <span>4. 三时段 65/35 居民引力热力圈</span>
+            <label class="chk"><input id="layerHeat" type="checkbox" checked /> 显示热力圈</label>
+          </div>
+          <div class="row-left">
+            <button data-slot="afternoon" class="btn teal slot-btn active">☀️ 午后 14:00</button>
+            <button data-slot="dusk" class="btn teal slot-btn">🌇 黄昏 17:30</button>
+            <button data-slot="night" class="btn teal slot-btn">🌙 星夜 21:00</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主体：左 2D/2.5D 蓝图 + 右详查卡 -->
+    <main class="main-grid">
+      <section class="card" style="display:flex;flex-direction:column;gap:8px;">
+        <div class="row" style="font-size:12px;">
+          <div class="row-left">
+            <strong>视口操作：</strong>
+            <span style="color:var(--muted);">点击设施 F01–F42 或居民 C01–C09 查详 · 拖拽平移 · 滚轮缩放</span>
+          </div>
+          <span class="badge warn" id="curSelPill">已选中：F04 时光小筑主木屋</span>
+        </div>
+
+        <canvas id="planCanvas"></canvas>
+
+        <div class="legend">
+          <span class="legend-item"><i class="swatch" style="background:#6ED3CE;"></i> L-0.5 潮间带 (-0.25m)</span>
+          <span class="legend-item"><i class="swatch" style="background:#F5E6C8;"></i> L0 海滨沙滩 (+0.2m)</span>
+          <span class="legend-item"><i class="swatch" style="background:#B7DDA8;"></i> L1 核心生活台地 (+1.8m)</span>
+          <span class="legend-item"><i class="swatch" style="background:#93C794;"></i> L2 溪谷梯田 (+3.6m)</span>
+          <span class="legend-item"><i class="swatch" style="background:#6DA972;"></i> L3 双制高崖 (+5.4m)</span>
+          <span class="legend-item"><i class="swatch" style="background:rgba(244,63,94,0.22);border-color:#F43F5E;"></i> 北向 1.43×H 遮挡盲区（已留白验证）</span>
+          <span class="legend-item"><i class="swatch" style="background:rgba(245,158,11,0.45);border-color:#D97706;"></i> 65% 主引力热区 / 35% 外围据点</span>
+        </div>
+      </section>
+
+      <!-- 右侧详查卡 & 索引目录 -->
+      <aside class="card inspector">
+        <div style="border-bottom:1.5px solid var(--border);padding-bottom:8px;">
+          <div class="row">
+            <span id="detBadge" class="badge">F04</span>
+            <span id="detTierBadge" class="badge info">L1 · +1.8m</span>
+          </div>
+          <h2 id="detTitle" style="font-size:17px;margin-top:6px;">时光小筑主木屋</h2>
+          <div id="detSub" style="font-size:12px;color:var(--muted);">Zone0 · 核心老镇 · 序幕解锁</div>
+        </div>
+
+        <!-- 干净特写预览 -->
+        <div class="preview-box">
+          <img id="detImg" class="preview-img" src="../workspace/assets/3d-modeling-closeups/F04-main-cottage.png" alt="资产特写" />
+          <div id="detImgFallback" style="display:none;font-size:12px;color:var(--muted);padding:26px 8px;">无法加载特写图</div>
+          <div id="detImgCaption" style="font-size:11px;color:var(--muted);font-family:monospace;">../workspace/assets/3d-modeling-closeups/F04-main-cottage.png</div>
+        </div>
+
+        <!-- 坐标 & 工程参数 -->
+        <div class="meta-grid">
+          <div class="meta-cell">
+            <div class="meta-k">精确 3D 世界坐标 (X, Y, Z)</div>
+            <div id="detCoord" class="meta-v">(-10.0m, +1.8m, -2.0m)</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-k">占地与总高 (W × D × H)</div>
+            <div id="detSize" class="meta-v">8.0m × 6.0m × 4.8m</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-k">坡道 / 北向 1.43×H 盲区</div>
+            <div id="detSlope" class="meta-v">L1缓坡 16.5° · 盲区 6.9m</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-k">AI 3D 建模友好度与路线</div>
+            <div id="detAi3d" class="meta-v">★☆☆☆☆ Blender+GI (0星光)</div>
+          </div>
+        </div>
+
+        <div class="meta-cell" style="font-size:12px;">
+          <div class="meta-k">叙事职责 / 交互动机 / 引力权重</div>
+          <div id="detDesc" style="margin-top:3px;line-height:1.5;"></div>
+        </div>
+
+        <!-- 切换目录：42 设施 / 9 居民 / 9 微道具植被 -->
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="row">
+            <div class="row-left">
+              <button data-dir="fac" class="btn active dir-btn">🏛️ 设施 (42)</button>
+              <button data-dir="res" class="btn dir-btn">🐾 居民 (9)</button>
+              <button data-dir="props" class="btn dir-btn">🪴 Props/树 (9)</button>
+            </div>
+            <input id="dirSearch" type="text" placeholder="筛选..." style="width:90px;padding:4px 7px;border-radius:7px;border:1px solid var(--border);font-size:11.5px;" />
+          </div>
+          <div id="dirList" class="list-scroll"></div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 底部联动地形剖面与 35° 视线透视验证 -->
+    <section class="card" style="display:flex;flex-direction:column;gap:8px;">
+      <div class="row">
+        <div>
+          <h2 style="font-size:14px;">📊 4+1 阶梯地形剖面与 35° 中轴海景视线验证</h2>
+          <p style="font-size:11.5px;color:var(--muted);">验证所有跨层坡道 ≤ 18.1°（无跳跃 100% 连续 NavMesh），并检查从北麓 L3 古樟台 (+5.4m) 沿 X∈[-7,+7] 中轴直望南屿的 35° 通透视线</p>
+        </div>
+        <div class="row-left">
+          <button id="profNS" class="btn active">南北中轴纵剖面 (Z: -54 → +68m)</button>
+          <button id="profEW" class="btn">东西海湾横剖面 (X: -68 → +68m)</button>
+        </div>
+      </div>
+      <canvas id="profileCanvas"></canvas>
+    </section>
+  </div>
+
+  <!-- 点击大图预览灯箱 -->
+  <div id="lightbox" class="hidden">
+    <div id="lightboxCard">
+      <div class="row">
+        <strong id="lightboxTitle" style="font-size:15px;">资产特写大图</strong>
+        <button id="lightboxClose" class="btn active">✕ 关闭</button>
+      </div>
+      <img id="lightboxImg" alt="preview" />
+      <div id="lightboxSub" style="font-size:12px;color:var(--muted);"></div>
+    </div>
+  </div>
+
+  <script src="../workspace/data/narrative-db.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        const rad = Math.min(r || 0, Math.abs(w) / 2, Math.abs(h) / 2);
+        this.beginPath();
+        this.moveTo(x + rad, y);
+        this.lineTo(x + w - rad, y);
+        this.quadraticCurveTo(x + w, y, x + w, y + rad);
+        this.lineTo(x + w, y + h - rad);
+        this.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+        this.lineTo(x + rad, y + h);
+        this.quadraticCurveTo(x, y + h, x, y + h - rad);
+        this.lineTo(x, y + rad);
+        this.quadraticCurveTo(x, y, x + rad, y);
+        this.closePath();
+        return this;
+      };
+    }
+
+    const DB = window.SHIGUANG_DB;
+    if (!DB) {
+      alert("未能加载 ../workspace/data/narrative-db.js");
+      return;
+    }
+
+    // 完整 62 项干净特写元数据与 AI 3D 友好度评级
+    const ASSETS_62 = [
+      {id:"F01-arrival-dock",code:"F01",stars:"★☆☆☆☆",route:"Blender/SCAD 码头木板 + GI (0星光)",ramp:"L0 平缓接驳 18° 木阶",desc:"玩家与好友登岛出生点；与 F40/F26 构成 2 秒摇橹渡船航线。"},
+      {id:"F02-fishing-pier",code:"F02",stars:"★☆☆☆☆",route:"Blender 栈桥模块 (0星光)",ramp:"L0 亲水栈桥",desc:"草帽狐狸阿澈日间主据点；触发海面涟漪与 M23 海玻璃回忆。"},
+      {id:"F03-beach-discovery",code:"F03",stars:"★★★★★",route:"AI 3D 闭合簇或公共贝壳 (0-5星光)",ramp:"L0 沙滩平面",desc:"序幕软门控关键物 M01《风铃绳断掉的那天》与 M08 发现点。"},
+      {id:"F04-main-cottage",code:"F04",stars:"★☆☆☆☆",route:"Blender 室内外 + 离线 GI (0星光)",ramp:"L1 +1.8m (16.5°缓坡可达)",desc:"全岛第一座可进入室内庇护所，内含壁炉、茶桌、像素挂画与书架。"},
+      {id:"F05-coffee-terrace",code:"F05",stars:"★★★☆☆",route:"Blender 木台 + 桌面道具复用",ramp:"L1 双阶露台",desc:"多槽位 Smart Object，午后与星夜吸引 2–3 名居民饮茶聊天。"},
+      {id:"F06-mendel-flowerbed",code:"F06",stars:"★★★☆☆",route:"Blender 木框 + 程序化花株变色",ramp:"L1 平地",desc:"4 基因 81 种基因型玫瑰育种核心；培育 RRYYwwss 蓝玫瑰解锁北麓！"},
+      {id:"F07-pixel-flagpole",code:"F07",stars:"★★★☆☆",route:"动态 Canvas 贴图旗面 (0星光)",ramp:"L1 平地",desc:"实时映射 12×12 像素旗（< 180B 存 DataStore），终章合唱旗阵联动。"},
+      {id:"F08-chalkboard",code:"F08",stars:"★★★★☆",route:"Blender A字架 + Runtime UI",ramp:"L1 平地",desc:"Tracery 流行语注入入口，序幕必检设施。"},
+      {id:"F09-wish-fountain",code:"F09",stars:"★★★☆☆",route:"Blender 卵石圆池 + 水花粒子",ramp:"L1 心愿广场中心",desc:"全镇 65% 午后高频偶遇第一热区核心，接收暖心值。"},
+      {id:"F10-retro-vending",code:"F10",stars:"★★★★★",route:"AI 3D 闭合机柜或 Blender (0-5星光)",ramp:"L1 广场北角",desc:"随机掉落奇怪饮品，测试居民 465 种口味极值反应。"},
+      {id:"F11-plaza-benches",code:"F11",stars:"★★★★☆",route:"公共库木椅复用 (0星光)",ramp:"L1 广场西侧",desc:"面瘫橘猫阿橘初始驻足点，支持把两名居民轻推到相邻长椅对视。"},
+      {id:"F12-cafe-kiosk",code:"F12",stars:"★★★☆☆",route:"Blender 蓝白条纹木亭 (0星光)",ramp:"L1 广场东侧",desc:"吃包柯基奶包日间驻地，向东衔接微光夜市。"},
+      {id:"F13a-house-amber",code:"F13a",stars:"★★★★☆",route:"Blender F13 换色模板 (0星光)",ramp:"L1 西巷",desc:"居民萌屋·琥珀屋（阿橘居所）。"},
+      {id:"F13b-house-sage",code:"F13b",stars:"★★★★☆",route:"Blender F13 换色模板 (0星光)",ramp:"L1 西巷北",desc:"居民萌屋·鼠尾草屋（绵绵居所）。"},
+      {id:"F13c-house-blue",code:"F13c",stars:"★★★★☆",route:"Blender F13 换色模板 (0星光)",ramp:"L1 东巷",desc:"居民萌屋·海风屋（奶包居所）。"},
+      {id:"F14-swing-pavilion",code:"F14",stars:"★★★☆☆",route:"Blender 木亭 + Pivot 摆动",ramp:"L1 生活小巷南",desc:"广播玩耍与音乐动机，支持双人秋千。"},
+      {id:"F15-windmill-tower",code:"F15",stars:"★★★☆☆",route:"Blender 八角塔 + Lua 旋叶",ramp:"L2 +3.6m (北向盲区 12.16m 已留白)",desc:"5 座 Macro Weenie 一级天际线地标之一；悬浮猫头鹰墨羽白天打盹据点。"},
+      {id:"F16-sunset-overlook",code:"F16",stars:"★★★☆☆",route:"Blender 观景亭 + 望远镜",ramp:"L2 +3.6m",desc:"黄昏时段热区核心，站在望远镜前同时框住西灯塔/东灯船/南拱门。"},
+      {id:"F17-three-fruit-tree",code:"F17",stars:"★★★☆☆",route:"Blender 三团树冠模板 (0星光)",ramp:"L2 果林坡",desc:"标志性 3 果实树剪影，摇树掉果正向微回报。"},
+      {id:"F18-memory-stone-corner",code:"F18",stars:"★★★★☆",route:"Blender 石碑 + 2D 纸片宠",ramp:"L2 东高台",desc:"2D 纸片涂鸦宠物散步与小羊绒绒初遇打卡点。"},
+      {id:"F19-windchime-post-office",code:"F19",stars:"★☆☆☆☆",route:"Blender 室内外 + 风铃摆动 (0星光)",ramp:"L1 西翼 +1.8m",desc:"第一章核心地标，邮差团团与阿橘的未寄信件档案柜所在地。"},
+      {id:"F20-mailbox-gallery",code:"F20",stars:"★★★☆☆",route:"木棚 Blender + 信箱 AI 闭合体",ramp:"L1 西翼",desc:"陈列居民手写便签与 12×12 像素邮票墙，阿橘第 2 幕剧场地点。"},
+      {id:"F21-windchime-corridor",code:"F21",stars:"★☆☆☆☆",route:"Blender 贴坡木廊 + 信号旗 (0星光)",ramp:"L2 +3.6m (缓坡 ≤15°)",desc:"登顶西岬灯塔前的“窥视框景（Peek）”长廊，同步悬挂玩家像素旗。"},
+      {id:"F22-west-cape-lighthouse",code:"F22",stars:"★★★☆☆",route:"混合：AI 塔身 + Blender 灯室旋光",ramp:"L3 +5.4m (北向 16.45m 已设草坡留白!)",desc:"全湾西南最高地标（Macro Weenie），12 秒旋转琥珀光束横扫抱月湾。"},
+      {id:"F23-cliff-cottage",code:"F23",stars:"★★★★☆",route:"Blender 模板换色加附件 (0星光)",ramp:"L2 +3.6m 西北崖",desc:"西北灰蓝尖瓦萌屋组（含团团小屋 F23a 与客舍 F23b）。"},
+      {id:"F24-driftwood-campfire",code:"F24",stars:"★★★★★",route:"AI 3D 闭合石圈木堆 (5星光)",ramp:"L0 +0.3m 西滩秘境#1",desc:"口袋秘境 #1：漂流木围坐篝火角，可烤棉花糖并远眺西拱桥落日。"},
+      {id:"F25-bakery-kiln-stall",code:"F25",stars:"★★★☆☆",route:"红砖窑炉 AI 5星 + 广场串灯 Blender",ramp:"L1 +1.8m 东湾核心",desc:"星夜 65% 聚合第一热区（星露谷酒吧效应）！红砖窑炉烤包剧场。"},
+      {id:"F26-old-boatyard",code:"F26",stars:"★☆☆☆☆",route:"Blender 开放木桁架船坞 (0星光)",ramp:"L0-L1 +1.2m (含东渡口 +0.2m)",desc:"第二章核心：木工小浣熊咔哒与阿澈修复白昼号跳板与摇橹渡船。"},
+      {id:"F27-daylight-lightship",code:"F27",stars:"★★★☆☆",route:"AI 船壳 + Blender 平甲板与桅灯",ramp:"L0 +0.2m (11.5°跳板)",desc:"5 座 Macro Weenie 之一，可登甲板敲响船钟并重燃桅杆暖灯。"},
+      {id:"F28-tidepool-rocks",code:"F28",stars:"★☆☆☆☆",route:"地形下凹网格 + 礁石复用",ramp:"L-0.5 -0.25m (8.5°砾石缓坡)",desc:"口袋秘境 #2：唯一涉浅水 10cm 潮间带生态池，夜晚倒映星河。"},
+      {id:"F29-kite-terrace-bench",code:"F29",stars:"★☆☆☆☆",route:"Blender 梯田台块 + 花丛变色",ramp:"L2 +3.6m 东山梯田",desc:"衔接东湾与北麓，茶花花床与纸风筝展架，绵绵第 2 幕场地。"},
+      {id:"F30-studio-cottage",code:"F30",stars:"★★★★☆",route:"Blender 模板换顶+画架 (0星光)",ramp:"L1-L2 东岸工坊",desc:"芥末黄工坊画室萌屋组（咔哒工坊 F30a 与绒绒画室 F30b）。"},
+      {id:"F31-memory-greenhouse",code:"F31",stars:"★☆☆☆☆",route:"Blender 木构拱肋+半透明玻璃穹顶",ramp:"L2 +3.6m 北麓溪谷",desc:"全岛第二座可进入室内建筑！《四季年谱》修复地与温室苗床。"},
+      {id:"F32-creek-arch-bridge",code:"F32",stars:"★☆☆☆☆",route:"Blender 溪水带 + 2座拱桥 (≤12°)",ramp:"L2 +3.2m (坡度 ≤12°)",desc:"东西双木拱桥横跨萤火浅溪，彻底打通西岸邮局北径与东岸梯田。"},
+      {id:"F33-forest-watermill",code:"F33",stars:"★★★☆☆",route:"AI/Blender 小屋 + 独立旋转水车",ramp:"L2 +3.6m 东溪口秘境#3",desc:"口袋秘境 #3：动态木水车配复古铜喇叭留声机，支持切换全镇黑胶 BGM。"},
+      {id:"F34-camphor-bell-pavilion",code:"F34",stars:"★★★☆☆",route:"Blender 圆台 + AI 雕塑性古樟树",ramp:"L3 +5.4m 北缘终章制高点 (0遮挡)",desc:"全图最高点 + 中轴视野起点！敲响铜钟召唤全镇赴南屿回声合唱。"},
+      {id:"F35-timber-slide",code:"F35",stars:"★☆☆☆☆",route:"Blender 光滑样条木槽 + 触发器",ramp:"L3→L1 单向快降 (7m/s, 5秒)",desc:"东西双林间下行圆木滑道（F35W / F35E），复刻 A Short Hike 下行爽感。"},
+      {id:"F36-tree-hollow-postbox",code:"F36",stars:"★★★★★",route:"AI 3D 雕塑古树墩 (5星光)",ramp:"L2.5 +4.2m 西北秘境#4",desc:"口袋秘境 #4：掏空老树墩内藏三十年前旧合照墙与秘密邮筒。"},
+      {id:"F37-sea-arch-bridge",code:"F37",stars:"★☆☆☆☆",route:"Blender 精准桥台连续 NavMesh",ramp:"L0 +0.3~1.7m (坡度 ≤14°)",desc:"第一章末修复蓝图，终章连接西岬与星砂小屿的弧形跨海木拱桥。"},
+      {id:"F38-tidal-stepping-stones",code:"F38",stars:"★☆☆☆☆",route:"圆润扁平玄武岩模块化排布",ramp:"L0 +0.15m 潮汐平面",desc:"第二章退潮显现的东潮汐踏石礁道，与西拱桥合龙 385m 环湾大环。"},
+      {id:"F39-echo-amphitheater-arch",code:"F39",stars:"★★★★☆",route:"AI 流线漂流木拱门 + Blender 看台",ramp:"L1 +1.4m 星砂小屿",desc:"终章音乐会主场！面朝北向中轴回望老镇与古樟台，产生强仪式回望。"},
+      {id:"F40-wooden-rowboat",code:"F40",stars:"★★★★☆",route:"AI 独立闭合小渡船 (5星光)",ramp:"L0 +0.2m 内湾水程 14–50m",desc:"摇橹小渡船（F01 ↔ F40 ↔ F26_dock），2 秒跨湾浪漫快传。"},
+      {id:"F41-mini-book-booth",code:"F41",stars:"★★★★★",route:"AI 3D 紧凑电话亭书屋 (5星光)",ramp:"L0 +0.25m 星砂沙洲秘境#5",desc:"口袋秘境 #5：异步好友漂流短句交换书屋，绒绒第 3 幕收尾地。"},
+      {id:"F42-postal-bike-stop",code:"F42",stars:"★★★★☆",route:"AI 单车站牌复用 4 次 (5星光)",ramp:"L1/L2 四区枢纽",desc:"第一章解锁！老镇/西邮局/东夜市/北图书馆 4 站 1.5 秒叮铃快传。"},
+      {id:"C01-glasses-bear",code:"C01",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F04 / F31",desc:"眼镜棕熊·阿木（ICSG），负责《四季年谱》与第三章图书馆主线。"},
+      {id:"C02-lop-rabbit",code:"C02",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F06 / F29",desc:"垂耳白兔·绵绵（EDRG），培育孟德尔蓝玫瑰解锁北麓花藤门。"},
+      {id:"C03-deadpan-cat",code:"C03",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F11 / F19 / F39",desc:"面瘫橘猫·阿橘（ICSK），秘密整理未寄信箱的机械电音鼓掌诗人。"},
+      {id:"C04-corgi-baker",code:"C04",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F12 / F25",desc:"吃包柯基·奶包（ECRG），6格大胃王，夜间微光夜市烤包气氛官。"},
+      {id:"C05-floating-owl",code:"C05",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F15 / F22 / F34",desc:"悬浮猫头鹰·墨羽（IDSK），离地 +0.25m 悬浮，重燃灯塔与观星指引。"},
+      {id:"C06-strawhat-fox",code:"C06",stars:"★★★★★",route:"已有 T-Pose 复用 (0星光)",ramp:"主据点 F02 / F27 / F40",desc:"草帽狐狸·阿澈（ICRK），退休白昼号船长，掌舵摇橹渡船。"},
+      {id:"C07-postman-otter",code:"C07",stars:"★★★★★",route:"douyin-3d T-Pose + 自动绑骨 (5星光)",ramp:"主据点 F19 / F20 / F42",desc:"迷糊邮差水獭·团团（EDRK），第一章登场，管理邮局与单车快传。"},
+      {id:"C08-carpenter-raccoon",code:"C08",stars:"★★★★★",route:"douyin-3d T-Pose + 自动绑骨 (5星光)",ramp:"主据点 F26 / F37 / F35",desc:"强迫症木工小浣熊·咔哒（ICSG），修船修拱桥与北麓滑道。"},
+      {id:"C09-artist-sheep",code:"C09",stars:"★★★★★",route:"douyin-3d T-Pose + 自动绑骨 (5星光)",ramp:"主据点 F18 / F31 / F41",desc:"纸片画师小羊·绒绒（IDRG），将 2D 纸片宠物与像素旗融入正史。"},
+      {id:"P01-clay-street-lamp",code:"P01",stars:"★★★★★",route:"AI/公共库复用 (每12-16m部署)",ramp:"全岛路径",desc:"暖陶木质矮路灯，星夜提供柔和 GI 地面引导光斑。"},
+      {id:"P02-vintage-mailbox",code:"P02",stars:"★★★★★",route:"AI 3D 闭合单品",ramp:"全岛路径",desc:"微倾 5° 复古薄荷绿海风邮筒。"},
+      {id:"P03-wooden-signpost",code:"P03",stars:"★★★★★",route:"AI 3D 闭合单品",ramp:"主次路口",desc:"手绘灯塔/小花图标微倾路牌（可交互扶正，取悦强迫症咔哒）。"},
+      {id:"P04-shell-windchime-post",code:"P04",stars:"★★★★★",route:"AI 3D 闭合单品",ramp:"海岸沿线",desc:"贝壳与海玻璃风铃木桩，靠近触发海风听觉提示。"},
+      {id:"P05-bakery-food-cart",code:"P05",stars:"★★★★★",route:"AI 3D 闭合单品",ramp:"Zone E / 广场",desc:"海风烤包木推车，展示蜜瓜包与饮品道具。"},
+      {id:"P06-mini-armillary-sphere",code:"P06",stars:"★★★★★",route:"AI 3D 闭合单品",ramp:"L3 双制高台",desc:"暖铜迷你星盘观测仪，呼应天象与星穹主题。"},
+      {id:"E01-coastal-pine-tree",code:"E01",stars:"★★★☆☆",route:"Blender 3单元圆蓬松冠 (0星光)",ramp:"Zone W / S 海岸",desc:"蓝绿海松调 #7BB59D，与老镇果树形成生态色域区分。"},
+      {id:"E02-autumn-maple-tree",code:"E02",stars:"★★★☆☆",route:"Blender 3单元换色模板 (0星光)",ramp:"Zone N 北麓森林",desc:"柔金杏叶 #E8C37D 与浅苔绿，烘托北麓记忆季候感。"},
+      {id:"U01-paper-pet-standee",code:"U01",stars:"★★★★★",route:"2D 纸片立牌 + 弹性脚本 (0星光)",ramp:"全岛跟随散步",desc:"白边黑线涂鸦纸片小猫，保留轻拼贴混搭基因。"}
+    ];
+
+    const ASSET_MAP = {};
+    ASSETS_62.forEach(a => { ASSET_MAP[a.code] = a; });
+
+    // 35° 斜俯视北向遮挡盲区验证对象 (L = 1.43 * H)
+    const TALL_LANDMARKS = [
+      { id: "F22", name: "西岬灯塔", x: -56, z: -24, w: 7, h: 11.5, note: "北向16.45m已规划海蚀草坡与矮松负空间留白，避开F19/F20" },
+      { id: "F34", name: "古樟星穹台", x: 0, z: 58, w: 12, h: 12.5, note: "位于全图最北缘，正北为远海边界，遮挡风险=0" },
+      { id: "F15", name: "八角风车塔", x: -12, z: 20, w: 5, h: 8.5, note: "北侧留有草坡台阶间隙，不遮挡F31温室入口" },
+      { id: "F27", name: "白昼号灯船", x: 52, z: -32, w: 11, h: 9.5, note: "位于东湾南缘浅滩，北向海滩留白" },
+      { id: "F31", name: "记忆温室", x: -16, z: 42, w: 12, h: 6.2, note: "北向接溪谷森林缓冲带" },
+      { id: "F39", name: "回声拱门", x: -2, z: -45, w: 10, h: 6.5, note: "位于南屿中心，向北为开阔内湾水面" }
+    ];
+
+    const MICRO_ITEMS = [
+      { id: "P01", name: "暖陶木质矮路灯", zone: "全岛", tier: "全层级", pos: [2, 1.8, -1], size: [0.7, 0.7, 1.9] },
+      { id: "P02", name: "歪斜薄荷绿邮筒", zone: "ZoneW", tier: "L1", pos: [-34, 1.8, 5], size: [0.7, 0.7, 1.35] },
+      { id: "P03", name: "手绘微倾木指路牌", zone: "Zone0", tier: "L1", pos: [-28, 1.8, -3], size: [0.9, 0.6, 1.75] },
+      { id: "P04", name: "贝壳风铃木桩", zone: "ZoneW", tier: "L0", pos: [-48, 0.2, -28], size: [0.8, 0.8, 2.1] },
+      { id: "P05", name: "海风烤包木推车", zone: "ZoneE", tier: "L1", pos: [39, 1.8, -7], size: [1.8, 1.1, 1.9] },
+      { id: "P06", name: "暖铜迷你星盘仪", zone: "ZoneN", tier: "L3", pos: [5, 5.4, 56], size: [0.9, 0.9, 1.5] },
+      { id: "E01", name: "海风歪颈圆松树", zone: "ZoneW", tier: "L2", pos: [-58, 3.6, -13], size: [3.2, 2.8, 4.8] },
+      { id: "E02", name: "北麓柔金奶油枫树", zone: "ZoneN", tier: "L2", pos: [-26, 3.6, 48], size: [3.4, 3.2, 5.2] },
+      { id: "U01", name: "2D纸片涂鸦宠物立牌", zone: "Zone0", tier: "L2", pos: [21, 3.6, 15], size: [0.9, 0.45, 0.9] }
+    ];
+
+    const CHAPTER_ORDER = ["prologue", "ch1", "ch2", "ch3", "ch4", "epilogue"];
+    const ZONE_COLORS = {
+      Zone0: "rgba(251, 191, 36, 0.22)",
+      ZoneW: "rgba(99, 102, 241, 0.16)",
+      ZoneE: "rgba(249, 115, 22, 0.17)",
+      ZoneN: "rgba(16, 185, 129, 0.17)",
+      ZoneS: "rgba(14, 165, 233, 0.20)"
+    };
+    const TIER_COLORS = {
+      "L-0.5": "#6ED3CE",
+      "L0": "#F5E6C8",
+      "L0-L1": "#E9D9AA",
+      "L1": "#B7DDA8",
+      "L1-L2": "#A4D29E",
+      "L2": "#93C794",
+      "L2.5": "#81BA83",
+      "L3": "#6DA972",
+      "L3->L1": "#D98A5F"
+    };
+
+    let viewMode = "2D"; // "2D" | "ISO"
+    let profileMode = "NS"; // "NS" | "EW"
+    let timeSlot = "afternoon";
+    let chapterIndex = 5;
+    let dirTab = "fac"; // "fac" | "res" | "props"
+    let selectedKind = "fac";
+    let selectedId = "F04";
+    let zoom2D = 1.0, panX = 0, panY = 0;
+
+    const planCanvas = document.getElementById("planCanvas");
+    const profCanvas = document.getElementById("profileCanvas");
+
+    function fitCanvas(c) {
+      const r = c.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (c.width !== Math.round(r.width * dpr) || c.height !== Math.round(r.height * dpr)) {
+        c.width = Math.round(r.width * dpr);
+        c.height = Math.round(r.height * dpr);
+      }
+      const c2 = c.getContext("2d");
+      c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx: c2, w: r.width, h: r.height };
+    }
+
+    function getActiveZones() {
+      const set = new Set();
+      document.querySelectorAll(".zone-chk:checked").forEach(el => set.add(el.value));
+      return set;
+    }
+
+    function getResidentPosAtSlot(res) {
+      const wMap = res.gravityWeights[timeSlot] || res.gravityWeights.afternoon;
+      let bestFid = res.homeFacility, bestW = -1;
+      Object.entries(wMap).forEach(([fid, w]) => {
+        if (w > bestW) { bestW = w; bestFid = fid; }
+      });
+      const fac = DB.facilities.find(f => f.id === bestFid) || DB.facilities[0];
+      const idx = parseInt(res.id.slice(1), 10);
+      const ang = idx * 1.15;
+      return {
+        x: fac.pos[0] + Math.cos(ang) * 2.4,
+        y: fac.pos[1],
+        z: fac.pos[2] + Math.sin(ang) * 2.2,
+        facId: fac.id
+      };
+    }
+
+    // 2D 坐标映射 X:[-74,+74], Z:[-58,+72]
+    function make2DMapper(w, h) {
+      const baseScale = Math.min((w - 50) / 148, (h - 46) / 132) * zoom2D;
+      const ox = w / 2 + panX;
+      const oy = h * 0.52 + panY;
+      return {
+        toPx: (x, z) => ({ px: ox + x * baseScale, py: oy - z * baseScale }),
+        scale: baseScale
+      };
+    }
+
+    // 2.5D 等轴测投影 X:[-68,+68], Z:[-54,+68], Y:[-0.5,+5.4]
+    function makeIsoMapper(w, h) {
+      const s = Math.min((w - 60) / 165, (h - 45) / 135) * zoom2D;
+      const ox = w * 0.50 + panX;
+      const oy = h * 0.56 + panY;
+      return {
+        toIso: (x, y, z) => ({
+          px: ox + (x * 0.86 - z * 0.34) * s,
+          py: oy + (-z * 0.50 - x * 0.12) * s - y * 3.1 * s
+        }),
+        s
+      };
+    }
+
+    function drawIsoPrism(ctx, toIso, x1, x2, z1, z2, yBot, yTop, topCol, frontCol, sideCol, strokeCol) {
+      const pBL = toIso(x1, yTop, z1), pBR = toIso(x2, yTop, z1), pTR = toIso(x2, yTop, z2), pTL = toIso(x1, yTop, z2);
+      const bBL = toIso(x1, yBot, z1), bBR = toIso(x2, yBot, z1), bTR = toIso(x2, yBot, z2);
+
+      ctx.fillStyle = frontCol;
+      ctx.beginPath(); ctx.moveTo(pBL.px, pBL.py); ctx.lineTo(pBR.px, pBR.py); ctx.lineTo(bBR.px, bBR.py); ctx.lineTo(bBL.px, bBL.py); ctx.closePath(); ctx.fill();
+
+      ctx.fillStyle = sideCol;
+      ctx.beginPath(); ctx.moveTo(pBR.px, pBR.py); ctx.lineTo(pTR.px, pTR.py); ctx.lineTo(bTR.px, bTR.py); ctx.lineTo(bBR.px, bBR.py); ctx.closePath(); ctx.fill();
+
+      ctx.fillStyle = topCol;
+      ctx.beginPath(); ctx.moveTo(pBL.px, pBL.py); ctx.lineTo(pBR.px, pBR.py); ctx.lineTo(pTR.px, pTR.py); ctx.lineTo(pTL.px, pTL.py); ctx.closePath(); ctx.fill();
+
+      if (strokeCol) { ctx.strokeStyle = strokeCol; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+
+    function draw2D() {
+      const info = fitCanvas(planCanvas);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      const { toPx, scale } = make2DMapper(w, h);
+      const activeZones = getActiveZones();
+      const tierFilter = document.getElementById("tierFilter").value;
+      const showTopo = document.getElementById("layerTopo").checked;
+      const showBlind = document.getElementById("layerBlind").checked;
+      const showHeat = document.getElementById("layerHeat").checked;
+      const curChapObj = DB.chapters[chapterIndex];
+
+      // 浅海湾底图 (184x168m)
+      ctx.fillStyle = "#B8E3F4";
+      ctx.fillRect(0, 0, w, h);
+
+      // 4m / 16m 坐标网格
+      ctx.strokeStyle = "rgba(62, 61, 82, 0.06)";
+      ctx.lineWidth = 1;
+      for (let gx = -68; gx <= 68; gx += 4) {
+        const p1 = toPx(gx, -56), p2 = toPx(gx, 68);
+        ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); ctx.stroke();
+        if (gx % 16 === 0) {
+          ctx.fillStyle = "#5A587D"; ctx.font = "9.5px monospace"; ctx.textAlign = "center";
+          ctx.fillText(gx + "m", p1.px, toPx(0, -57).py);
+        }
+      }
+      for (let gz = -56; gz <= 68; gz += 4) {
+        const p1 = toPx(-68, gz), p2 = toPx(68, gz);
+        ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); ctx.stroke();
+        if (gz % 16 === 0) {
+          ctx.fillStyle = "#5A587D"; ctx.font = "9.5px monospace"; ctx.textAlign = "right";
+          ctx.fillText(gz + "m", toPx(-69, gz).px, p1.py + 3);
+        }
+      }
+
+      // 抱月海岸与高差阶梯轮廓
+      const drawPoly = (pts, fill, stroke, lw = 1.5) => {
+        ctx.beginPath();
+        pts.forEach(([x, z], i) => {
+          const p = toPx(x, z);
+          if (i === 0) ctx.moveTo(p.px, p.py); else ctx.lineTo(p.px, p.py);
+        });
+        ctx.closePath();
+        if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+      };
+
+      // L0 主陆地与南屿
+      drawPoly([[-64,-33],[-42,-35],[-31,-24],[0,-22],[31,-24],[45,-36],[63,-34],[64,34],[52,64],[-52,64],[-64,34]], "#F5E6C8", "#D6C198", 2);
+      drawPoly([[-22,-35],[16,-35],[20,-49],[-20,-51]], "#F5E6C8", "#D6C198", 2);
+      // L-0.5 东潮间带
+      drawPoly([[29,-31],[43,-31],[43,-21],[29,-21]], "#6ED3CE", "#44A8A4", 1.8);
+      // L1 核心生活台地
+      drawPoly([[-61,-14],[61,-14],[61,30],[-61,30]], "#B7DDA8", "#89B686", 1.5);
+      drawPoly([[-12,-50],[10,-50],[10,-39],[-12,-39]], "#B7DDA8", "#89B686", 1.5);
+      // L2 北麓与东西台地
+      drawPoly([[-50,14],[50,14],[50,62],[-50,62]], "#93C794", "#6E9F70", 1.5);
+      drawPoly([[-58,-20],[-43,-20],[-43,-6],[-58,-6]], "#93C794", "#6E9F70", 1.2);
+      drawPoly([[-62,12],[-41,12],[-41,30],[-62,30]], "#93C794", "#6E9F70", 1.2);
+      // L3 双制高点
+      drawPoly([[-64,-32],[-48,-32],[-48,-18],[-64,-18]], "#6DA972", "#4F8354", 1.8);
+      drawPoly([[-12,51],[12,51],[12,65],[-12,65]], "#6DA972", "#4F8354", 1.8);
+
+      // 萤火浅溪 F32
+      ctx.save(); ctx.strokeStyle = "#5CB6DE"; ctx.lineWidth = Math.max(4, 2.8 * scale); ctx.lineCap = "round";
+      ctx.beginPath();
+      [[-8,36],[2,34],[12,36],[24,34],[35,38]].forEach(([x, z], i) => {
+        const p = toPx(x, z); if (i === 0) ctx.moveTo(p.px, p.py); else ctx.lineTo(p.px, p.py);
+      });
+      ctx.stroke(); ctx.restore();
+
+      // 5 大片区范围着色
+      DB.zones.forEach(z => {
+        if (!activeZones.has(z.id)) return;
+        const b = z.bounds;
+        const tl = toPx(b.xMin, b.zMax), br = toPx(b.xMax, b.zMin);
+        const unlocked = curChapObj.unlockedZones.includes(z.id);
+        ctx.save();
+        ctx.fillStyle = ZONE_COLORS[z.id] || "rgba(255,255,255,0.1)";
+        ctx.fillRect(tl.px, tl.py, br.px - tl.px, br.py - tl.py);
+        ctx.strokeStyle = unlocked ? "rgba(70,69,94,0.35)" : "rgba(180,80,80,0.45)";
+        ctx.setLineDash([5, 4]); ctx.lineWidth = 1.4;
+        ctx.strokeRect(tl.px, tl.py, br.px - tl.px, br.py - tl.py);
+        ctx.fillStyle = "#3E3D52"; ctx.font = "bold 10.5px sans-serif"; ctx.textAlign = "left";
+        ctx.fillText(`${z.id} ${z.name.split("：")[0]} (${z.areaM2}m²)`, tl.px + 5, tl.py + 13);
+        ctx.restore();
+      });
+
+      // 35° 斜俯视北向 1.43xH 遮挡盲区安全验证层
+      if (showBlind) {
+        // 中轴通透视线走廊 X ∈ [-7, +7]
+        const cTL = toPx(-7, 65), cBR = toPx(7, -50);
+        ctx.save();
+        ctx.fillStyle = "rgba(56, 189, 248, 0.14)";
+        ctx.fillRect(cTL.px, cTL.py, cBR.px - cTL.px, cBR.py - cTL.py);
+        ctx.strokeStyle = "#0284C7"; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+        ctx.strokeRect(cTL.px, cTL.py, cBR.px - cTL.px, cBR.py - cTL.py);
+        ctx.fillStyle = "#0369A1"; ctx.font = "bold 9.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("南北中轴通透海景走廊 X∈[-7,+7]", (cTL.px + cBR.px) / 2, toPx(0, 63).py);
+
+        // 北向 1.43*H 遮挡区
+        TALL_LANDMARKS.forEach(lm => {
+          const blindLen = lm.h * 1.43;
+          const pTL = toPx(lm.x - lm.w / 2, lm.z + blindLen);
+          const pBR = toPx(lm.x + lm.w / 2, lm.z);
+          ctx.fillStyle = "rgba(244, 63, 94, 0.16)";
+          ctx.fillRect(pTL.px, pTL.py, pBR.px - pTL.px, pBR.py - pTL.py);
+          ctx.strokeStyle = "rgba(244, 63, 94, 0.6)"; ctx.lineWidth = 1;
+          ctx.strokeRect(pTL.px, pTL.py, pBR.px - pTL.px, pBR.py - pTL.py);
+          ctx.fillStyle = "#BE123C"; ctx.font = "9px monospace"; ctx.textAlign = "center";
+          ctx.fillText(`1.43H=${blindLen.toFixed(1)}m`, (pTL.px + pBR.px) / 2, pTL.py + 10);
+        });
+        ctx.restore();
+      }
+
+      // 拓扑环线与三层捷径
+      if (showTopo) {
+        const strokeLoop = (pts, col, dash, lw) => {
+          ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash);
+          ctx.beginPath();
+          pts.forEach(([x, z], i) => { const p = toPx(x, z); if (i === 0) ctx.moveTo(p.px, p.py); else ctx.lineTo(p.px, p.py); });
+          ctx.stroke(); ctx.restore();
+        };
+        // 130m 内环
+        strokeLoop([[-6,-20],[-6,-11],[14,-10],[14,5],[14,17],[-12,17],[-22,4],[-22,-6],[-6,-11]], "#D97706", [5,4], 2.2);
+        // 385m 外环
+        strokeLoop([[-22,4],[-44,4],[-38,-8],[-50,-14],[-56,-24],[-42,-30],[-28,-35],[-2,-45],[22,-36],[36,-26],[52,-32],[54,-18],[44,-4],[48,14],[26,42],[0,58],[-16,42],[-36,46],[-48,20],[-44,4]], "#059669", [7,4], 2.2);
+        // 摇橹渡船
+        strokeLoop([[-6,-22],[-5,-36],[48,-24]], "#0284C7", [3,5], 2.0);
+        // 北麓下行滑道
+        strokeLoop([[-26,35],[-34,12]], "#DC2626", [], 2.6);
+        strokeLoop([[27,36],[36,14]], "#DC2626", [], 2.6);
+        // 邮差单车 4 区线
+        strokeLoop([[6,3],[-38,-8],[-12,32],[40,5],[6,3]], "#14B8A6", [2,4], 1.5);
+      }
+
+      // 三时段 65/35 引力热力圈
+      if (showHeat) {
+        const slot = DB.gravitySchedule.slots[timeSlot] || DB.gravitySchedule.slots.afternoon;
+        const drawHeat = (fids, col, radM) => {
+          fids.forEach(fid => {
+            const fac = DB.facilities.find(f => f.id === fid);
+            if (!fac || !activeZones.has(fac.zone)) return;
+            const p = toPx(fac.pos[0], fac.pos[2]);
+            const rg = ctx.createRadialGradient(p.px, p.py, 2, p.px, p.py, radM * scale);
+            rg.addColorStop(0, col); rg.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.fillStyle = rg;
+            ctx.beginPath(); ctx.arc(p.px, p.py, radM * scale, 0, Math.PI * 2); ctx.fill();
+          });
+        };
+        drawHeat(slot.hotspotA, "rgba(245, 158, 11, 0.45)", 11);
+        drawHeat(slot.hotspotB, "rgba(251, 146, 60, 0.36)", 9);
+        drawHeat(slot.outerSlots, "rgba(56, 189, 248, 0.30)", 7.5);
+      }
+
+      // 42 项设施节点 + 子锚点 + 9 微 Props
+      DB.facilities.forEach(fac => {
+        if (!activeZones.has(fac.zone)) return;
+        const unlocked = chapterIndex >= CHAPTER_ORDER.indexOf(fac.unlockChapter || "prologue");
+        const tierOk = tierFilter === "all" || fac.tier.includes(tierFilter);
+        const p = toPx(fac.pos[0], fac.pos[2]);
+        const rw = Math.max(15, fac.size[0] * scale * 0.72);
+        const rd = Math.max(13, fac.size[1] * scale * 0.72);
+        const isSel = selectedKind === "fac" && selectedId === fac.id;
+
+        ctx.save();
+        ctx.globalAlpha = (unlocked ? 1.0 : 0.35) * (tierOk ? 1.0 : 0.25);
+        ctx.fillStyle = TIER_COLORS[fac.tier] || "#E4BA8B";
+        ctx.beginPath(); ctx.roundRect(p.px - rw / 2, p.py - rd / 2, rw, rd, 4); ctx.fill();
+        ctx.strokeStyle = isSel ? "#DC2626" : "#46455E";
+        ctx.lineWidth = isSel ? 2.6 : 1.2;
+        if (!unlocked) ctx.setLineDash([3, 3]);
+        ctx.stroke();
+
+        ctx.fillStyle = "#2E2D40"; ctx.font = "bold 8.5px monospace";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(fac.id, p.px, p.py);
+
+        if (fac.subAnchors) {
+          fac.subAnchors.forEach(sub => {
+            if (Math.hypot(sub.pos[0] - fac.pos[0], sub.pos[2] - fac.pos[2]) < 1.0) return;
+            const sp = toPx(sub.pos[0], sub.pos[2]);
+            ctx.fillStyle = TIER_COLORS[fac.tier] || "#E4BA8B";
+            ctx.beginPath(); ctx.roundRect(sp.px - 10, sp.py - 6, 20, 12, 3); ctx.fill();
+            ctx.strokeStyle = "#46455E"; ctx.lineWidth = 1; ctx.stroke();
+            ctx.fillStyle = "#2E2D40"; ctx.font = "bold 7.5px monospace";
+            ctx.fillText(sub.id.replace("F42_", ""), sp.px, sp.py);
+          });
+        }
+        ctx.restore();
+      });
+
+      // 9 位居民锚点 (C01-C09)
+      DB.residents.forEach(res => {
+        const unlocked = chapterIndex >= CHAPTER_ORDER.indexOf(res.unlockChapter || "prologue");
+        const rPos = getResidentPosAtSlot(res);
+        const p = toPx(rPos.x, rPos.z);
+        const isSel = selectedKind === "res" && selectedId === res.id;
+        ctx.save();
+        ctx.globalAlpha = unlocked ? 1.0 : 0.32;
+        ctx.fillStyle = isSel ? "#DC2626" : "#B96A59";
+        ctx.beginPath(); ctx.arc(p.px, p.py, 7.5, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#FFF"; ctx.lineWidth = 1.6; ctx.stroke();
+        ctx.fillStyle = "#FFF"; ctx.font = "bold 7.5px monospace";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(res.id, p.px, p.py);
+        ctx.restore();
+      });
+    }
+
+    function drawIso() {
+      const info = fitCanvas(planCanvas);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      const { toIso, s } = makeIsoMapper(w, h);
+      const activeZones = getActiveZones();
+      const tierFilter = document.getElementById("tierFilter").value;
+      const showHeat = document.getElementById("layerHeat").checked;
+
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, timeSlot === "night" ? "#1E2D4A" : timeSlot === "dusk" ? "#F9D6B5" : "#DFF2FA");
+      bg.addColorStop(1, timeSlot === "night" ? "#2E476E" : "#7CC6E8");
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+      // 5 级微高差台地立体棱柱 (由远到近 / 由低到高)
+      // Zone N & Core Base L0
+      drawIsoPrism(ctx, toIso, -64, 64, -34, 62, -0.6, 0.2, "#F5E6C8", "#DFC69E", "#C5AD86", "rgba(120,90,40,0.25)");
+      // Zone S Islet L0 & L1
+      drawIsoPrism(ctx, toIso, -22, 18, -51, -35, -0.6, 0.2, "#F5E6C8", "#DFC69E", "#C5AD86", "rgba(120,90,40,0.25)");
+      drawIsoPrism(ctx, toIso, -12, 10, -50, -39, 0.2, 1.4, "#B7DDA8", "#8EB87D", "#739E65", "rgba(40,80,40,0.3)");
+      // L-0.5 East Intertidal
+      drawIsoPrism(ctx, toIso, 29, 43, -31, -21, -0.4, -0.25, "#6ED3CE", "#4CAEA9", "#3B9490", null);
+      // L1 Main Plateau
+      drawIsoPrism(ctx, toIso, -61, 61, -14, 30, 0.2, 1.8, "#B7DDA8", "#8EB87D", "#739E65", "rgba(40,80,40,0.28)");
+      // L2 North & Wing Terraces
+      drawIsoPrism(ctx, toIso, -50, 50, 14, 62, 1.8, 3.6, "#93C794", "#70A471", "#59895A", "rgba(30,70,30,0.3)");
+      drawIsoPrism(ctx, toIso, -58, -43, -20, -6, 1.8, 3.6, "#93C794", "#70A471", "#59895A", null);
+      drawIsoPrism(ctx, toIso, -62, -41, 12, 30, 1.8, 3.6, "#93C794", "#70A471", "#59895A", null);
+      // L3 Twin Peaks (+5.4m)
+      drawIsoPrism(ctx, toIso, -64, -48, -32, -18, 1.8, 5.4, "#6DA972", "#528B57", "#427346", "rgba(20,55,20,0.35)");
+      drawIsoPrism(ctx, toIso, -12, 12, 51, 65, 3.6, 5.4, "#6DA972", "#528B57", "#427346", "rgba(20,55,20,0.35)");
+
+      if (showHeat) {
+        const slot = DB.gravitySchedule.slots[timeSlot] || DB.gravitySchedule.slots.afternoon;
+        slot.hotspotA.forEach(fid => {
+          const fac = DB.facilities.find(f => f.id === fid);
+          if (!fac) return;
+          const p = toIso(fac.pos[0], fac.pos[1] + 0.1, fac.pos[2]);
+          ctx.fillStyle = "rgba(245, 158, 11, 0.35)";
+          ctx.beginPath(); ctx.ellipse(p.px, p.py, 7 * s, 3.8 * s, 0, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+
+      // 画家算法排序绘制 42 设施
+      const sorted = [...DB.facilities].sort((a, b) => (b.pos[2] - a.pos[2]) || (a.pos[0] - b.pos[0]));
+      sorted.forEach(fac => {
+        if (!activeZones.has(fac.zone)) return;
+        const unlocked = chapterIndex >= CHAPTER_ORDER.indexOf(fac.unlockChapter || "prologue");
+        const tierOk = tierFilter === "all" || fac.tier.includes(tierFilter);
+        const isSel = selectedKind === "fac" && selectedId === fac.id;
+        const hw = Math.max(1.2, fac.size[0] * 0.42), hd = Math.max(1.1, fac.size[1] * 0.42);
+        const h = Math.max(1.0, fac.size[2] * 0.65);
+
+        ctx.save();
+        ctx.globalAlpha = (unlocked ? 1 : 0.38) * (tierOk ? 1 : 0.28);
+        const topC = isSel ? "#FDE047" : (fac.id === "F22" || fac.id === "F04" ? "#B96A59" : "#E4BA8B");
+        const sideC = isSel ? "#EAB308" : "#9D623E";
+        drawIsoPrism(ctx, toIso, fac.pos[0] - hw, fac.pos[0] + hw, fac.pos[2] - hd, fac.pos[2] + hd, fac.pos[1], fac.pos[1] + h, topC, sideC, "#5A587D", isSel ? "#FFF" : "rgba(0,0,0,0.3)");
+
+        const lp = toIso(fac.pos[0], fac.pos[1] + h + 0.7, fac.pos[2]);
+        ctx.fillStyle = isSel ? "#DC2626" : "rgba(46,45,64,0.8)";
+        ctx.beginPath(); ctx.roundRect(lp.px - 12, lp.py - 6, 24, 12, 4); ctx.fill();
+        ctx.fillStyle = "#FFF"; ctx.font = "bold 8px monospace"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(fac.id, lp.px, lp.py);
+        ctx.restore();
+      });
+
+      // 居民锚点
+      DB.residents.forEach(res => {
+        const rPos = getResidentPosAtSlot(res);
+        const p = toIso(rPos.x, rPos.y + 1.2, rPos.z);
+        const isSel = selectedKind === "res" && selectedId === res.id;
+        ctx.fillStyle = isSel ? "#DC2626" : "#B96A59";
+        ctx.beginPath(); ctx.arc(p.px, p.py, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#FFF"; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = "#FFF"; ctx.font = "bold 7.5px monospace"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(res.id, p.px, p.py);
+      });
+    }
+
+    function drawProfile() {
+      const info = fitCanvas(profCanvas);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      ctx.fillStyle = "#FFFDF8"; ctx.fillRect(0, 0, w, h);
+
+      const padL = 48, padR = 24, padT = 18, padB = 26;
+      const gw = w - padL - padR, gh = h - padT - padB;
+      const mapY = (m) => padT + gh - ((m + 1.2) / 8.2) * gh;
+
+      // 海平面 & 高程网格
+      ctx.strokeStyle = "#38BDF8"; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(padL, mapY(0)); ctx.lineTo(w - padR, mapY(0)); ctx.stroke();
+      ctx.setLineDash([]);
+
+      [-0.25, 0, 1.8, 3.6, 5.4].forEach(lv => {
+        const py = mapY(lv);
+        ctx.strokeStyle = "rgba(62,61,82,0.08)";
+        ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(w - padR, py); ctx.stroke();
+        ctx.fillStyle = "#6E6C85"; ctx.font = "9.5px monospace"; ctx.textAlign = "right";
+        ctx.fillText(`${lv >= 0 ? "+" : ""}${lv.toFixed(1)}m`, padL - 5, py + 3);
+      });
+
+      if (profileMode === "NS") {
+        const mapZ = (z) => padL + ((z + 54) / 122) * gw;
+        // 抱月内湾海水
+        ctx.fillStyle = "rgba(124, 198, 232, 0.36)";
+        ctx.fillRect(mapZ(-36), mapY(0), mapZ(-22) - mapZ(-36), mapY(-1.2) - mapY(0));
+
+        const pts = [[-54,-0.6],[-50,0.2],[-48,1.4],[-40,1.4],[-36,0.2],[-34,-0.6],[-23,-0.6],[-22,0.2],[-16,0.2],[-12,1.8],[12,1.8],[16,3.6],[32,3.6],[35,3.2],[38,3.6],[51,3.6],[54,5.4],[64,5.4],[68,-0.6]];
+        ctx.fillStyle = "rgba(147, 199, 148, 0.42)";
+        ctx.beginPath(); ctx.moveTo(mapZ(-54), mapY(-1.2));
+        pts.forEach(([z, y]) => ctx.lineTo(mapZ(z), mapY(y)));
+        ctx.lineTo(mapZ(68), mapY(-1.2)); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "#5F9A62"; ctx.lineWidth = 2.2;
+        ctx.beginPath(); pts.forEach(([z, y], i) => i === 0 ? ctx.moveTo(mapZ(z), mapY(y)) : ctx.lineTo(mapZ(z), mapY(y))); ctx.stroke();
+
+        // 地标剪影 & 35° 中轴俯瞰视线
+        ctx.fillStyle = "#B96A59"; ctx.fillRect(mapZ(-46), mapY(4.5), mapZ(-42) - mapZ(-46), mapY(1.4) - mapY(4.5)); // F39
+        ctx.fillRect(mapZ(-5), mapY(5.2), mapZ(1) - mapZ(-5), mapY(1.8) - mapY(5.2)); // F04
+        ctx.fillStyle = "#6DA972"; ctx.fillRect(mapZ(55), mapY(6.9), mapZ(61) - mapZ(55), mapY(5.4) - mapY(6.9)); // F34
+
+        ctx.save(); ctx.strokeStyle = "#F43F5E"; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(mapZ(54), mapY(6.8)); ctx.lineTo(mapZ(-45), mapY(1.8)); ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = "#3E3D52"; ctx.font = "10px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("南屿 F39(+1.4m)", mapZ(-45), h - 8);
+        ctx.fillText("抱月内湾", mapZ(-29), h - 8);
+        ctx.fillText("L1 老镇 (+1.8m)", mapZ(-2), h - 8);
+        ctx.fillText("L2 萤火浅溪 (+3.2m)", mapZ(35), h - 8);
+        ctx.fillText("L3 古樟星穹 (+5.4m) + 35°中轴瞰海视线", mapZ(55), h - 8);
+      } else {
+        const mapX = (x) => padL + ((x + 68) / 136) * gw;
+        const pts = [[-68,-0.6],[-64,5.4],[-50,5.4],[-44,1.8],[28,1.8],[32,-0.25],[43,-0.25],[46,0.2],[62,0.2],[64,1.8],[68,-0.6]];
+        ctx.fillStyle = "rgba(183, 221, 168, 0.45)";
+        ctx.beginPath(); ctx.moveTo(mapX(-68), mapY(-1.2));
+        pts.forEach(([x, y]) => ctx.lineTo(mapX(x), mapY(y)));
+        ctx.lineTo(mapX(68), mapY(-1.2)); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "#5F9A62"; ctx.lineWidth = 2.2;
+        ctx.beginPath(); pts.forEach(([x, y], i) => i === 0 ? ctx.moveTo(mapX(x), mapY(y)) : ctx.lineTo(mapX(x), mapY(y))); ctx.stroke();
+
+        ctx.fillStyle = "#B96A59"; ctx.fillRect(mapX(-59), mapY(7.0), mapX(-53) - mapX(-59), mapY(5.4) - mapY(7.0)); // F22
+        ctx.fillStyle = "#3E3D52"; ctx.font = "10px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("西岬 L3 灯塔(+5.4m)", mapX(-56), h - 8);
+        ctx.fillText("西邮局 L1", mapX(-40), h - 8);
+        ctx.fillText("核心老镇 L1 (+1.8m)", mapX(0), h - 8);
+        ctx.fillText("东潮间带 L-0.5 (-0.25m, 8.5°)", mapX(36), h - 8);
+        ctx.fillText("东湾船坞 L0", mapX(55), h - 8);
+      }
+    }
+
+    function drawAll() {
+      if (viewMode === "2D") draw2D(); else drawIso();
+      drawProfile();
+    }
+
+    // ==================== 详情检查器与目录渲染 ====================
+    function selectItem(kind, id) {
+      selectedKind = kind; selectedId = id;
+      let title = "", sub = "", badge = id, tierTxt = "", coord = "", size = "", slope = "", ai3d = "", desc = "", asset = null;
+
+      if (kind === "fac") {
+        const fac = DB.facilities.find(f => f.id === id) || DB.facilities[0];
+        const codeKey = ASSET_MAP[fac.id] ? fac.id : (fac.id === "F13" ? "F13a" : fac.id);
+        asset = ASSET_MAP[codeKey] || ASSET_MAP["F04"];
+        title = fac.name;
+        const ch = DB.chapters[CHAPTER_ORDER.indexOf(fac.unlockChapter || "prologue")];
+        sub = `${fac.zone} · 解锁：${ch ? ch.title.split("：")[0] : "序幕"}`;
+        tierTxt = `${fac.tier} · +${fac.pos[1]}m`;
+        coord = `(${fac.pos[0].toFixed(1)}m, ${fac.pos[1] >= 0 ? "+" : ""}${fac.pos[1].toFixed(2)}m, ${fac.pos[2].toFixed(1)}m)`;
+        size = `${fac.size[0]}m × ${fac.size[1]}m × ${fac.size[2]}m`;
+        slope = `${asset.ramp} · 北盲区 ${(fac.size[2] * 1.43).toFixed(1)}m`;
+        ai3d = `${asset.stars} · ${asset.route}`;
+        desc = `${asset.desc} 动机广播：${Object.entries(fac.motives || {}).map(([k, v]) => `${k}:${v}`).join(" / ")}。`;
+      } else if (kind === "res") {
+        const res = DB.residents.find(r => r.id === id) || DB.residents[0];
+        asset = ASSET_MAP[res.id];
+        const pos = getResidentPosAtSlot(res);
+        title = `${res.species} · ${res.name}`;
+        sub = `${res.title} · 人格四维 ${res.personality4Axis.code}`;
+        tierTxt = `当前锚点 ${pos.facId}`;
+        coord = `(${pos.x.toFixed(1)}m, +${pos.y.toFixed(1)}m, ${pos.z.toFixed(1)}m)`;
+        size = `1.3m × 0.8m × 1.35m (Chibi)`;
+        slope = `语音：${res.voiceProfile.mode} (${res.voiceProfile.basePitch}x)`;
+        ai3d = `${asset.stars} · ${asset.route}`;
+        desc = `怪癖「${res.quirk.name}」：${res.quirk.behaviorHint}。当前时段(${timeSlot})引力权重：` +
+          Object.entries(res.gravityWeights[timeSlot] || {}).map(([k, v]) => `${k}:${Math.round(v * 100)}%`).join(" · ");
+      } else {
+        const mp = MICRO_ITEMS.find(m => m.id === id) || MICRO_ITEMS[0];
+        asset = ASSET_MAP[mp.id];
+        title = mp.name;
+        sub = `${mp.zone} · 3级微契机/生态资产`;
+        tierTxt = mp.tier;
+        coord = `(${mp.pos[0].toFixed(1)}m, +${mp.pos[1].toFixed(1)}m, ${mp.pos[2].toFixed(1)}m)`;
+        size = `${mp.size[0]}m × ${mp.size[1]}m × ${mp.size[2]}m`;
+        slope = asset.ramp;
+        ai3d = `${asset.stars} · ${asset.route}`;
+        desc = asset.desc;
+      }
+
+      document.getElementById("curSelPill").textContent = `已选中：${badge} ${title}`;
+      document.getElementById("detBadge").textContent = badge;
+      document.getElementById("detTierBadge").textContent = tierTxt;
+      document.getElementById("detTitle").textContent = title;
+      document.getElementById("detSub").textContent = sub;
+      document.getElementById("detCoord").textContent = coord;
+      document.getElementById("detSize").textContent = size;
+      document.getElementById("detSlope").textContent = slope;
+      document.getElementById("detAi3d").textContent = ai3d;
+      document.getElementById("detDesc").textContent = desc;
+
+      const img = document.getElementById("detImg");
+      const fb = document.getElementById("detImgFallback");
+      const src = `../workspace/assets/3d-modeling-closeups/${asset.id}.png`;
+      img.style.display = "block"; fb.style.display = "none";
+      img.src = src;
+      img.onerror = () => { img.style.display = "none"; fb.style.display = "block"; fb.textContent = `图片暂未加载：${src}`; };
+      document.getElementById("detImgCaption").textContent = src;
+
+      // Support switching F13a / F13b / F13c variants cleanly in preview
+      let varRow = document.getElementById("f13VariantRow");
+      if (!varRow) {
+        varRow = document.createElement("div");
+        varRow.id = "f13VariantRow";
+        varRow.className = "row-left";
+        varRow.style.marginTop = "4px";
+        document.getElementById("detImgCaption").after(varRow);
+      }
+      varRow.innerHTML = "";
+      if (kind === "fac" && id === "F13") {
+        ["F13a", "F13b", "F13c"].forEach(vc => {
+          const va = ASSET_MAP[vc];
+          const b = document.createElement("button");
+          b.className = "btn";
+          b.style.padding = "2px 7px";
+          b.textContent = vc;
+          b.addEventListener("click", () => {
+            const vsrc = `../workspace/assets/3d-modeling-closeups/${va.id}.png`;
+            img.style.display = "block"; fb.style.display = "none";
+            img.src = vsrc;
+            document.getElementById("detImgCaption").textContent = vsrc;
+          });
+          varRow.appendChild(b);
+        });
+      }
+
+      renderDirList();
+      drawAll();
+    }
+
+    function renderDirList() {
+      const list = document.getElementById("dirList");
+      const q = document.getElementById("dirSearch").value.trim().toLowerCase();
+      list.innerHTML = "";
+
+      let items = [];
+      if (dirTab === "fac") {
+        items = DB.facilities.map(f => ({ kind: "fac", id: f.id, title: `${f.id} ${f.name}`, right: f.tier }));
+      } else if (dirTab === "res") {
+        items = DB.residents.map(r => ({ kind: "res", id: r.id, title: `${r.id} ${r.species}·${r.name}`, right: r.personality4Axis.code }));
+      } else {
+        items = MICRO_ITEMS.map(m => ({ kind: "props", id: m.id, title: `${m.id} ${m.name}`, right: m.tier }));
+      }
+
+      items.filter(it => !q || it.title.toLowerCase().includes(q)).forEach(it => {
+        const btn = document.createElement("button");
+        btn.className = "list-item" + (selectedKind === it.kind && selectedId === it.id ? " selected" : "");
+        btn.innerHTML = `<span>${it.title}</span><span style="font-size:11px;color:var(--muted);font-family:monospace;">${it.right}</span>`;
+        btn.addEventListener("click", () => selectItem(it.kind, it.id));
+        list.appendChild(btn);
+      });
+    }
+
+    function updateChapterSliderUI() {
+      const ch = DB.chapters[chapterIndex];
+      const unlockedFacs = DB.facilities.filter(f => chapterIndex >= CHAPTER_ORDER.indexOf(f.unlockChapter || "prologue")).length;
+      const unlockedRes = DB.residents.filter(r => chapterIndex >= CHAPTER_ORDER.indexOf(r.unlockChapter || "prologue")).length;
+      const area = DB.zones.filter(z => ch.unlockedZones.includes(z.id)).reduce((s, z) => s + z.areaM2, 0);
+      document.getElementById("chapSliderLabel").textContent = ch.title;
+      document.getElementById("chapSliderDesc").textContent =
+        `已解锁面积 ${area.toLocaleString()} m² · 设施 ${unlockedFacs}/42 · 居民 ${unlockedRes}/9`;
+      document.getElementById("zoneAreaBadge").textContent = `${area.toLocaleString()} m²`;
+      drawAll();
+    }
+
+    // ==================== 交互与事件绑定 ====================
+    let isDraggingMap = false, dragStart = null, movedMap = false;
+    planCanvas.addEventListener("pointerdown", e => {
+      const r = planCanvas.getBoundingClientRect();
+      isDraggingMap = true; movedMap = false;
+      dragStart = { x: e.clientX, y: e.clientY, px: panX, py: panY, cx: e.clientX - r.left, cy: e.clientY - r.top, w: r.width, h: r.height };
+    });
+    planCanvas.addEventListener("pointermove", e => {
+      if (!isDraggingMap || !dragStart) return;
+      const dx = e.clientX - dragStart.x, dy = e.clientY - dragStart.y;
+      if (Math.hypot(dx, dy) > 4) {
+        movedMap = true;
+        panX = dragStart.px + dx; panY = dragStart.py + dy;
+        drawAll();
+      }
+    });
+    planCanvas.addEventListener("pointerup", () => {
+      if (!isDraggingMap) return;
+      isDraggingMap = false;
+      if (movedMap || !dragStart) return;
+      const { cx, cy, w, h } = dragStart;
+      let best = null, bestD = 26;
+
+      if (viewMode === "2D") {
+        const { toPx } = make2DMapper(w, h);
+        DB.residents.forEach(res => {
+          const rp = getResidentPosAtSlot(res);
+          const p = toPx(rp.x, rp.z);
+          const d = Math.hypot(cx - p.px, cy - p.py);
+          if (d < bestD) { bestD = d; best = { kind: "res", id: res.id }; }
+        });
+        DB.facilities.forEach(fac => {
+          const p = toPx(fac.pos[0], fac.pos[2]);
+          const d = Math.hypot(cx - p.px, cy - p.py);
+          if (d < bestD) { bestD = d; best = { kind: "fac", id: fac.id }; }
+        });
+      } else {
+        const { toIso } = makeIsoMapper(w, h);
+        DB.residents.forEach(res => {
+          const rp = getResidentPosAtSlot(res);
+          const p = toIso(rp.x, rp.y + 1.2, rp.z);
+          const d = Math.hypot(cx - p.px, cy - p.py);
+          if (d < bestD) { bestD = d; best = { kind: "res", id: res.id }; }
+        });
+        DB.facilities.forEach(fac => {
+          const p = toIso(fac.pos[0], fac.pos[1] + fac.size[2] * 0.35, fac.pos[2]);
+          const d = Math.hypot(cx - p.px, cy - p.py);
+          if (d < bestD) { bestD = d; best = { kind: "fac", id: fac.id }; }
+        });
+      }
+      if (best) {
+        dirTab = best.kind;
+        document.querySelectorAll(".dir-btn").forEach(b => b.classList.toggle("active", b.dataset.dir === dirTab));
+        selectItem(best.kind, best.id);
+      }
+    });
+    planCanvas.addEventListener("wheel", e => {
+      e.preventDefault();
+      zoom2D = Math.max(0.65, Math.min(3.0, zoom2D - Math.sign(e.deltaY) * 0.14));
+      drawAll();
+    }, { passive: false });
+
+    document.getElementById("view2DBtn").addEventListener("click", () => {
+      viewMode = "2D";
+      document.getElementById("view2DBtn").classList.add("active");
+      document.getElementById("viewIsoBtn").classList.remove("active");
+      drawAll();
+    });
+    document.getElementById("viewIsoBtn").addEventListener("click", () => {
+      viewMode = "ISO";
+      document.getElementById("viewIsoBtn").classList.add("active");
+      document.getElementById("view2DBtn").classList.remove("active");
+      drawAll();
+    });
+    document.getElementById("resetCamBtn").addEventListener("click", () => {
+      zoom2D = 1.0; panX = 0; panY = 0; drawAll();
+    });
+
+    document.querySelectorAll(".zone-chk").forEach(el => el.addEventListener("change", drawAll));
+    ["tierFilter", "layerTopo", "layerBlind", "layerHeat"].forEach(id => {
+      document.getElementById(id).addEventListener("change", drawAll);
+    });
+    document.getElementById("chapSlider").addEventListener("input", e => {
+      chapterIndex = Number(e.target.value);
+      updateChapterSliderUI();
+    });
+    document.querySelectorAll(".slot-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        timeSlot = btn.dataset.slot;
+        document.querySelectorAll(".slot-btn").forEach(b => b.classList.toggle("active", b.dataset.slot === timeSlot));
+        selectItem(selectedKind, selectedId);
+      });
+    });
+
+    document.querySelectorAll(".dir-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        dirTab = btn.dataset.dir;
+        document.querySelectorAll(".dir-btn").forEach(b => b.classList.toggle("active", b.dataset.dir === dirTab));
+        renderDirList();
+      });
+    });
+    document.getElementById("dirSearch").addEventListener("input", renderDirList);
+
+    document.getElementById("profNS").addEventListener("click", () => {
+      profileMode = "NS";
+      document.getElementById("profNS").classList.add("active");
+      document.getElementById("profEW").classList.remove("active");
+      drawProfile();
+    });
+    document.getElementById("profEW").addEventListener("click", () => {
+      profileMode = "EW";
+      document.getElementById("profEW").classList.add("active");
+      document.getElementById("profNS").classList.remove("active");
+      drawProfile();
+    });
+
+    document.getElementById("detImg").addEventListener("click", () => {
+      const lb = document.getElementById("lightbox");
+      document.getElementById("lightboxImg").src = document.getElementById("detImg").src;
+      document.getElementById("lightboxTitle").textContent = `${document.getElementById("detBadge").textContent} · ${document.getElementById("detTitle").textContent}`;
+      document.getElementById("lightboxSub").textContent = document.getElementById("detImgCaption").textContent;
+      lb.classList.remove("hidden");
+    });
+    document.getElementById("lightboxClose").addEventListener("click", () => document.getElementById("lightbox").classList.add("hidden"));
+    document.getElementById("lightbox").addEventListener("click", e => {
+      if (e.target.id === "lightbox") document.getElementById("lightbox").classList.add("hidden");
+    });
+
+    window.addEventListener("resize", drawAll);
+
+    // Init
+    updateChapterSliderUI();
+    selectItem("fac", "F04");
+  })();
+  </script>
+</body>
+</html>

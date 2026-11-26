@@ -1,0 +1,3760 @@
+{
+  "meta": {
+    "gameTitle": "时光小筑",
+    "version": "1.0.0",
+    "mapScale": "4x (136m x 122m, 14,334 m², Zone 0/W/E/N/S, F01-F42)",
+    "authorRole": "Gemini 4 Neon · 专属角色剧本编剧",
+    "designPhilosophy": "轻巧温暖、零惩罚陪伴、微个性反差、严格工程动作边界对齐",
+    "counts": {
+      "characters": 9,
+      "stagesPerCharacter": 3,
+      "personalScripts": 27,
+      "duoEncounters": 3,
+      "totalScripts": 30
+    },
+    "constraints": {
+      "allowedActions": [
+        "walk",
+        "run",
+        "greet",
+        "wave",
+        "sit",
+        "clap",
+        "cheer",
+        "dance",
+        "photo",
+        "water_bend",
+        "turn_to_player",
+        "hop_bounce",
+        "nod_tilt",
+        "hover_bob",
+        "door_open",
+        "pivot_spin",
+        "paper_pet_squash"
+      ],
+      "allowedBubbles": [
+        "none",
+        "bubble_yellow",
+        "bubble_orange",
+        "bubble_pink",
+        "bubble_purple"
+      ],
+      "allowedFx": [
+        "none",
+        "fx_heart",
+        "fx_sparkle",
+        "fx_petal",
+        "fx_ripple",
+        "fx_firefly"
+      ],
+      "allowedSfx": [
+        "voice_soft",
+        "voice_mech"
+      ],
+      "dialogueLengthChars": {
+        "min": 10,
+        "targetMax": 34,
+        "hardMax": 36
+      },
+      "choiceLabelMaxChars": 14,
+      "zeroPenalty": true
+    },
+    "storageSchema": {
+      "datastoreHardLimitBytes": 6000,
+      "charStagesBudgetBytes": 80,
+      "key": "shiguang_mini_scripts_v1",
+      "charIndexOrder": ["C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09"],
+      "duoBitOrder": ["D01", "D02", "D03"],
+      "examplePayload": {
+        "charStages": [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "choiceMask": 0,
+        "duoMask": 0,
+        "duoChoiceMask": 0
+      },
+      "notes": "charStages 仅存 9 元整数数组 [0..3]（34 字节）；choiceMask 为 27 位整数，bit = charIndex*3 + (stage-1)，0=A / 1=B；duoMask 与 duoChoiceMask 各为 3 位整数；全量极限序列化仅 87 字节，不存大段文本历史。"
+    }
+  },
+  "characters": [
+    {
+      "id": "C01",
+      "stageIndex": 0,
+      "assetId": "C01-glasses-bear",
+      "name": "阿木",
+      "title": "眼镜棕熊",
+      "displayName": "眼镜棕熊·阿木",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F04", "F05", "F31", "F34"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 0.78,
+        "pitchVariance": 0.06,
+        "charIntervalMs": 95
+      },
+      "personality": "温厚书卷气、慢半拍治愈系",
+      "quirkContrast": "立志严谨记录《四季年谱》，实际一晒太阳就发呆，把正史写成海风与午睡流水账。",
+      "signatureActions": ["turn_to_player", "nod_tilt", "sit", "greet", "photo"],
+      "scripts": [
+        {
+          "scriptId": "C01_S1",
+          "charId": "C01",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "风吹不散的记事页",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F04",
+            "facilityName": "时光小筑主木屋",
+            "coords": [-10, -2],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "talk",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 0 · 午后在主木屋门廊与阿木首次对话"
+          },
+          "stageNote": "阿木在主木屋门前转身挥手并轻点头，门扇轻启映出室内暖意，全程无拿书翻页动作。",
+          "lines": [
+            {
+              "speaker": "C01",
+              "text": "呀，你就是新搬来时光小筑的朋友吧？欢迎来到海湾。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "我叫阿木，正在替小镇背诵并整理《四季年谱》呢。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "说来惭愧，刚才在木屋前晒太阳，正事差点全忘光了。",
+              "action": "nod_tilt",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "满脑子只记住暖茶香、红屋顶，还有海风慢吞吞的声音。",
+              "action": "door_open",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "新邻居，今天的年谱第一行，你觉得该记些什么好？",
+              "action": "turn_to_player",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "帮阿木定下今天的年谱标题",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "写“适合发呆的晴天”",
+                "tone": "慵懒随性",
+                "affectionDelta": 10,
+                "memoryTag": "C01_S1_DAYDREAM",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "哈哈，这句太对味啦！发呆本来就是海湾头等大事。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "以后逛累了就来茶桌旁坐坐，我们一起慢慢攒故事。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "写“刚来就闻到暖茶香”",
+                "tone": "温暖细腻",
+                "affectionDelta": 10,
+                "memoryTag": "C01_S1_TEASCENT",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "好温柔的开头，连我都觉得门廊下的阳光更暖了呢。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "等你去北边溪谷温室看看时，我再念更多旧事给你听。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C01_S2",
+          "charId": "C01",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "圆眼镜上的小雾气",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone N",
+            "facilityId": "F31",
+            "facilityName": "溪谷记忆温室与森林图书馆",
+            "coords": [-16, 42],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 在记忆温室图书馆轻推阿木 1 次后触发"
+          },
+          "stageNote": "阿木被轻推后小弹跳回神，慢步绕开绿植，靠气泡与歪头表现起雾窘态，无擦眼镜精细手部动作。",
+          "lines": [
+            {
+              "speaker": "C01",
+              "text": "哎呀！刚才被你轻轻推了一下，我才回过神来呢。",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "温室里的花雾太暖啦，我的圆眼镜一下子白茫茫一片。",
+              "action": "turn_to_player",
+              "bubble": "bubble_purple",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "我刚刚居然对着那盆大绿植，认真问候了整整半分钟！",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "还纳闷今天的新朋友怎么这么安静，半句都不肯回话。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "幸好你刚好路过提醒我，不然我都要跟盆栽讲年谱啦。",
+              "action": "greet",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "安慰有点不好意思的阿木",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "绿植一定超爱听你讲话",
+                "tone": "俏皮暖心",
+                "affectionDelta": 10,
+                "memoryTag": "C01_S2_PLANTFAN",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "哈哈，这么说来，它的叶子刚才好像真晃了两下呢。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "下次雾散了，我们一起走上北麓古樟台看整座海湾吧。",
+                    "action": "nod_tilt",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "别慌，慢慢走我陪你看路",
+                "tone": "可靠陪伴",
+                "affectionDelta": 10,
+                "memoryTag": "C01_S2_WALKWITH",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "有你在旁边带路，连白茫茫的暖雾都变得很安心呢。",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "等傍晚风轻一点，我们去古樟钟楼那儿吹吹风好吗？",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C01_S3",
+          "charId": "C01",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "留给明天的空白页",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone N",
+            "facilityId": "F34",
+            "facilityName": "古樟星穹钟楼与全景观测台",
+            "coords": [0, 58],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "ring_bell",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 2 · 黄昏或星夜在古樟钟楼敲响铜钟 1 次后与阿木对话"
+          },
+          "stageNote": "在北麓 L3 观景台面向海湾，阿木以鼓掌、欢呼与拍照定格收尾，镜头保持常态不切复杂过场。",
+          "lines": [
+            {
+              "speaker": "C01",
+              "text": "刚才那声铜钟传得好远，整个海湾的屋顶都像被点亮了。",
+              "action": "turn_to_player",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "从前我总担心老镇的回忆被海风吹散，才拼命背下年谱。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "直到看你在码头、邮局和温室慢慢走过，我才松了口气。",
+              "action": "walk",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "原来小镇最珍贵的，从来不是写满的旧页，而是留白呀。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "fx_firefly",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C01",
+              "text": "留一页干干净净的空白，就能一直等大家明天回来相聚。",
+              "action": "turn_to_player",
+              "bubble": "bubble_pink",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "回应阿木的心愿回声",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "明天我们再一起慢慢写",
+                "tone": "温暖约定",
+                "affectionDelta": 15,
+                "memoryTag": "C01_S3_TOMORROW",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "一言为定！不赶进度，也不催时间，每天记一点点就好。",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "来，趁现在晚霞正好，我们对着海湾留一张纪念照吧！",
+                    "action": "photo",
+                    "bubble": "none",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "空白页正好装风声和笑声",
+                "tone": "诗意治愈",
+                "affectionDelta": 15,
+                "memoryTag": "C01_S3_BREEZE",
+                "replyLines": [
+                  {
+                    "speaker": "C01",
+                    "text": "真好听的比喻，这是整本《四季年谱》最温柔的注脚了。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C01",
+                    "text": "海湾一直都在，随时欢迎你回古樟树下吹风发呆呀。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "stageIndex": 1,
+      "assetId": "C02-lop-rabbit",
+      "name": "绵绵",
+      "title": "垂耳白兔",
+      "displayName": "垂耳白兔·绵绵",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F06", "F29", "F31"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 1.24,
+        "pitchVariance": 0.09,
+        "charIntervalMs": 78
+      },
+      "personality": "软糯温柔、细心爱花",
+      "quirkContrast": "平时连走路都怕惊扰花苞，一聊到孟德尔花色杂交就立刻小跳变身硬核花痴园丁。",
+      "signatureActions": ["water_bend", "hop_bounce", "nod_tilt", "dance", "clap"],
+      "scripts": [
+        {
+          "scriptId": "C02_S1",
+          "charId": "C02",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "会说悄悄话的苗床",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F06",
+            "facilityName": "孟德尔杂交花圃",
+            "coords": [5, -8],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "water_flower",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 0 · 午后在孟德尔花圃浇水 1 次后与绵绵对话"
+          },
+          "stageNote": "绵绵在花圃前用官方 water_bend 倾身照看花丛，兴奋时以 hop_bounce 原地小弹跳配合花瓣粒子。",
+          "lines": [
+            {
+              "speaker": "C02",
+              "text": "呀，谢谢你帮花圃浇水，它们刚才都在轻轻晃叶子呢！",
+              "action": "water_bend",
+              "bubble": "bubble_pink",
+              "fx": "fx_petal",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "我是绵绵，每天早上最喜欢来听露水滴进泥土的声音。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "偷偷告诉你，不同颜色的花挨着种，会悄悄聊出新颜色哦！",
+              "action": "hop_bounce",
+              "bubble": "bubble_orange",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "红的和白的碰碰头变成粉，听说还藏着神秘的星砂蓝呢。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "你最想看这片小花圃，明天醒来开出什么颜色呀？",
+              "action": "greet",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "和绵绵分享你期待的花色",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "好期待开出星砂蓝小花",
+                "tone": "充满好奇",
+                "affectionDelta": 10,
+                "memoryTag": "C02_S1_BLUE",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "太巧啦！我也一直梦想看到像海湾晴空一样的蓝色花瓣！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "我们不催它们，每天轻轻浇一点水，慢慢等它冒芽吧。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "开出什么颜色我都喜欢",
+                "tone": "佛系温柔",
+                "affectionDelta": 10,
+                "memoryTag": "C02_S1_ANYCOLOR",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "呜哇，被你这么温柔地夸奖，花苞晚上一定会睡超香的。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "东边山坡上还有茶花梯田，有空也一起去晒晒太阳呀。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C02_S2",
+          "charId": "C02",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "被风吹乱的茶花排队",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone E",
+            "facilityId": "F29",
+            "facilityName": "茶花梯田木阶与纸风筝架",
+            "coords": [48, 14],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 白天在东山茶花梯田轻推绵绵 1 次后触发"
+          },
+          "stageNote": "绵绵在茶花梯田边小步踱走并轻转，被轻推后停止慌张，全程用全身位移与欢呼动作表达。",
+          "lines": [
+            {
+              "speaker": "C02",
+              "text": "呀呀，刚才光顾着数茶花，没注意自己一直在原地转圈。",
+              "action": "pivot_spin",
+              "bubble": "bubble_purple",
+              "fx": "fx_petal",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "东山的海风太调皮，把粉茶花和奶油茶花的顺序吹乱啦。",
+              "action": "turn_to_player",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "我本来想排得整整齐齐，好让纸风筝飞过时一眼认出来。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "可现在东一朵粉、西一朵白，我都数不清谁挨着谁了呢。",
+              "action": "nod_tilt",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "给犯愁的绵绵出一个轻松主意",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "混在一起像拼色奶油蛋糕",
+                "tone": "浪漫甜美",
+                "affectionDelta": 10,
+                "memoryTag": "C02_S2_CAKE",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "咦，这么一看真的好像草莓奶油蛋糕！瞬间不焦虑啦！",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "原来风也在帮花儿选邻居呢，下次我带你去看温室新芽！",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "顺着风吹的方向走一圈就好",
+                "tone": "自然松弛",
+                "affectionDelta": 10,
+                "memoryTag": "C02_S2_WINDWAY",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "对呀，茶花自己都觉得舒服，我干嘛非要管它们排队呢。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_orange",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "谢谢你帮我松了一口气，过两天温室那边有惊喜给你看！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C02_S3",
+          "charId": "C02",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "温室里的蓝晨露",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone N",
+            "facilityId": "F31",
+            "facilityName": "溪谷记忆温室与森林图书馆",
+            "coords": [-16, 42],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F31"
+            },
+            "summaryZh": "阶段 2 · 进入北麓记忆温室图书馆与绵绵对话"
+          },
+          "stageNote": "温室玻璃门开启后，绵绵在培育床旁倾身再欢快轻舞，辅以花瓣与爱心粒子收束。",
+          "lines": [
+            {
+              "speaker": "C02",
+              "text": "你终于来温室啦！快看看阳光照到的那块培育床——",
+              "action": "door_open",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "我们一直等的那株星砂蓝花，今天早上悄悄冒出花苞啦！",
+              "action": "hop_bounce",
+              "bubble": "bubble_pink",
+              "fx": "fx_petal",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "以前我总怕照顾不好它们，连睡觉都梦见忘记浇水呢。",
+              "action": "water_bend",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "后来发现，只要有人愿意陪着慢慢看，花儿自己就会长好。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "fx_heart",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C02",
+              "text": "这第一朵蓝晨露，我想送给最温柔的种花搭档！",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "回应绵绵的温室惊喜",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "给它起名叫“不赶时间的蓝”",
+                "tone": "纪念仪式",
+                "affectionDelta": 15,
+                "memoryTag": "C02_S3_NAMEBLUE",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "哇，这个名字像晨露一样清亮！我要请阿木记进年谱里！",
+                    "action": "dance",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "以后不管晴天雨天，温室里永远留着我们的小花园呀。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "都是绵绵每天细心照料的功劳",
+                "tone": "真诚肯定",
+                "affectionDelta": 15,
+                "memoryTag": "C02_S3_THANKYOU",
+                "replyLines": [
+                  {
+                    "speaker": "C02",
+                    "text": "嘿嘿，被你一夸，我的长耳朵都要高兴得翘起来啦！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C02",
+                    "text": "随时记得来闻闻花香哦，我一直都在花圃和温室等你。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "stageIndex": 2,
+      "assetId": "C03-deadpan-cat",
+      "name": "阿橘",
+      "title": "面瘫橘猫",
+      "displayName": "面瘫橘猫·阿橘",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F11", "F19", "F20", "F39"],
+      "defaultSfx": "voice_mech",
+      "voiceProfile": {
+        "sfx": "voice_mech",
+        "basePitch": 0.94,
+        "pitchVariance": 0.03,
+        "charIntervalMs": 86
+      },
+      "personality": "嘴硬心软、冷面慢鼓掌",
+      "quirkContrast": "挂着半眯面瘫眼与平直电音假装只是路过，暗地里却是全镇心愿便签的秘密护送者。",
+      "signatureActions": ["sit", "clap", "turn_to_player", "nod_tilt", "pivot_spin"],
+      "scripts": [
+        {
+          "scriptId": "C03_S1",
+          "charId": "C03",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "只是路过长椅而已",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F11",
+            "facilityName": "广场八卦长椅与花盆组",
+            "coords": [11, 5],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "talk",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 0 · 在心愿广场八卦长椅旁与阿橘首次对话"
+          },
+          "stageNote": "阿橘坐姿稳如泰山，台词间隙冷静拍手，绝不做夸张颜艺，用机械平直音节突出反差。",
+          "lines": [
+            {
+              "speaker": "C03",
+              "text": "啪、啪。鼓掌完毕。我只是顺路坐一下，并没有在等你。",
+              "action": "clap",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "别误会，我坐八卦长椅也不是爱听闲话，是在测风速。",
+              "action": "sit",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "顺便一提，西边旧邮局的风铃响了一上午，吵得很有节奏。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "你要是闲着没事，可以去那边逛逛，反正我绝对不去。",
+              "action": "nod_tilt",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "顺着面瘫阿橘的话聊下去",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "那我也陪你坐着测海风",
+                "tone": "默契配合",
+                "affectionDelta": 10,
+                "memoryTag": "C03_S1_WINDTEST",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "嗯，长椅很宽，分你一半不收租金。你倒挺上道。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_orange",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "风向往西吹了，等会我可能……只是顺路去西边巡逻。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "你其实很操心西边邮局吧",
+                "tone": "温柔戳穿",
+                "affectionDelta": 10,
+                "memoryTag": "C03_S1_SEETHROUGH",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "咳，风太大我没听清。我只是顺便记录小镇噪音数据。",
+                    "action": "pivot_spin",
+                    "bubble": "bubble_purple",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "算了，既然你猜到了，改天在邮局门口见，不许迟到。",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C03_S2",
+          "charId": "C03",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "不是我藏的未寄便签",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone W",
+            "facilityId": "F20",
+            "facilityName": "阶梯复古信箱画廊与邮包棚",
+            "coords": [-38, -8],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 在西岸阶梯信箱画廊轻推阿橘 1 次后触发"
+          },
+          "stageNote": "阿橘在信箱画廊前被轻推，小弹跳一下后迅速恢复淡定站姿，全程不出现手递手递信动作。",
+          "lines": [
+            {
+              "speaker": "C03",
+              "text": "唔……别突然轻推我，差点把我的贝雷帽晃歪半厘米。",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "既然撞见了就直说吧，角落那个旧信箱里积了好多悄悄话。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "大家不好意思当面夸人，写完纸条又害羞，全丢在这儿。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "我觉得烂在盒子里太可惜，才顺手理了理摆到邮局窗台上。",
+              "action": "nod_tilt",
+              "bubble": "bubble_yellow",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "你别到处说是我干的，维持冷酷形象可是很费精力的。",
+              "action": "clap",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "回应傲娇的秘密信件管家",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "放心，我帮你严守冷酷机密",
+                "tone": "酷酷配合",
+                "affectionDelta": 10,
+                "memoryTag": "C03_S2_SECRET",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "不错，保密意识满分。给你记一朵看不见的小红花。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "等南边小屿的拱门修好，我再带你去听一回真正的回声。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "悄悄话被你救回来真好呀",
+                "tone": "暖心赞美",
+                "affectionDelta": 10,
+                "memoryTag": "C03_S2_SAVED",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "……咳，只是一些举手之劳，不用说得像什么英雄故事。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "下回走到南湾潮汐剧场时叫我，那里风大，适合装深沉。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C03_S3",
+          "charId": "C03",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "风铃拱门下的认真鼓掌",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone S",
+            "facilityId": "F39",
+            "facilityName": "潮汐风铃回声剧场与海风拱门",
+            "coords": [-2, -45],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F39"
+            },
+            "summaryZh": "阶段 2 · 黄昏或星夜抵达南屿潮汐回声剧场与阿橘对话"
+          },
+          "stageNote": "在南屿漂流木拱门前，阿橘破例连续鼓掌并小幅转身欢呼，头顶浮现粉色气泡与爱心粒子。",
+          "lines": [
+            {
+              "speaker": "C03",
+              "text": "站在这座漂流木拱门下，连海风都在帮小镇传话呢。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "其实公告栏夸烤包香、夸花好看的便签，有几张是我贴的。",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "总觉得当面说谢谢太肉麻，还是借风铃和纸条顺口一点。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "不过今天对着你，我决定破个例——不用纸条，直接讲。",
+              "action": "turn_to_player",
+              "bubble": "bubble_pink",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C03",
+              "text": "有你在的小镇，热闹得刚刚好。啪、啪、啪，认真鼓掌。",
+              "action": "clap",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "回应阿橘破例的认真鼓掌",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "我也为最温柔的阿橘鼓掌！",
+                "tone": "热情回礼",
+                "affectionDelta": 15,
+                "memoryTag": "C03_S3_CLAPBACK",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "咳……不许用“最温柔”这种词，我的面瘫快端不住了。",
+                    "action": "pivot_spin",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "回声听见就行，以后长椅旁边的位置永远给你留着。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "这下海湾都听见你的心意啦",
+                "tone": "会心一笑",
+                "affectionDelta": 15,
+                "memoryTag": "C03_S3_ECHO",
+                "replyLines": [
+                  {
+                    "speaker": "C03",
+                    "text": "好吧，既然海风替我作证，那我就顺理成章承认一次。",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C03",
+                    "text": "走吧，再去听听大家今天又在广场聊什么有趣小事。",
+                    "action": "walk",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C04",
+      "stageIndex": 3,
+      "assetId": "C04-corgi-baker",
+      "name": "奶包",
+      "title": "吃包柯基",
+      "displayName": "吃包柯基·奶包",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F12", "F10", "F25"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 1.15,
+        "pitchVariance": 0.1,
+        "charIntervalMs": 72
+      },
+      "personality": "热心贪吃、元气气氛组",
+      "quirkContrast": "满脑子都是刚出炉的软面包，但每次烤好最香的那一盘总先招呼全镇来分着吃。",
+      "signatureActions": ["run", "hop_bounce", "cheer", "dance", "clap"],
+      "scripts": [
+        {
+          "scriptId": "C04_S1",
+          "charId": "C04",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "海风里的烤包普查",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F12",
+            "facilityName": "露天海风条纹咖啡小卖部",
+            "coords": [23, -4],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "talk",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 0 · 白天在露天海风咖啡小卖部与奶包首次对话"
+          },
+          "stageNote": "奶包在咖啡亭前小跑靠近并原地蹦跳，不拿实体面包或咬食动作，用气泡与欢呼传达贪吃元气。",
+          "lines": [
+            {
+              "speaker": "C04",
+              "text": "嗅嗅——哇！新邻居来啦，你身上带着太阳晒暖的味道！",
+              "action": "run",
+              "bubble": "bubble_yellow",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "我叫奶包！正在筹备东湾超级热闹的微光烤包夜集哦！",
+              "action": "hop_bounce",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "眼下先做个小镇幸福普查，帮你决定今晚的第一炉菜单。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "红砖窑炉已经擦得亮晶晶了，就差你投出关键的一票！",
+              "action": "cheer",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "帮奶包选今晚的首发烤包",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "刚出炉的软乎蜂蜜圆包",
+                "tone": "暖甜治愈",
+                "affectionDelta": 10,
+                "memoryTag": "C04_S1_HONEYBUN",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "好耶！蜂蜜圆包配海风，香得连云朵都要羡慕咱们！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "今晚串灯一亮，记得顺着香味来东湾找我抢第一炉呀！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "外脆里软的海盐黄油卷",
+                "tone": "酥香满足",
+                "affectionDelta": 10,
+                "memoryTag": "C04_S1_SALTBUN",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "哇塞，一听就是懂吃的同好！海盐卷排进今晚头牌！",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "等东边桥修通了，我立刻请你到窑炉前闻个痛快！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C04_S2",
+          "charId": "C04",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "窑炉前的香味小乌龙",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone E",
+            "facilityId": "F25",
+            "facilityName": "微光夜市红砖烤包窑炉与串灯木摊",
+            "coords": [44, -4],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 黄昏或星夜在东湾微光夜市轻推奶包 1 次后触发"
+          },
+          "stageNote": "奶包在红砖窑炉前急得打转，被轻推后清醒过来，全程无揉面或开炉门精细手部动作。",
+          "lines": [
+            {
+              "speaker": "C04",
+              "text": "哎哟！幸亏你推了我一下，我差点闻着香味原地睡着啦！",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "惨了惨了，刚才打了个小盹，木盘上的面包全混在一起了。",
+              "action": "pivot_spin",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "哪个是海盐卷、哪个是红豆包，我现在光靠看根本分不清！",
+              "action": "walk",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "大家一会儿就要来逛夜集了，这可怎么跟邻居们介绍呀？",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "帮着急的奶包化解烤包乌龙",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "直接推出“惊喜盲盒烤包”！",
+                "tone": "脑洞有趣",
+                "affectionDelta": 10,
+                "memoryTag": "C04_S2_BLINDBOX",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "哇！咬开才知道什么馅，这主意比原计划还好玩一百倍！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "果然有你在身边，连小乌龙都能烤出酥脆的好运气呢！",
+                    "action": "dance",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "热乎乎出炉不管哪种都超香",
+                "tone": "松弛暖胃",
+                "affectionDelta": 10,
+                "memoryTag": "C04_S2_WARMBUN",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "对哦！只要是热腾腾烤出来的，每种口味都是满分惊喜！",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "待会儿星夜串灯全亮时，一定来烤包摊前陪我听大家聊天！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C04_S3",
+          "charId": "C04",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "串灯下的围炉香气",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone E",
+            "facilityId": "F25",
+            "facilityName": "微光夜市红砖烤包窑炉与串灯木摊",
+            "coords": [44, -4],
+            "timeOfDay": "night",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F25"
+            },
+            "summaryZh": "阶段 2 · 星夜时段到访东湾微光夜市与奶包对话"
+          },
+          "stageNote": "星夜串灯亮起，奶包以迎宾、鼓掌、轻舞与拍照完成夜市心愿收尾，点亮萤火与爱心特效。",
+          "lines": [
+            {
+              "speaker": "C04",
+              "text": "你看呀，串灯全亮起来之后，整片东湾都变得暖烘烘的！",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_firefly",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "从前晚上冷清的时候，我一个人吃面包总觉得少点味道。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "现在大家围着窑炉聊聊天、听听海浪，连夜风都甜滋滋的。",
+              "action": "walk",
+              "bubble": "bubble_orange",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C04",
+              "text": "原来面包最厉害的秘方，就是有人肯坐下来和你一起分呀！",
+              "action": "hop_bounce",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "分享星夜烤包摊的喜悦",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "谢谢你用面包香点亮夜晚",
+                "tone": "暖心感谢",
+                "affectionDelta": 15,
+                "memoryTag": "C04_S3_LIGHTNIGHT",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "嘿嘿，只要你哪天晚上饿了累了，窑炉的暖火随时亮着！",
+                    "action": "dance",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "以后每天晚上都要来凑热闹哦，首席试吃官非你莫属！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "快合张影留住这阵烤包香",
+                "tone": "欢乐打卡",
+                "affectionDelta": 15,
+                "memoryTag": "C04_S3_PHOTO",
+                "replyLines": [
+                  {
+                    "speaker": "C04",
+                    "text": "好呀好呀！我站窑炉旁边摆个最圆润的姿势，三二一！",
+                    "action": "photo",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C04",
+                    "text": "咔嚓！这绝对是全镇闻起来最香的一张合照啦！",
+                    "action": "cheer",
+                    "bubble": "none",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "stageIndex": 4,
+      "assetId": "C05-floating-owl",
+      "name": "墨羽",
+      "title": "悬浮猫头鹰",
+      "displayName": "悬浮猫头鹰·墨羽",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F15", "F22", "F34"],
+      "defaultSfx": "voice_mech",
+      "voiceProfile": {
+        "sfx": "voice_mech",
+        "basePitch": 1.08,
+        "pitchVariance": 0.05,
+        "charIntervalMs": 92
+      },
+      "personality": "空灵夜行、微电波诗意",
+      "quirkContrast": "努力维持神秘夜行信使的风度，其实是个怕大风的小陀螺，一遇阵风就会飘歪半米。",
+      "signatureActions": ["hover_bob", "pivot_spin", "turn_to_player", "nod_tilt", "wave"],
+      "scripts": [
+        {
+          "scriptId": "C05_S1",
+          "charId": "C05",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "风车叶数到第几圈",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F15",
+            "facilityName": "北高台八角木质风车塔",
+            "coords": [-12, 20],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F15"
+            },
+            "summaryZh": "阶段 0 · 走上北高台风车塔首次与墨羽对话"
+          },
+          "stageNote": "墨羽全程以 hover_bob 离地轻浮表现特色，遇风自转时触发 pivot_spin，不安排着陆跳跃动作。",
+          "lines": [
+            {
+              "speaker": "C05",
+              "text": "呼……风车转到第四十二圈，刚好迎来一位新朋友。",
+              "action": "hover_bob",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "我是墨羽，以前替夜色送信，现在专职在风车边数云。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "离地飘着看小镇，会发现屋顶和海浪都在一起呼吸呢。",
+              "action": "hover_bob",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "不过先声明，如果待会儿起大风，我原地打转不算失态。",
+              "action": "pivot_spin",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "回应离地漂浮的墨羽",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "离地飘着转圈不会头晕吗？",
+                "tone": "好奇打趣",
+                "affectionDelta": 10,
+                "memoryTag": "C05_S1_DIZZY",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "顺风的时候像摇篮，逆风的时候……嗯，像一颗小陀螺。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_purple",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "等傍晚去西岬灯塔崖时，你就会明白我多爱顺风啦。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "今晚我也来高台陪你看星星",
+                "tone": "安静陪伴",
+                "affectionDelta": 10,
+                "memoryTag": "C05_S1_STARS",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "好约定。那我提前替你留一块没有乱流的好位置。",
+                    "action": "greet",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "夜色安静下来时，西岬和北麓的星光都会特别清楚哦。",
+                    "action": "hover_bob",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C05_S2",
+          "charId": "C05",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "被海风吹偏的小航线",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone W",
+            "facilityId": "F22",
+            "facilityName": "西岬旧灯塔",
+            "coords": [-56, -24],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 黄昏或星夜在西岬旧灯塔崖轻推墨羽 1 次后触发"
+          },
+          "stageNote": "海岬风口处墨羽原地微旋，被玩家轻推回平台中心后恢复平稳悬浮，体现“物理滑稽意外”紫色气泡。",
+          "lines": [
+            {
+              "speaker": "C05",
+              "text": "咕呜……稳住了！谢谢你轻轻推了我一把，差点飘过栏杆。",
+              "action": "pivot_spin",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "西岬的傍晚海风太热情，把我像气球一样往外推了半米。",
+              "action": "hover_bob",
+              "bubble": "bubble_purple",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "以前灯塔熄着的时候，夜里巡逻总找不到降落的参照点。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "现在只要看见琥珀光扫过海湾，就知道家在哪个方向了。",
+              "action": "nod_tilt",
+              "bubble": "bubble_pink",
+              "fx": "fx_firefly",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "安慰刚才差点飘远的墨羽",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "灯塔亮着你就绝不会飘丢",
+                "tone": "暖心安定",
+                "affectionDelta": 10,
+                "memoryTag": "C05_S2_LIGHTHOUSE",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "嗯，琥珀色的旋转光束，比天上的星图还要让人踏实。",
+                    "action": "hover_bob",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "下个晴朗的星夜，我们去最北边的古樟星穹台汇合吧。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "其实随风慢转还挺潇洒的",
+                "tone": "顺势捧场",
+                "affectionDelta": 10,
+                "memoryTag": "C05_S2_COOLSPIN",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "咳，被你这么一说，那刚才就算我展示的新式空中礼仪吧。",
+                    "action": "cheer",
+                    "bubble": "bubble_orange",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "星夜去北麓星穹台找我，那儿风柔，适合认真看星河。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C05_S3",
+          "charId": "C05",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "比星星更亮的屋顶灯",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone N",
+            "facilityId": "F34",
+            "facilityName": "古樟星穹钟楼与全景观测台",
+            "coords": [0, 58],
+            "timeOfDay": "night",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F34"
+            },
+            "summaryZh": "阶段 2 · 星夜登上北麓古樟星穹观景台与墨羽对话"
+          },
+          "stageNote": "星夜古樟台萤火飘升，墨羽以轻浮、转圈与挥翅收尾，营造静谧高空治愈感。",
+          "lines": [
+            {
+              "speaker": "C05",
+              "text": "从星穹台往下望，西岬灯塔和东湾夜市都在一闪一闪呢。",
+              "action": "hover_bob",
+              "bubble": "none",
+              "fx": "fx_firefly",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "我当夜行信使许多年，飞过无数安静得听不见回声的屋顶。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "以前总觉得，只有离地面越远，星星才显得越清楚。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "可今晚低头一看，你们点亮的暖窗和串灯，比星星还亮。",
+              "action": "hover_bob",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C05",
+              "text": "我想，以后我不用再独自飘向远方，留在海湾就很好了。",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_firefly",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "回应夜行信使墨羽的停留心愿",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "每晚都会给你留一盏暖灯",
+                "tone": "长久守候",
+                "affectionDelta": 15,
+                "memoryTag": "C05_S3_WARMLAMP",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "收到这份夜间回信了。那今晚的海湾就交给我来守望吧。",
+                    "action": "pivot_spin",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "愿你每晚都有顺风和好梦，我的新朋友。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "能遇见你真好，小夜行信使",
+                "tone": "真挚告白",
+                "affectionDelta": 15,
+                "memoryTag": "C05_S3_GLADMET",
+                "replyLines": [
+                  {
+                    "speaker": "C05",
+                    "text": "叮咚——我的心情仪表盘显示，此刻暖度已经满格啦。",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C05",
+                    "text": "以后抬头看见我飘在风车边，记得朝我挥挥手哦。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_firefly",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "stageIndex": 5,
+      "assetId": "C06-strawhat-fox",
+      "name": "阿澈",
+      "title": "草帽狐狸",
+      "displayName": "草帽狐狸·阿澈",
+      "homeZone": "Zone 0",
+      "signatureFacilities": ["F02", "F27", "F28", "F40"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 0.88,
+        "pitchVariance": 0.05,
+        "charIntervalMs": 90
+      },
+      "personality": "慵懒随性、海风守望者",
+      "quirkContrast": "嘴上整天只说在栈桥发呆钓空气，心里其实一直挂念着搁浅的白昼号灯船和每一位归来的朋友。",
+      "signatureActions": ["sit", "turn_to_player", "nod_tilt", "wave", "photo"],
+      "scripts": [
+        {
+          "scriptId": "C06_S1",
+          "charId": "C06",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "不咬钩也是好天气",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F02",
+            "facilityName": "木质钓鱼栈桥",
+            "coords": [10, -23],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "talk",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 0 · 白天在木质钓鱼栈桥首次与阿澈对话"
+          },
+          "stageNote": "阿澈空手立/坐于栈桥边听海浪，不出现持鱼竿甩竿精细动作，以水波粒子烘托临海氛围。",
+          "lines": [
+            {
+              "speaker": "C06",
+              "text": "哟，刚登岛就逛到栈桥来了？这儿的海风吹着挺舒服吧。",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "我叫阿澈，常在这儿等鱼咬钩——虽然今天一条都没来。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "不过没关系，钓到两朵白浪和一整个晴天，也不算亏。",
+              "action": "sit",
+              "bubble": "bubble_yellow",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "对了，顺着东边浅滩看过去，能瞧见一艘睡着的老灯船。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "你觉得站在栈桥发呆，算不算一种很厉害的本事？",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "和悠闲的阿澈聊两句",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "钓云听浪听起来就超治愈",
+                "tone": "同频松弛",
+                "affectionDelta": 10,
+                "memoryTag": "C06_S1_FISHCLOUDS",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "哈哈，知音难求！海湾最不缺的就是慢吞吞的好时间。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_ripple",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "以后东岸开放了，记得去那艘“白昼号”甲板上找我呀。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "东湾那艘老灯船有故事吗？",
+                "tone": "关注前史",
+                "affectionDelta": 10,
+                "memoryTag": "C06_S1_LIGHTSHIP",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "眼力不错嘛。那艘船叫白昼号，以前可是海湾最亮的星。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_orange",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "等你走到东边浅滩时，我慢慢讲它的旧航海日志给你听。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C06_S2",
+          "charId": "C06",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "浅滩上的白昼号",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone E",
+            "facilityId": "F27",
+            "facilityName": "搁浅的白昼号潮汐灯船",
+            "coords": [52, -32],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F27"
+            },
+            "summaryZh": "阶段 1 · 黄昏或任意时段登上东湾白昼号灯船与阿澈对话"
+          },
+          "stageNote": "在白昼号宽平甲板上，阿澈轻步踱走并点头诉说心事，无爬桅杆或手摇铜钟细节动作。",
+          "lines": [
+            {
+              "speaker": "C06",
+              "text": "欢迎登上白昼号。木板踩起来虽然斜了一点，倒还稳当吧？",
+              "action": "greet",
+              "bubble": "bubble_orange",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "其实从前我是这艘灯船的船长，负责接送去远方的老邻居。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "后来出门的人多、回来的人少，灯船就干脆在浅滩歇脚了。",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "嘴上总说只爱钓鱼，其实我是怕重新挂上桅灯也没人看呀。",
+              "action": "turn_to_player",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "鼓励卸下防备的老船长阿澈",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "现在我在看呀，全镇都在看",
+                "tone": "直球温暖",
+                "affectionDelta": 10,
+                "memoryTag": "C06_S2_WATCHING",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "哈哈，被你一句话说得，我这老船长倒有点不好意思了。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "那今晚就把桅杆暖灯点亮，顺便把摇橹小渡船也收拾好！",
+                    "action": "cheer",
+                    "bubble": "none",
+                    "fx": "fx_ripple",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "停在浅滩也能照亮整片海湾",
+                "tone": "温柔释怀",
+                "affectionDelta": 10,
+                "memoryTag": "C06_S2_HARBORLIGHT",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "说得太好啦！不下远海也没关系，当海湾的安心路标挺酷。",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "改天渡船通航，我第一个载你晃晃悠悠去南边小屿玩！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C06_S3",
+          "charId": "C06",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "不收船票的小渡口",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone S",
+            "facilityId": "F40",
+            "facilityName": "小屿北埠渡口（含摇橹小船）",
+            "coords": [-5, -36],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "use_ferry",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 2 · 体验摇橹渡船抵达南屿北埠渡口后与阿澈对话"
+          },
+          "stageNote": "在南屿渡口迎着晚风挥手与拍照，船体保持静态或程序微晃，角色全程站在平稳木栈平台。",
+          "lines": [
+            {
+              "speaker": "C06",
+              "text": "平安靠岸！怎么样，两秒划过内湾的渡船还算稳当吧？",
+              "action": "wave",
+              "bubble": "bubble_pink",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "从这儿回头看老镇，灯船、风车和西岬灯塔全都连成圈了。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "谢谢你让白昼号重新亮灯，也让我找回了守望海湾的干劲。",
+              "action": "nod_tilt",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C06",
+              "text": "以后不管何时想来南屿吹吹风，我的小渡船永远不收船票。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "fx_ripple",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "回应老船长阿澈的归航约定",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "那我每天都要来坐船兜风",
+                "tone": "欢快相约",
+                "affectionDelta": 15,
+                "memoryTag": "C06_S3_DAILYFERRY",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "哈哈，随时恭候！船头视野最好的位子永久为你保留！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "顺风顺水，今天的晚霞也刚刚好，慢慢逛吧老朋友。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_ripple",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "拍张合照纪念海湾大闭环！",
+                "tone": "定格时刻",
+                "affectionDelta": 15,
+                "memoryTag": "C06_S3_PORTPHOTO",
+                "replyLines": [
+                  {
+                    "speaker": "C06",
+                    "text": "好主意！让我摆出最帅气的船长站姿，快把海湾拍进去！",
+                    "action": "photo",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C06",
+                    "text": "漂亮！这片海湾有你在，每天都像刚起航一样新鲜呀。",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C07",
+      "stageIndex": 6,
+      "assetId": "C07-postman-otter",
+      "name": "团团",
+      "title": "迷糊邮差水獭",
+      "displayName": "迷糊邮差水獭·团团",
+      "homeZone": "Zone W",
+      "signatureFacilities": ["F19", "F20", "F21", "F42"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 1.18,
+        "pitchVariance": 0.11,
+        "charIntervalMs": 74
+      },
+      "personality": "风风火火、迷糊又热心",
+      "quirkContrast": "总把明信片和备忘条塞错位置、急起来原地打转，但每封真正重要的心意从未寄丢。",
+      "signatureActions": ["run", "hop_bounce", "pivot_spin", "door_open", "greet"],
+      "scripts": [
+        {
+          "scriptId": "C07_S1",
+          "charId": "C07",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "风铃响了，信去哪啦",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone W",
+            "facilityId": "F19",
+            "facilityName": "风铃旧邮局",
+            "coords": [-44, 4],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F19"
+            },
+            "summaryZh": "阶段 0 · 白天抵达西岸风铃旧邮局首次与团团对话"
+          },
+          "stageNote": "团团在旧邮局薄荷绿门前小跑停步，门扇轻启呼应邮局开张，无掏口袋或手持信封动作。",
+          "lines": [
+            {
+              "speaker": "C07",
+              "text": "叮铃铃——哎呀新邻居来西岸啦！欢迎光临风铃旧邮局！",
+              "action": "run",
+              "bubble": "bubble_orange",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "我是邮差团团，专门负责把海湾里的好消息送到各家各户。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "不过……我刚清点完三张明信片，一转身居然忘了放哪边！",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "究竟在左边那个邮筒里，还是在单车篮子里呢？哎呀呀！",
+              "action": "door_open",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "安抚慌慌张张的小邮差团团",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "别急，听风铃响的方向找找",
+                "tone": "童趣巧妙",
+                "affectionDelta": 10,
+                "memoryTag": "C07_S1_CHIME",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "叮铃！哎呀我想起来啦，刚听见左边风铃响时放进去的！",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "你简直是邮局的幸运星！单车驿站修好后我立刻告诉你！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "不着急，我顺路陪你挨个看",
+                "tone": "耐心体贴",
+                "affectionDelta": 10,
+                "memoryTag": "C07_S1_HELPFIND",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "呜哇，有人陪着找信，感觉迷糊也没那么丢人了呢！",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "前面就是薄荷绿单车驿站，等会我们一起去认认站牌吧！",
+                    "action": "walk",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C07_S2",
+          "charId": "C07",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "贴错邮戳的烤包收据",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone W",
+            "facilityId": "F42",
+            "facilityName": "复古薄荷绿邮差单车驿站",
+            "coords": [-38, -8],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 在西岸邮差单车驿站旁轻推团团 1 次后触发"
+          },
+          "stageNote": "团团在单车驿站旁急得原地自转，被轻推后立正认错，完全依靠全身旋转与弹跳演活迷糊性格。",
+          "lines": [
+            {
+              "speaker": "C07",
+              "text": "停住啦停住啦！被你轻推一下，我的脑袋终于不晕乎了！",
+              "action": "pivot_spin",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "大乌龙！我刚才骑单车太开心，把东湾烤包单据当信寄啦！",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "还给那张“海盐卷两只”的纸条，认真盖上了西岬风景邮戳。",
+              "action": "turn_to_player",
+              "bubble": "bubble_yellow",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "哎呀，大家收到烤包收据明信片，会不会觉得我太迷糊了？",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "安慰又闹小乌龙的团团",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "香喷喷的烤包也算海湾风景",
+                "tone": "幽默开解",
+                "affectionDelta": 10,
+                "memoryTag": "C07_S2_DELICIOUS",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "对耶！那干脆命名为“限时美味风情明信片”好啦！",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "下次黄昏来海岬风铃长廊找我，我有封真正的好信给你看！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "错投的纸条说不定能逗乐大家",
+                "tone": "轻松治愈",
+                "affectionDelta": 10,
+                "memoryTag": "C07_S2_LAUGH",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "哈哈，想想奶包笑得打滚的样子，我就完全不紧张啦！",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "单车驿站随时都能快传过来，傍晚来风铃长廊吹海风哦！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C07_S3",
+          "charId": "C07",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "没有收件人的欢迎明信片",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone W",
+            "facilityId": "F21",
+            "facilityName": "海岬风铃长廊与信号旗台",
+            "coords": [-50, -14],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F21"
+            },
+            "summaryZh": "阶段 2 · 黄昏抵达西岬风铃长廊与团团对话"
+          },
+          "stageNote": "夕阳风铃长廊下，团团先打招呼后欢快起舞，台词交代旧明信片展示在窗台而非手递手动作。",
+          "lines": [
+            {
+              "speaker": "C07",
+              "text": "你来得正好！夕阳把风铃长廊照得像一串透明蜂蜜糖呢。",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "今天打扫邮局时，我在柜台最角落找到一张泛黄的旧卡片。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "上面没写收件人名字，只画着暖阳、海浪和一个大大的笑脸。",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "fx_petal",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "我把它摆在邮局最亮眼的窗台上了——那其实一直是在等你呀！",
+              "action": "hop_bounce",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C07",
+              "text": "原来我虽然老放错东西，这封最珍贵的欢迎信还是按时送到啦！",
+              "action": "cheer",
+              "bubble": "bubble_pink",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "收下时光小筑给你的欢迎明信片",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "这封欢迎信我好好收在心里啦",
+                "tone": "暖心珍藏",
+                "affectionDelta": 15,
+                "memoryTag": "C07_S3_KEEPHEART",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "太好啦！邮差团团本次投递任务，圆满完成一百二十分！",
+                    "action": "dance",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "以后海湾有新的好消息，我还是第一时间叮铃铃跑来告诉你！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "以后也拜托你传递好消息！",
+                "tone": "信赖鼓励",
+                "affectionDelta": 15,
+                "memoryTag": "C07_S3_TRUSTPOST",
+                "replyLines": [
+                  {
+                    "speaker": "C07",
+                    "text": "交给我吧！我保证把重要信件全都放进最显眼的薄荷邮筒！",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C07",
+                    "text": "对了，要是听见风铃响，那就是我在替海风向你问好呀！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C08",
+      "stageIndex": 7,
+      "assetId": "C08-carpenter-raccoon",
+      "name": "咔哒",
+      "title": "强迫症木工小浣熊",
+      "displayName": "强迫症木工小浣熊·咔哒",
+      "homeZone": "Zone E",
+      "signatureFacilities": ["F26", "F27", "F37", "F35"],
+      "defaultSfx": "voice_mech",
+      "voiceProfile": {
+        "sfx": "voice_mech",
+        "basePitch": 1.02,
+        "pitchVariance": 0.04,
+        "charIntervalMs": 76
+      },
+      "personality": "严谨细节控、一夸就害羞",
+      "quirkContrast": "执着于完美 2cm 柔和圆角倒角与清脆船铃音准，实则是怕邻居走路磕脚的细心小暖男。",
+      "signatureActions": ["walk", "nod_tilt", "pivot_spin", "hop_bounce", "clap"],
+      "scripts": [
+        {
+          "scriptId": "C08_S1",
+          "charId": "C08",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "两厘米圆角的尊严",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone E",
+            "facilityId": "F26",
+            "facilityName": "旧造船木工坊",
+            "coords": [54, -18],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F26"
+            },
+            "summaryZh": "阶段 0 · 白天首次拜访东湾旧造船木工坊与咔哒对话"
+          },
+          "stageNote": "咔哒空手踱步巡检船台木板，用走步、歪头与小弹跳表现工匠骄傲，不出现拿锤子锯子动作。",
+          "lines": [
+            {
+              "speaker": "C08",
+              "text": "咔哒、咔哒——请等一下，这排木板边缘刚好磨圆两厘米。",
+              "action": "walk",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "你好，我是木工咔哒，东湾的船坞和木桥都归我守尺寸。",
+              "action": "turn_to_player",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "造船和搭桥最忌讳留尖角，每一条边都得圆润得恰到好处。",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "这样不管谁在木栈道上蹦蹦跳跳，都不会被边角磕到脚啦。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "评价咔哒的 2cm 倒角工艺",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "看起来像暖暖的微缩积木！",
+                "tone": "精准戳心",
+                "affectionDelta": 10,
+                "memoryTag": "C08_S1_BLOCKS",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "咔哒！你、你居然一眼就看懂了木头的温润手感！",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "咳，过奖了。下回西拱桥修缮时，欢迎来帮我验收平不平。",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "你连大家走路怕磕脚都想到了",
+                "tone": "看见体贴",
+                "affectionDelta": 10,
+                "memoryTag": "C08_S1_CARING",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "才不是特意体贴谁呢……这只是严谨木工的基础安全规范！",
+                    "action": "pivot_spin",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "总、总之走累了就来船坞看看木纹，保准让你心情齐整。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C08_S2",
+          "charId": "C08",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "歪了半度的船铃与桥柱",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone S",
+            "facilityId": "F37",
+            "facilityName": "弧形跨海木拱桥",
+            "coords": [-28, -35],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "nudge",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 在跨海木拱桥旁轻推正在纠结的咔哒 1 次后触发"
+          },
+          "stageNote": "咔哒在拱桥口焦急踱步，被玩家轻推打断纠结循环后倾耳聆听海风，全程无拆装工具动作。",
+          "lines": [
+            {
+              "speaker": "C08",
+              "text": "哎呀！我刚才盯着桥柱太入神，都没发现你走到身边来。",
+              "action": "hop_bounce",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "麻烦大了！海风一吹，桥头灯柱好像歪了不到半度角度！",
+              "action": "walk",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "连远处白昼号的船铃，刚才听起来都像低了半个音准呢。",
+              "action": "nod_tilt",
+              "bubble": "bubble_yellow",
+              "fx": "fx_ripple",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "我来回走了八遍还没下定决心，你说要不要拆了重新对齐？",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "帮纠结的强迫症咔哒松绑",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "微微倾斜才像海风亲手签的名",
+                "tone": "浪漫解围",
+                "affectionDelta": 10,
+                "memoryTag": "C08_S2_WINDSIGN",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "海风的签名？嗯……听起来倒像是海湾限定的独家工艺！",
+                    "action": "nod_tilt",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "好吧，这次破例允许半度误差！咔哒，宣布今日验收通过！",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "踩上去稳当舒服就已经满分啦",
+                "tone": "务实肯定",
+                "affectionDelta": 10,
+                "memoryTag": "C08_S2_STURDY",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "呼——也是哦，拱桥本来就是让大家舒舒服服散步用的。",
+                    "action": "cheer",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "那我这就去检查北麓木滑道，保准让你滑得顺溜又安心！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C08_S3",
+          "charId": "C08",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "不差一毫米的温柔合龙",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone N",
+            "facilityId": "F35",
+            "facilityName": "林间快速下行圆木滑道组件",
+            "coords": [-26, 35],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F35"
+            },
+            "summaryZh": "阶段 2 · 抵达北麓林间木滑道入口与咔哒对话"
+          },
+          "stageNote": "在北麓木滑道平稳入口平台对话，咔哒以欢呼、慢步与挥手收尾，不强制演绎滑行碰撞。",
+          "lines": [
+            {
+              "speaker": "C08",
+              "text": "报告！北麓林间圆木滑道、东西拱桥和灯船跳板全部合龙！",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "每一段坡道我都量过，不用跳跃也能一路平平稳稳走完。",
+              "action": "walk",
+              "bubble": "none",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "以前我以为，只有分毫不差的直线和角度，才配叫好作品。",
+              "action": "nod_tilt",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "听着大家在桥上说说笑笑，才发现让人安心才是最高精度。",
+              "action": "turn_to_player",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_mech"
+            },
+            {
+              "speaker": "C08",
+              "text": "今天这道木滑道的首发试滑资格，我留给最懂木头的你！",
+              "action": "cheer",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_mech"
+            }
+          ],
+          "choice": {
+            "prompt": "回应骄傲的木工咔哒",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "全镇最稳的路和桥全靠你啦！",
+                "tone": "热烈称赞",
+                "affectionDelta": 15,
+                "memoryTag": "C08_S3_BESTCARP",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "咔哒哒——这句表扬我要刻进心里，圆角误差零毫米！",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "放心滑下去吧，底下的干草垫子我也摆得方方正正的！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "改天一起逛完你修的大环线",
+                "tone": "同行邀约",
+                "affectionDelta": 15,
+                "memoryTag": "C08_S3_LOOPWALK",
+                "replyLines": [
+                  {
+                    "speaker": "C08",
+                    "text": "好呀！顺便听听木板在脚下咯吱轻响，那是我最爱的乐曲。",
+                    "action": "clap",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_mech"
+                  },
+                  {
+                    "speaker": "C08",
+                    "text": "只要这座海湾需要修修补补，咔哒永远在船坞随时待命！",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_mech"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "stageIndex": 8,
+      "assetId": "C09-artist-sheep",
+      "name": "绒绒",
+      "title": "纸片画师小羊",
+      "displayName": "纸片画师小羊·绒绒",
+      "homeZone": "Zone E",
+      "signatureFacilities": ["F18", "F30", "F36", "F41"],
+      "defaultSfx": "voice_soft",
+      "voiceProfile": {
+        "sfx": "voice_soft",
+        "basePitch": 1.28,
+        "pitchVariance": 0.07,
+        "charIntervalMs": 88
+      },
+      "personality": "绵软害羞、轻拼贴浪漫派",
+      "quirkContrast": "总担心自己的白边纸片涂鸦太简陋，却用三笔呆萌豆豆眼留住了全镇最治愈的回忆。",
+      "signatureActions": ["paper_pet_squash", "nod_tilt", "photo", "hop_bounce", "dance"],
+      "scripts": [
+        {
+          "scriptId": "C09_S1",
+          "charId": "C09",
+          "stage": 1,
+          "stageLabel": "初遇小插曲",
+          "title": "白边纸片里的呆呆小猫",
+          "trigger": {
+            "requireStage": 0,
+            "zone": "Zone 0",
+            "facilityId": "F18",
+            "facilityName": "时光石与纸片宠物打卡坪",
+            "coords": [23, 16],
+            "timeOfDay": "day",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F18"
+            },
+            "summaryZh": "阶段 0 · 白天在时光石纸片宠物打卡坪首次与绒绒对话"
+          },
+          "stageNote": "绒绒立于 U01 2D 纸片涂鸦宠物旁，触发 paper_pet_squash 让纸片立牌弹性挤压呼应，无拿画笔作画动作。",
+          "lines": [
+            {
+              "speaker": "C09",
+              "text": "呀……你好呀，你刚刚是不是也在看这只纸片小猫立牌？",
+              "action": "turn_to_player",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "我叫绒绒，喜欢用黑线条和厚厚奶油白边做纸片涂鸦。",
+              "action": "greet",
+              "bubble": "none",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "你看它，只画了两颗圆豆豆眼，一被风吹还会弹性晃来晃去。",
+              "action": "paper_pet_squash",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "我老担心画得太简单了……你会不会觉得它傻乎乎的呀？",
+              "action": "nod_tilt",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "夸夸绒绒的 2D 白边纸片小宠",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "厚厚白边和豆豆眼可爱犯规！",
+                "tone": "热情点赞",
+                "affectionDelta": 10,
+                "memoryTag": "C09_S1_CUTE",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "真、真的吗！连纸片小猫听见你夸它，都开心得一弹一弹呢！",
+                    "action": "paper_pet_squash",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "东边画室和北林树洞里还有我的涂鸦，欢迎常来看看呀。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "留白越多越容易装进好心情",
+                "tone": "懂她理念",
+                "affectionDelta": 10,
+                "memoryTag": "C09_S1_WHITESPACE",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "嗯嗯！你一下子就说中了！白边就是留给想象的柔软空位。",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "能遇到懂纸片画的朋友，感觉整个下午都像云朵一样软。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C09_S2",
+          "charId": "C09",
+          "stage": 2,
+          "stageLabel": "日常小烦恼与轻推波折",
+          "title": "秘密树洞里的合影心愿",
+          "trigger": {
+            "requireStage": 1,
+            "zone": "Zone N",
+            "facilityId": "F36",
+            "facilityName": "北林秘密树洞邮筒与回忆相框",
+            "coords": [-36, 46],
+            "timeOfDay": "any",
+            "condition": {
+              "type": "take_photo",
+              "minCount": 1
+            },
+            "summaryZh": "阶段 1 · 在全岛拍照至少 1 次后于北林秘密树洞与绒绒对话"
+          },
+          "stageNote": "绒绒在秘密树洞相框旁害羞轻步、配合拍照动作与纸片弹性缩放，无手持铅笔或画板动作。",
+          "lines": [
+            {
+              "speaker": "C09",
+              "text": "哇，你也找到北林这个偷偷藏着旧相框的温暖树洞啦！",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "看到相框里的笑脸，我也好想做一套全镇居民的纸片小画。",
+              "action": "walk",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "可是我有点害羞，不敢一个个跑去请大家站好让我观察呢。",
+              "action": "nod_tilt",
+              "bubble": "bubble_yellow",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "要是画得不够像，或者打扰到大家午睡，那该怎么办呀？",
+              "action": "turn_to_player",
+              "bubble": "bubble_purple",
+              "fx": "none",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "帮有点小社恐的绒绒鼓鼓劲",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "画成圆润豆豆眼大家准喜欢",
+                "tone": "轻松鼓励",
+                "affectionDelta": 10,
+                "memoryTag": "C09_S2_BEADEYES",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "对哦！圆圆的轮廓加上小帽子，三笔就能认出是谁来啦！",
+                    "action": "hop_bounce",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "谢谢你给我勇气，画好后我想把它们放到南屿漂流书屋里！",
+                    "action": "paper_pet_squash",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "我随时帮你拍照记录大家日常",
+                "tone": "暖心搭档",
+                "affectionDelta": 10,
+                "memoryTag": "C09_S2_PHOTOSUPPORT",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "太棒啦！有你拍的暖阳照片当参考，我一点也不紧张了！",
+                    "action": "photo",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "等成品做好，我们约在星砂沙洲的漂流书屋一起看吧！",
+                    "action": "clap",
+                    "bubble": "none",
+                    "fx": "none",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "scriptId": "C09_S3",
+          "charId": "C09",
+          "stage": 3,
+          "stageLabel": "心愿回声小收尾",
+          "title": "留在风里的白边回忆",
+          "trigger": {
+            "requireStage": 2,
+            "zone": "Zone S",
+            "facilityId": "F41",
+            "facilityName": "星砂沙洲迷你漂流书屋",
+            "coords": [10, -47],
+            "timeOfDay": "sunset",
+            "condition": {
+              "type": "visit_facility",
+              "facilityId": "F41"
+            },
+            "summaryZh": "阶段 2 · 黄昏或星夜抵达南屿迷你漂流书屋与绒绒对话"
+          },
+          "stageNote": "在迷你漂流书屋旁，绒绒配合纸片小宠弹性跳动、拍照与轻舞收尾，传达“把回忆留在原地”的温柔主题。",
+          "lines": [
+            {
+              "speaker": "C09",
+              "text": "看呀，我把全镇居民的纸片小画，都安稳放进漂流书屋里了。",
+              "action": "greet",
+              "bubble": "bubble_pink",
+              "fx": "fx_sparkle",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "听老邻居说，早年离开的朋友也爱用纸片画把自己留在岛上。",
+              "action": "nod_tilt",
+              "bubble": "none",
+              "fx": "fx_petal",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "好像在说，哪怕走得再远，快乐的样子依然在这吹海风呢。",
+              "action": "paper_pet_squash",
+              "bubble": "bubble_orange",
+              "fx": "none",
+              "sfx": "voice_soft"
+            },
+            {
+              "speaker": "C09",
+              "text": "所以我特意在最中间，留了一张圆圆白边的小画框给你哦。",
+              "action": "turn_to_player",
+              "bubble": "bubble_pink",
+              "fx": "fx_heart",
+              "sfx": "voice_soft"
+            }
+          ],
+          "choice": {
+            "prompt": "回应绒绒为你预留的纸片画框",
+            "options": [
+              {
+                "id": "A",
+                "bit": 0,
+                "label": "快把我也画进白边纸片里吧！",
+                "tone": "欣喜融入",
+                "affectionDelta": 15,
+                "memoryTag": "C09_S3_DRAWME",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "好呀！我要把你画得像傍晚的琥珀暖光一样，笑眯眯的！",
+                    "action": "dance",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "以后每一次吹起海风，纸片小宠都会替我们欢快弹跳呀！",
+                    "action": "paper_pet_squash",
+                    "bubble": "none",
+                    "fx": "fx_petal",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              },
+              {
+                "id": "B",
+                "bit": 1,
+                "label": "和纸片小宠一起拍张纪念照吧",
+                "tone": "轻松留念",
+                "affectionDelta": 15,
+                "memoryTag": "C09_S3_PETPHOTO",
+                "replyLines": [
+                  {
+                    "speaker": "C09",
+                    "text": "嗯嗯！小猫立牌也站稳啦，我们一起对着海湾笑一个！",
+                    "action": "photo",
+                    "bubble": "bubble_pink",
+                    "fx": "fx_sparkle",
+                    "sfx": "voice_soft"
+                  },
+                  {
+                    "speaker": "C09",
+                    "text": "谢谢你一直温柔听我说话，星砂沙洲永远为你留着晴天。",
+                    "action": "wave",
+                    "bubble": "none",
+                    "fx": "fx_heart",
+                    "sfx": "voice_soft"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "duoEncounters": [
+    {
+      "scriptId": "D01",
+      "duoBitIndex": 0,
+      "participants": ["C03", "C07"],
+      "participantNames": ["面瘫橘猫·阿橘", "迷糊邮差水獭·团团"],
+      "title": "神秘的“海风归位”邮筒",
+      "trigger": {
+        "requireCharStages": {
+          "C03": 1,
+          "C07": 1
+        },
+        "zone": "Zone W",
+        "facilityId": "F19",
+        "facilityName": "风铃旧邮局",
+        "coords": [-44, 4],
+        "timeOfDay": "day",
+        "condition": {
+          "type": "duo_proximity",
+          "maxDistanceM": 6.0
+        },
+        "summaryZh": "阿橘与团团均完成阶段 1 · 白天两人在西岸风铃旧邮局 6m 内偶遇时触发"
+      },
+      "stageNote": "团团原地兴奋小跳，阿橘站在邮局台阶旁冷静鼓掌装作无关路人，凸显跨角色性格碰撞。",
+      "lines": [
+        {
+          "speaker": "C07",
+          "text": "太神奇啦！我昨天放错的三张明信片，今天全自己归位了！",
+          "action": "hop_bounce",
+          "bubble": "bubble_orange",
+          "fx": "fx_sparkle",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C03",
+          "text": "啪、啪。真稀奇。一定是西岸的海风吹得格外讲究秩序。",
+          "action": "clap",
+          "bubble": "none",
+          "fx": "none",
+          "sfx": "voice_mech"
+        },
+        {
+          "speaker": "C07",
+          "text": "对吧对吧！我猜旧邮局里肯定住着一位隐形的整理小精灵！",
+          "action": "cheer",
+          "bubble": "bubble_yellow",
+          "fx": "fx_sparkle",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C03",
+          "text": "嗯，而且那位精灵肯定最讨厌被人拆穿，也喜欢戴贝雷帽。",
+          "action": "nod_tilt",
+          "bubble": "bubble_purple",
+          "fx": "none",
+          "sfx": "voice_mech"
+        },
+        {
+          "speaker": "C07",
+          "text": "咦，新邻居你刚路过，你觉得邮局里真的有风精灵吗？",
+          "action": "turn_to_player",
+          "bubble": "bubble_orange",
+          "fx": "none",
+          "sfx": "voice_soft"
+        }
+      ],
+      "choice": {
+        "prompt": "决定是否揭晓邮局“整理精灵”的真相",
+        "options": [
+          {
+            "id": "A",
+            "bit": 0,
+            "label": "肯定是戴贝雷帽的海风精灵！",
+            "tone": "默契帮藏",
+            "affectionDelta": 10,
+            "memoryTag": "D01_WINDELF",
+            "replyLines": [
+              {
+                "speaker": "C07",
+                "text": "哇塞！那我每天都要在门口多挂一串风铃谢谢这位精灵！",
+                "action": "dance",
+                "bubble": "bubble_pink",
+                "fx": "fx_sparkle",
+                "sfx": "voice_soft"
+              },
+              {
+                "speaker": "C03",
+                "text": "分析合理，不愧是你。本路过橘猫满意地继续散步去了。",
+                "action": "walk",
+                "bubble": "bubble_pink",
+                "fx": "fx_heart",
+                "sfx": "voice_mech"
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "bit": 1,
+            "label": "谢谢这位路过的橘色热心精灵",
+            "tone": "温柔点破",
+            "affectionDelta": 10,
+            "memoryTag": "D01_CATELF",
+            "replyLines": [
+              {
+                "speaker": "C03",
+                "text": "咳……风太大我什么都没听见，反正下回自己记好格子。",
+                "action": "pivot_spin",
+                "bubble": "bubble_purple",
+                "fx": "none",
+                "sfx": "voice_mech"
+              },
+              {
+                "speaker": "C07",
+                "text": "呀！原来是阿橘偷偷帮的忙！谢谢你，你真是全世界最好！",
+                "action": "cheer",
+                "bubble": "bubble_pink",
+                "fx": "fx_heart",
+                "sfx": "voice_soft"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scriptId": "D02",
+      "duoBitIndex": 1,
+      "participants": ["C04", "C08"],
+      "participantNames": ["吃包柯基·奶包", "强迫症木工小浣熊·咔哒"],
+      "title": "烤包圆度与两厘米倒角",
+      "trigger": {
+        "requireCharStages": {
+          "C04": 1,
+          "C08": 1
+        },
+        "zone": "Zone E",
+        "facilityId": "F25",
+        "facilityName": "微光夜市红砖烤包窑炉与串灯木摊",
+        "coords": [44, -4],
+        "timeOfDay": "night",
+        "condition": {
+          "type": "duo_proximity",
+          "maxDistanceM": 6.0
+        },
+        "summaryZh": "奶包与咔哒均完成阶段 1 · 星夜两人在东湾微光夜市 6m 内偶遇时触发"
+      },
+      "stageNote": "星夜夜市串灯下，咔哒严肃绕摊端详，奶包欢快蹦跶，纯靠气泡与全身动作演绎“工匠遇吃货”喜剧反差。",
+      "lines": [
+        {
+          "speaker": "C08",
+          "text": "咔哒！奶包，你这批蜂蜜圆包的边缘圆角竟然正好两厘米！",
+          "action": "walk",
+          "bubble": "bubble_yellow",
+          "fx": "fx_sparkle",
+          "sfx": "voice_mech"
+        },
+        {
+          "speaker": "C04",
+          "text": "咦，真的吗？我没用尺子呀，全靠肚子饿的感觉随手滚圆！",
+          "action": "hop_bounce",
+          "bubble": "bubble_orange",
+          "fx": "none",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C08",
+          "text": "没、没用尺子？可连焦糖色的弧线都对称得如此惊人！",
+          "action": "pivot_spin",
+          "bubble": "bubble_purple",
+          "fx": "none",
+          "sfx": "voice_mech"
+        },
+        {
+          "speaker": "C04",
+          "text": "哈哈，因为面团闻到暖火就会自己鼓成最开心的圆弧呀！",
+          "action": "cheer",
+          "bubble": "bubble_pink",
+          "fx": "fx_firefly",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C08",
+          "text": "新朋友你来评评理，没有图纸的烤包算不算高阶木工奇迹？",
+          "action": "turn_to_player",
+          "bubble": "bubble_yellow",
+          "fx": "none",
+          "sfx": "voice_mech"
+        }
+      ],
+      "choice": {
+        "prompt": "给两位夜市搭档做个轻松裁判",
+        "options": [
+          {
+            "id": "A",
+            "bit": 0,
+            "label": "面包误差全算“香气余量”",
+            "tone": "妙语解围",
+            "affectionDelta": 10,
+            "memoryTag": "D02_AROMATOL",
+            "replyLines": [
+              {
+                "speaker": "C08",
+                "text": "香气余量……绝妙的专业术语！我立刻记进我的工艺笔记！",
+                "action": "nod_tilt",
+                "bubble": "bubble_pink",
+                "fx": "fx_sparkle",
+                "sfx": "voice_mech"
+              },
+              {
+                "speaker": "C04",
+                "text": "耶！明天我再烤一盘两厘米圆角面包，专供船坞加班吃！",
+                "action": "dance",
+                "bubble": "bubble_pink",
+                "fx": "fx_heart",
+                "sfx": "voice_soft"
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "bit": 1,
+            "label": "趁热尝一口就知道多圆润啦",
+            "tone": "快乐干饭",
+            "affectionDelta": 10,
+            "memoryTag": "D02_TASTETEST",
+            "replyLines": [
+              {
+                "speaker": "C04",
+                "text": "对对对！趁热香喷喷的，尝完保准咔哒开心得原地转圈！",
+                "action": "clap",
+                "bubble": "bubble_pink",
+                "fx": "fx_sparkle",
+                "sfx": "voice_soft"
+              },
+              {
+                "speaker": "C08",
+                "text": "唔……既然为了实测圆润度，那我就勉为其难先吃两个吧。",
+                "action": "hop_bounce",
+                "bubble": "bubble_orange",
+                "fx": "fx_heart",
+                "sfx": "voice_mech"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scriptId": "D03",
+      "duoBitIndex": 2,
+      "participants": ["C01", "C09"],
+      "participantNames": ["眼镜棕熊·阿木", "纸片画师小羊·绒绒"],
+      "title": "年谱里的白边小插画",
+      "trigger": {
+        "requireCharStages": {
+          "C01": 1,
+          "C09": 1
+        },
+        "zone": "Zone N",
+        "facilityId": "F31",
+        "facilityName": "溪谷记忆温室与森林图书馆",
+        "coords": [-16, 42],
+        "timeOfDay": "sunset",
+        "condition": {
+          "type": "duo_proximity",
+          "maxDistanceM": 6.0
+        },
+        "summaryZh": "阿木与绒绒均完成阶段 1 · 黄昏或任意时段两人在记忆温室图书馆 6m 内偶遇时触发"
+      },
+      "stageNote": "温室暖金光晕里，绒绒身旁的纸片小宠弹性蹦跶，阿木连连点头赞叹，营造静谧可爱的跨界合作。",
+      "lines": [
+        {
+          "speaker": "C01",
+          "text": "绒绒，我正发愁《四季年谱》全是字，看久了会不会太严肃。",
+          "action": "nod_tilt",
+          "bubble": "bubble_yellow",
+          "fx": "none",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C09",
+          "text": "那个……我在书架边摆了只白边纸片小猫，想试试配不配得上。",
+          "action": "paper_pet_squash",
+          "bubble": "bubble_orange",
+          "fx": "fx_sparkle",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C01",
+          "text": "哎呀！它呆萌萌地晃一下，整座图书馆的空气都变柔软了！",
+          "action": "clap",
+          "bubble": "bubble_pink",
+          "fx": "fx_petal",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C09",
+          "text": "阿木先生居然不嫌它画得简单……那我能当年谱插画师吗？",
+          "action": "hop_bounce",
+          "bubble": "bubble_pink",
+          "fx": "none",
+          "sfx": "voice_soft"
+        },
+        {
+          "speaker": "C01",
+          "text": "当然求之不得！新邻居，你也来给这本画册年谱提个建议吧？",
+          "action": "turn_to_player",
+          "bubble": "bubble_orange",
+          "fx": "none",
+          "sfx": "voice_soft"
+        }
+      ],
+      "choice": {
+        "prompt": "为阿木和绒绒的合作送上点子",
+        "options": [
+          {
+            "id": "A",
+            "bit": 0,
+            "label": "暖心年谱配豆豆眼插画绝配！",
+            "tone": "暖心赞同",
+            "affectionDelta": 10,
+            "memoryTag": "D03_PERFECTPAIR",
+            "replyLines": [
+              {
+                "speaker": "C09",
+                "text": "太好啦！我要在每一页角落都画一朵笑眯眯的小海浪！",
+                "action": "dance",
+                "bubble": "bubble_pink",
+                "fx": "fx_petal",
+                "sfx": "voice_soft"
+              },
+              {
+                "speaker": "C01",
+                "text": "哈哈，这下《四季年谱》肯定会成为海湾最受欢迎的绘本了。",
+                "action": "greet",
+                "bubble": "bubble_pink",
+                "fx": "fx_heart",
+                "sfx": "voice_soft"
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "bit": 1,
+            "label": "记得给九位居民每人留一整页",
+            "tone": "全员团圆",
+            "affectionDelta": 10,
+            "memoryTag": "D03_ALLNINE",
+            "replyLines": [
+              {
+                "speaker": "C01",
+                "text": "好主意！九位老友再加上新搬来的你，十页刚好凑个圆满！",
+                "action": "cheer",
+                "bubble": "bubble_pink",
+                "fx": "fx_heart",
+                "sfx": "voice_soft"
+              },
+              {
+                "speaker": "C09",
+                "text": "嗯嗯，连纸片小宠也要算一份，大家一个都不能少呀！",
+                "action": "paper_pet_squash",
+                "bubble": "bubble_pink",
+                "fx": "fx_sparkle",
+                "sfx": "voice_soft"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

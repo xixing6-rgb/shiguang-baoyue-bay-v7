@@ -1,0 +1,155 @@
+{
+  "version": "1.0.7",
+  "workspaces": [
+    {
+      "activeMode": "agent",
+      "directModelPreferences": {
+        "faceCount": 2000,
+        "modelVendor": "douyin-3d",
+        "quality": "standard",
+        "styleId": 2
+      },
+      "hasUnreadAttention": false,
+      "messages": [],
+      "starlightTurns": [],
+      "questionPreference": {
+        "mode": "ask"
+      },
+      "results": [
+        {
+          "createdAtUtc": "2026-11-22T08:10:30.920Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/594d4dd8243f47c18f9660dd04ee9dd5.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/vg141245d70akc70.wprefab",
+            "metadata": {
+              "capacity": 55988,
+              "faceCount": 23388,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:96909d76-1cfa-4c30-8693-31d4db83ba67:db18898b6f9dc20249b9196852961b94a329d1a4e7bb208779acc8d213a7ebd1:db18898b6f9dc20249b9196852961b94a329d1a4e7bb208779acc8d213a7ebd1"
+        },
+        {
+          "createdAtUtc": "2026-11-22T08:36:33.304Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/54b98ee51a054fe88aea3f00e540fc89.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/dmviq8grdse7dqf6.wprefab",
+            "metadata": {
+              "capacity": 55988,
+              "faceCount": 23388,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:9e97306d-c6f8-4ba7-ade3-772f0b095acf:65324e93be33b6b02806207d57a1ad075127883e1869eca62414cd487968dfa3:65324e93be33b6b02806207d57a1ad075127883e1869eca62414cd487968dfa3"
+        },
+        {
+          "createdAtUtc": "2026-11-22T08:49:37.905Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/8368cecc1b424e1fb5810df2eba050bd.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/t6ip87d4kpff98uq.wprefab",
+            "metadata": {
+              "capacity": 124768,
+              "faceCount": 35568,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:9e97306d-c6f8-4ba7-ade3-772f0b095acf:46a92431ee5249f2e0876db933068e3af0ccfc9b13f3d1e1ed71f887edeae206:46a92431ee5249f2e0876db933068e3af0ccfc9b13f3d1e1ed71f887edeae206"
+        },
+        {
+          "createdAtUtc": "2026-11-22T09:02:08.328Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/0f866404353d41d9b912a1398386ff5c.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/gazfl2u92v3bu016.wprefab",
+            "metadata": {
+              "capacity": 178692,
+              "faceCount": 53516,
+              "logicalCenter": [
+                0,
+                0.5,
+                16
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:603ea3fa-f0e3-464f-9663-e6482b5f939f:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563"
+        }
+      ],
+      "routeMode": "auto",
+      "skillSelection": {
+        "contextSkillIds": []
+      },
+      "workspaceId": "workspace_024l9gls",
+      "workspacePreferences": {
+        "topology": {
+          "provider": "douyin-3d",
+          "styleLora": "none"
+        }
+      }
+    }
+  ],
+  "draftConfig": {
+    "activeMode": "agent",
+    "directModelPreferences": {
+      "faceCount": 2000,
+      "modelVendor": "douyin-3d",
+      "quality": "standard",
+      "styleId": 2
+    },
+    "questionPreference": {
+      "mode": "ask"
+    },
+    "skillSelection": {
+      "contextSkillIds": []
+    },
+    "workspacePreferences": {
+      "topology": {
+        "provider": "douyin-3d",
+        "styleLora": "none"
+      }
+    },
+    "routeMode": "auto"
+  }
+}

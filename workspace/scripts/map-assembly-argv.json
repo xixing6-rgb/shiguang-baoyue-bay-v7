@@ -1,0 +1,6 @@
+[
+  "--config",
+  "{\"prefabId\":\"shiguang-town\",\"resourceId\":\"map-shiguang-town\",\"bindings\":[{\"slot\":\"cottage\",\"modelPath\":\"assets/models/model-cottage/package/model.glb\"},{\"slot\":\"pier\",\"modelPath\":\"assets/models/model-pier/package/model.glb\"},{\"slot\":\"terrace\",\"modelPath\":\"assets/models/model-terrace/package/model.glb\"},{\"slot\":\"flowerbed\",\"modelPath\":\"assets/models/model-flowerbed/package/model.glb\"},{\"slot\":\"flagpole\",\"modelPath\":\"assets/models/model-flagpole/package/model.glb\"},{\"slot\":\"chalkboard\",\"modelPath\":\"assets/models/model-chalkboard/package/model.glb\"},{\"slot\":\"fountain\",\"modelPath\":\"assets/models/model-fountain/package/model.glb\"},{\"slot\":\"windmill\",\"modelPath\":\"assets/models/model-windmill/package/model.glb\"}],\"instanceIds\":[\"cottage-main\",\"fishing-pier\",\"coffee-terrace\",\"flower-bed\",\"pixel-flag\",\"chalkboard-main\",\"wish-fountain\",\"windmill-north\"]}",
+  "--output",
+  "wprefabs/shiguang-town/.tmp/scene-execute/map-assembly.js"
+]

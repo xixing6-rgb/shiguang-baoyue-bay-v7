@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "ui-dialogue-25d",
+  "displayName": "2.5D Wind Waker 对话与轻种菜 UI",
+  "summary": "底部宽幅对话框 + 左侧透明角色帧动画框（符合草图布局），搭配不挡摇杆的轻种菜 HUD 与靠近交互提示",
+  "templateGate": "none"
+}

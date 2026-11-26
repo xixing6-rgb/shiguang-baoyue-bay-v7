@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "terrainGlb": "workspace/assets/models/map-shiguang-town-4x.glb",
+  "hardscapeGlb": "workspace/assets/models/town-hardscape-4x.glb",
+  "sampleSpacingM": 0.4,
+  "maxAllowedSlopeDeg": 18.5,
+  "routeCount": 15,
+  "totalSamples": 3564,
+  "maxSlopeDeg": 17.23,
+  "issueCount": 0,
+  "passed": true,
+  "routes": [
+    {
+      "id": "01-main-route-v1",
+      "lengthM": 50.72,
+      "sampleCount": 130,
+      "minY": 0.2,
+      "maxY": 3.602,
+      "maxStepM": 0.122,
+      "maxSlopeDeg": 17.23,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "02-inner-town-loop",
+      "lengthM": 74.5,
+      "sampleCount": 192,
+      "minY": 0.2,
+      "maxY": 1.802,
+      "maxStepM": 0.116,
+      "maxSlopeDeg": 16.78,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "03-outer-coastal-loop-385m",
+      "lengthM": 405.39,
+      "sampleCount": 1062,
+      "minY": 0.2,
+      "maxY": 5.402,
+      "maxStepM": 0.122,
+      "maxSlopeDeg": 16.96,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "04-west-cape-loop",
+      "lengthM": 88.38,
+      "sampleCount": 227,
+      "minY": 0.2,
+      "maxY": 3.602,
+      "maxStepM": 0.116,
+      "maxSlopeDeg": 16.49,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "05-east-bay-loop",
+      "lengthM": 77.39,
+      "sampleCount": 201,
+      "minY": -0.15,
+      "maxY": 1.802,
+      "maxStepM": 0.109,
+      "maxSlopeDeg": 15.22,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "06-north-valley-loop",
+      "lengthM": 112.81,
+      "sampleCount": 302,
+      "minY": 3.6,
+      "maxY": 5.402,
+      "maxStepM": 0.102,
+      "maxSlopeDeg": 14.7,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "07-south-islet-loop",
+      "lengthM": 99.18,
+      "sampleCount": 254,
+      "minY": 0.2,
+      "maxY": 1.4,
+      "maxStepM": 0.1,
+      "maxSlopeDeg": 14.32,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "08-east-west-promenade",
+      "lengthM": 113.52,
+      "sampleCount": 288,
+      "minY": 1.8,
+      "maxY": 1.8,
+      "maxStepM": 0.0,
+      "maxSlopeDeg": 0.0,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "09-west-lighthouse-ascent",
+      "lengthM": 40.92,
+      "sampleCount": 108,
+      "minY": 1.8,
+      "maxY": 5.4,
+      "maxStepM": 0.12,
+      "maxSlopeDeg": 16.7,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "10-east-camellia-ascent",
+      "lengthM": 51.84,
+      "sampleCount": 133,
+      "minY": 1.8,
+      "maxY": 3.602,
+      "maxStepM": 0.122,
+      "maxSlopeDeg": 16.96,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "11-tidepool-dip-route",
+      "lengthM": 20.17,
+      "sampleCount": 54,
+      "minY": -0.15,
+      "maxY": 0.202,
+      "maxStepM": 0.046,
+      "maxSlopeDeg": 6.96,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "12-knoll-secret-route",
+      "lengthM": 23.79,
+      "sampleCount": 63,
+      "minY": 3.6,
+      "maxY": 4.2,
+      "maxStepM": 0.107,
+      "maxSlopeDeg": 15.32,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "13-west-slide-shortcut",
+      "lengthM": 52.02,
+      "sampleCount": 135,
+      "minY": 1.802,
+      "maxY": 5.402,
+      "maxStepM": 0.104,
+      "maxSlopeDeg": 15.34,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "14-east-slide-shortcut",
+      "lengthM": 52.37,
+      "sampleCount": 136,
+      "minY": 1.802,
+      "maxY": 5.402,
+      "maxStepM": 0.117,
+      "maxSlopeDeg": 17.1,
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "id": "15-creek-bridges-twin",
+      "lengthM": 103.89,
+      "sampleCount": 279,
+      "minY": 3.6,
+      "maxY": 3.982,
+      "maxStepM": 0.07,
+      "maxSlopeDeg": 14.61,
+      "issueCount": 0,
+      "issues": []
+    }
+  ]
+}

@@ -1,0 +1,595 @@
+{
+  "version": "1.0.7",
+  "workspaces": [
+    {
+      "activeMode": "agent",
+      "directModelPreferences": {
+        "faceCount": 2000,
+        "modelVendor": "douyin-3d",
+        "quality": "standard",
+        "styleId": 2
+      },
+      "hasUnreadAttention": false,
+      "messages": [],
+      "starlightTurns": [],
+      "questionPreference": {
+        "mode": "ask"
+      },
+      "results": [
+        {
+          "createdAtUtc": "2026-11-22T08:10:30.920Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/594d4dd8243f47c18f9660dd04ee9dd5.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/vg141245d70akc70.wprefab",
+            "metadata": {
+              "capacity": 55988,
+              "faceCount": 23388,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:96909d76-1cfa-4c30-8693-31d4db83ba67:db18898b6f9dc20249b9196852961b94a329d1a4e7bb208779acc8d213a7ebd1:db18898b6f9dc20249b9196852961b94a329d1a4e7bb208779acc8d213a7ebd1"
+        },
+        {
+          "createdAtUtc": "2026-11-22T08:36:33.304Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/54b98ee51a054fe88aea3f00e540fc89.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/dmviq8grdse7dqf6.wprefab",
+            "metadata": {
+              "capacity": 55988,
+              "faceCount": 23388,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:9e97306d-c6f8-4ba7-ade3-772f0b095acf:65324e93be33b6b02806207d57a1ad075127883e1869eca62414cd487968dfa3:65324e93be33b6b02806207d57a1ad075127883e1869eca62414cd487968dfa3"
+        },
+        {
+          "createdAtUtc": "2026-11-22T08:49:37.905Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/8368cecc1b424e1fb5810df2eba050bd.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/t6ip87d4kpff98uq.wprefab",
+            "metadata": {
+              "capacity": 124768,
+              "faceCount": 35568,
+              "logicalCenter": [
+                0,
+                0.7799999713897705,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:9e97306d-c6f8-4ba7-ade3-772f0b095acf:46a92431ee5249f2e0876db933068e3af0ccfc9b13f3d1e1ed71f887edeae206:46a92431ee5249f2e0876db933068e3af0ccfc9b13f3d1e1ed71f887edeae206"
+        },
+        {
+          "createdAtUtc": "2026-11-22T09:02:08.328Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑海滨小镇",
+            "summary": "绘本暖阳微缩海滨疗愈庭院与自主怪友小镇，含三级微高差地形、可进入主木屋、户外设施与交互体验。",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/0f866404353d41d9b912a1398386ff5c.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/gazfl2u92v3bu016.wprefab",
+            "metadata": {
+              "capacity": 178692,
+              "faceCount": 53516,
+              "logicalCenter": [
+                0,
+                0.5,
+                16
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town",
+          "revisionId": "external:automation:603ea3fa-f0e3-464f-9663-e6482b5f939f:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563"
+        },
+        {
+          "createdAtUtc": "2026-11-23T11:24:33.056Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑抱月湾4倍地图",
+            "summary": "shiguang-town-4x",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/aea97e67ae2243e39707baff75ed82c0.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/vs1hszpwnp73x46y.wprefab",
+            "metadata": {
+              "capacity": 418507,
+              "faceCount": 151871,
+              "logicalCenter": [
+                0,
+                1.5500000417232513,
+                -4
+              ],
+              "rigged": false
+            },
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-town-4x",
+          "revisionId": "external:automation:ea654072-150b-4bb1-a433-6c81f9ac7a13:37a6ee131ccc0c03ee762691021934497a3e4b33299099004324c0df0ebd60a6:37a6ee131ccc0c03ee762691021934497a3e4b33299099004324c0df0ebd60a6"
+        },
+        {
+          "createdAtUtc": "2026-11-23T12:16:56.074Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "抱月湾地表材质触发层",
+            "summary": "shiguang-material-triggers",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/iyau65k7zwbad5sh.wprefab",
+            "metadata": {
+              "capacity": 5310,
+              "faceCount": 0,
+              "logicalCenter": [
+                0,
+                0,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": false
+          },
+          "artifactId": "shiguang-material-triggers",
+          "revisionId": "external:automation:facdb0be-7793-432f-bcd1-7fa2479a592a:7000694475ad9c7b740c4f417be8566dab0e5f853b41be587bd1df73280ab7b0:7000694475ad9c7b740c4f417be8566dab0e5f853b41be587bd1df73280ab7b0"
+        },
+        {
+          "createdAtUtc": "2026-11-23T12:19:19.357Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "抱月湾地表材质触发层",
+            "summary": "shiguang-material-triggers",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/5ozdaas15g08gz71.wprefab",
+            "metadata": {
+              "capacity": 53270,
+              "faceCount": 0,
+              "logicalCenter": [
+                0,
+                0,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": false
+          },
+          "artifactId": "shiguang-material-triggers",
+          "revisionId": "external:automation:0e126ddf-f27c-42e5-a39f-90231f0881da:c824aae5e0666bc1c41df1de723823b3909ab6db7c64844c774efd141c5ee517:c824aae5e0666bc1c41df1de723823b3909ab6db7c64844c774efd141c5ee517"
+        },
+        {
+          "createdAtUtc": "2026-11-23T12:46:33.653Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "广场石草接边样板",
+            "summary": "shiguang-plaza-edge",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/56fce6a723f047169e9b88973afc1bb9.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/pszqmfghyx6m9cih.wprefab",
+            "metadata": {
+              "capacity": 1840,
+              "faceCount": 1440,
+              "logicalCenter": [
+                -3.0199999660253525,
+                -1.8040000200271606,
+                -3.9372111558914185
+              ],
+              "rigged": false
+            },
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-plaza-edge",
+          "revisionId": "external:automation:6cfa3a6d-11df-48c4-a244-450df67e28ec:a7c28075719bb01ffb15c5dc7ff1e6f1a158bcc6c9334f9937c45863beb5580b:a7c28075719bb01ffb15c5dc7ff1e6f1a158bcc6c9334f9937c45863beb5580b"
+        },
+        {
+          "createdAtUtc": "2026-11-23T12:47:08.970Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "抱月湾地表材质触发层",
+            "summary": "shiguang-material-triggers",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/8tpbs5y4ni64nnx4.wprefab",
+            "metadata": {
+              "capacity": 53270,
+              "faceCount": 0,
+              "logicalCenter": [
+                0,
+                0,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": false
+          },
+          "artifactId": "shiguang-material-triggers",
+          "revisionId": "external:automation:4b4d9ee8-a01e-47bc-816f-0c9453c08e83:ecf71a03ac50effe3ce21bc3a99d7fb09b4ecd2c947d8e196aa7c1edef7b7dfd:ecf71a03ac50effe3ce21bc3a99d7fb09b4ecd2c947d8e196aa7c1edef7b7dfd"
+        },
+        {
+          "createdAtUtc": "2026-11-23T12:49:35.099Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "广场石草接边样板",
+            "summary": "shiguang-plaza-edge",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/b275572bc5224476932de525309eb92a.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/jkg7hat6vb74x6og.wprefab",
+            "metadata": {
+              "capacity": 1840,
+              "faceCount": 1440,
+              "logicalCenter": [
+                -3.0199999660253525,
+                -1.8040000200271606,
+                -3.9372111558914185
+              ],
+              "rigged": false
+            },
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-plaza-edge",
+          "revisionId": "external:automation:c27eaa8d-9b95-4fef-8dd0-d447737b2ba1:272026c562aa8c9dae7784120a0b8ab92e3dbfbd01bb7e4c61bc230ce03f75d5:272026c562aa8c9dae7784120a0b8ab92e3dbfbd01bb7e4c61bc230ce03f75d5"
+        },
+        {
+          "createdAtUtc": "2026-11-23T13:10:35.394Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "心愿广场石路草缘",
+            "summary": "shiguang-plaza-completion",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/549ff00564de47408d41cb3b22ad616c.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/du1s1dmckb2qgzks.wprefab",
+            "metadata": {
+              "capacity": 12528,
+              "faceCount": 12128,
+              "logicalCenter": [
+                -11.5,
+                -1.8040000200271606,
+                0.125
+              ],
+              "rigged": false
+            },
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-plaza-completion",
+          "revisionId": "external:automation:6b796200-33aa-4752-9a6e-dd7a6103715e:66e7f1eb382ac8eb1ae78cb0187a7c7e397f95992a1e018845b3d609c7da1867:66e7f1eb382ac8eb1ae78cb0187a7c7e397f95992a1e018845b3d609c7da1867"
+        },
+        {
+          "createdAtUtc": "2026-11-23T13:10:55.729Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "抱月湾地表材质触发层",
+            "summary": "shiguang-material-triggers",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/89oyuw3lvxns9kjz.wprefab",
+            "metadata": {
+              "capacity": 53270,
+              "faceCount": 0,
+              "logicalCenter": [
+                0,
+                0,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": false
+          },
+          "artifactId": "shiguang-material-triggers",
+          "revisionId": "external:automation:5afd5453-e985-4bbd-bc28-bc6356a82782:3a4542e7d64d57db6c1f489bdefd8072ac126cc6e127e122abb69cffb208184e:3a4542e7d64d57db6c1f489bdefd8072ac126cc6e127e122abb69cffb208184e"
+        },
+        {
+          "createdAtUtc": "2026-11-23T13:13:17.509Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "抱月湾地表材质触发层",
+            "summary": "shiguang-material-triggers",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/per8eddjq9acpo8v.wprefab",
+            "metadata": {
+              "capacity": 53270,
+              "faceCount": 0,
+              "logicalCenter": [
+                0,
+                0,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": false
+          },
+          "artifactId": "shiguang-material-triggers",
+          "revisionId": "external:automation:d7487c9f-a40d-4fe6-b295-12aa9aaced91:2ab331106e2dfe8d57b16a7f2246d8d0205dd1f3098df8745076e816d700696e:2ab331106e2dfe8d57b16a7f2246d8d0205dd1f3098df8745076e816d700696e"
+        },
+        {
+          "createdAtUtc": "2026-11-23T13:13:18.728Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "心愿广场石路草缘",
+            "summary": "shiguang-plaza-completion",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/31e1341b41c5475a92fe969dfb11295f.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/s85rlhd8vdwck2l6.wprefab",
+            "metadata": {
+              "capacity": 13309,
+              "faceCount": 12909,
+              "logicalCenter": [
+                -11.5,
+                -1.8040000200271606,
+                0.125
+              ],
+              "rigged": false
+            },
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-plaza-completion",
+          "revisionId": "external:automation:8cdb304a-2d3e-4f56-8c43-2e2503d03bd8:9b569d6893bd83a16d854f2cfadcf7d08f67516056882eacd1a5af7d77366b8e:9b569d6893bd83a16d854f2cfadcf7d08f67516056882eacd1a5af7d77366b8e"
+        },
+        {
+          "createdAtUtc": "2026-11-24T11:57:48.739Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/3da501cdd9aa463a90de6036f47906d1.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/6wg262yqrvsww1of.wprefab",
+            "metadata": {
+              "capacity": 678752,
+              "faceCount": 598673,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:e1a0f989-f2b5-4792-ac1e-e6b05b871b46:e55c769c9aa0e9db29391eebdf8de1b3f6d2bea4d3cbcc010acc940ebb407534:e55c769c9aa0e9db29391eebdf8de1b3f6d2bea4d3cbcc010acc940ebb407534"
+        },
+        {
+          "createdAtUtc": "2026-11-24T12:15:40.748Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/4902cd88d98a462e86228d92b3076273.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/r39rfq7ocl7qj6cp.wprefab",
+            "metadata": {
+              "capacity": 678756,
+              "faceCount": 598677,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:340c8254-ed85-4fdb-b86e-5f088929448c:87f1eff864e24417c706f721d362a74e8fa5f17f70dbb11c813674821792f624:87f1eff864e24417c706f721d362a74e8fa5f17f70dbb11c813674821792f624"
+        },
+        {
+          "createdAtUtc": "2026-11-24T12:37:29.831Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/6716c392cc944de593d06b12273c468f.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/eitflflegg6eihqv.wprefab",
+            "metadata": {
+              "capacity": 678240,
+              "faceCount": 598677,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:2c67ed4c-7d3b-4f6d-bfdb-e67ac1e63fc8:b0a172edfd878ae34b1cf12e4de357134b3d149888d7a7b88363d02d41f7960a:b0a172edfd878ae34b1cf12e4de357134b3d149888d7a7b88363d02d41f7960a"
+        },
+        {
+          "createdAtUtc": "2026-11-25T04:52:10.029Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/b788b9a776ab45e6aca96b4be3526e78.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/o2ipzp9uitki9n62.wprefab",
+            "metadata": {
+              "capacity": 768059,
+              "faceCount": 688096,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:af3db980-7de8-4b3f-a7f8-e69e43207471:8110da41674630f9c98911e8a4bd90efe619cca51ad590a59a1698a8ea9f80b2:8110da41674630f9c98911e8a4bd90efe619cca51ad590a59a1698a8ea9f80b2"
+        },
+        {
+          "createdAtUtc": "2026-11-25T06:52:16.006Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/15e75fd0c9514fc6928b1f6775ee59c3.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/y7gbk41sh5cgq9ti.wprefab",
+            "metadata": {
+              "capacity": 787459,
+              "faceCount": 707096,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:f52cefb9-54f8-4490-b7e2-3e1649686899:9fd8c0ac55fa13067058dfeedf51a0b42a4f0497fde719334cc28648e612bddf:9fd8c0ac55fa13067058dfeedf51a0b42a4f0497fde719334cc28648e612bddf"
+        },
+        {
+          "createdAtUtc": "2026-11-25T10:25:58.042Z",
+          "type": "wprefab",
+          "artifact": {
+            "displayName": "时光小筑2.5D风之杖抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/1f8b4e9c8d3f4d7cac18c81361918608.png",
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/qzof45wxtf0okly6.wprefab",
+            "metadata": {
+              "capacity": 1181822,
+              "faceCount": 1093779,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "hasRuntimeScript": true,
+            "hasAudio": false,
+            "hasExpandableAssets": true
+          },
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:58a8602b-98c5-40ae-aad8-7a471588ff3f:77cb1f1717aae3e32600ba5fc8fd68e137c40faeb6ab5e77dbbb539513d4ebcb:77cb1f1717aae3e32600ba5fc8fd68e137c40faeb6ab5e77dbbb539513d4ebcb"
+        },
+        {
+          "type": "wprefab",
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:057535f7-88e5-4251-90d8-b442c7533209:d81a0c4c2744f33a1bd7c92e87e5c3e7e927c774ae77a30cc48cb495840c96e2:d81a0c4c2744f33a1bd7c92e87e5c3e7e927c774ae77a30cc48cb495840c96e2",
+          "createdAtUtc": "2026-11-26T05:20:15.767Z",
+          "artifact": {
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/irati3cto8gvzch7.wprefab",
+            "displayName": "shiguang-25d-windwaker",
+            "summary": "shiguang-25d-windwaker",
+            "hasRuntimeScript": true,
+            "hasAudio": true,
+            "hasExpandableAssets": true,
+            "metadata": {
+              "capacity": 1217445,
+              "faceCount": 1094550,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": false
+            },
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/e92adfb9c29d479ea96de4d0348aee5d.png"
+          }
+        },
+        {
+          "type": "wprefab",
+          "artifactId": "shiguang-25d-windwaker",
+          "revisionId": "external:automation:34ff0c59-646f-478c-b8f5-5183d3db1536:450320579dbd1c618b78e9b845803b74b9c63e289fd42138d890b8e9c4421876:450320579dbd1c618b78e9b845803b74b9c63e289fd42138d890b8e9c4421876",
+          "createdAtUtc": "2026-11-26T06:27:24.481Z",
+          "artifact": {
+            "uri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/dqmwp0c48in0gkmb.wprefab",
+            "displayName": "时光小筑·抱月湾",
+            "summary": "shiguang-25d-windwaker",
+            "hasRuntimeScript": true,
+            "hasAudio": true,
+            "hasExpandableAssets": true,
+            "metadata": {
+              "capacity": 1295202,
+              "faceCount": 1166766,
+              "logicalCenter": [
+                0,
+                33.79999999701977,
+                0
+              ],
+              "rigged": true
+            },
+            "thumbnailUri": "tos-cn-i-c2ox06qgwk/aigc_editor/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/149f1be0828448a6a43da6161230078e.png"
+          }
+        }
+      ],
+      "routeMode": "auto",
+      "skillSelection": {
+        "contextSkillIds": []
+      },
+      "workspaceId": "workspace_024l9gls",
+      "workspacePreferences": {
+        "topology": {
+          "provider": "douyin-3d",
+          "styleLora": "none"
+        }
+      }
+    }
+  ],
+  "draftConfig": {
+    "activeMode": "agent",
+    "directModelPreferences": {
+      "faceCount": 2000,
+      "modelVendor": "douyin-3d",
+      "quality": "standard",
+      "styleId": 2
+    },
+    "questionPreference": {
+      "mode": "ask"
+    },
+    "skillSelection": {
+      "contextSkillIds": []
+    },
+    "workspacePreferences": {
+      "topology": {
+        "provider": "douyin-3d",
+        "styleLora": "none"
+      }
+    },
+    "routeMode": "auto"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-windwaker-bay",
+  "displayName": "风之杖抱月湾连续地形",
+  "summary": "平滑四倍抱月湾地形 + 西岬拱桥 + 隐形海界围栏",
+  "nodeMergeBlacklist": [
+    "Invisible_Sea_Boundary_Main",
+    "Invisible_Sea_Boundary_South",
+    "WindWaker_Bay_Terrain",
+    "F37_West_Arch_Bridge"
+  ]
+}

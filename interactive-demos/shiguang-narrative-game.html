@@ -1,0 +1,3987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《时光小筑》4× 抱月海湾 · 离线完整叙事游戏</title>
+  <style>
+    :root {
+      --cream-green: #B7DDA8;
+      --sage-leaf: #93C794;
+      --warm-sand: #F5E6C8;
+      --mint-sea: #7CC6E8;
+      --honey-wood: #E4BA8B;
+      --toasted-wood: #9D623E;
+      --terracotta: #B96A59;
+      --cream-wall: #FFF5E4;
+      --cream-card: rgba(255, 248, 235, 0.94);
+      --slate-ink: #46455E;
+      --warm-slate: #5A587D;
+      --amber-glow: #FFD67A;
+      --border-wood: #D9AC7C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: #7CC6E8;
+      color: var(--slate-ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, -apple-system, sans-serif;
+      user-select: none;
+    }
+    #gameCanvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      cursor: grab;
+      touch-action: none;
+    }
+    #gameCanvas.dragging { cursor: grabbing; }
+
+    .hud-pill {
+      background: var(--cream-card);
+      border: 2px solid var(--border-wood);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(90, 88, 125, 0.16);
+      backdrop-filter: blur(6px);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 6px 11px; border-radius: 12px;
+      border: 1.5px solid var(--border-wood);
+      background: #FFF9EE; color: var(--slate-ink);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: transform 0.1s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { background: #FFF0D4; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn.active, .btn.primary {
+      background: var(--terracotta); color: #FFF8EE; border-color: #9D4E3F;
+    }
+    .btn.primary:hover { background: #A85B4A; }
+    .btn.mint { background: #D7F2EE; border-color: #6DB3AA; color: #2D5A55; }
+    .btn.amber { background: #FFE8AF; border-color: #D8A348; color: #6B440E; }
+
+    /* Top HUD */
+    #topLeftHud {
+      position: fixed; top: 12px; left: 12px; z-index: 20;
+      display: flex; flex-direction: column; gap: 8px; max-width: 440px;
+    }
+    #chapterCard {
+      padding: 9px 14px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .chapter-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+      background: #E9F5E3; color: #3D6B3B; border: 1px solid #93C794;
+    }
+    .badge.amber { background: #FFF1C9; color: #8A5311; border-color: #E4BA8B; }
+    #questDropdown {
+      padding: 10px 14px; font-size: 12px; line-height: 1.5;
+      max-height: 55vh; overflow-y: auto;
+    }
+    .hidden { display: none !important; }
+
+    #topRightHud {
+      position: fixed; top: 12px; right: 12px; z-index: 20;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    }
+    #envBar {
+      padding: 7px 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .stat-chip {
+      font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 10px;
+      background: #FFFDF8; border: 1px solid var(--border-wood);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+
+    /* Bottom Left MiniMap */
+    #miniMapWrap {
+      position: fixed; bottom: 12px; left: 12px; z-index: 20;
+      padding: 8px; display: flex; flex-direction: column; gap: 6px; width: 196px;
+    }
+    #miniMapCanvas {
+      width: 176px; height: 152px; border-radius: 10px;
+      border: 1.5px solid var(--border-wood); background: #7CC6E8; cursor: pointer;
+    }
+    .mini-hint { font-size: 10.5px; color: var(--warm-slate); line-height: 1.35; }
+
+    /* Context Interact Pill */
+    #interactPillWrap {
+      position: fixed; bottom: 86px; left: 50%; transform: translateX(-50%);
+      z-index: 25; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      pointer-events: none;
+    }
+    #interactPillWrap .btn {
+      pointer-events: auto; padding: 8px 16px; font-size: 13px; border-radius: 999px;
+      box-shadow: 0 6px 18px rgba(70, 69, 94, 0.25);
+    }
+
+    /* Bottom Right Dock */
+    #bottomDock {
+      position: fixed; bottom: 12px; right: 12px; z-index: 20;
+      padding: 7px 10px; display: flex; flex-wrap: wrap; gap: 6px; max-width: 520px; justify-content: flex-end;
+    }
+
+    /* Toast / Banner */
+    #toastBanner {
+      position: fixed; top: 72px; left: 50%; transform: translateX(-50%);
+      z-index: 40; padding: 9px 18px; border-radius: 999px;
+      background: rgba(70, 69, 94, 0.92); color: #FFF8EE;
+      border: 2px solid var(--amber-glow);
+      font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none; text-align: center; max-width: 86vw;
+    }
+
+    /* Interior Overlay Banner */
+    #interiorBanner {
+      position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+      z-index: 26; padding: 7px 14px; display: flex; align-items: center; gap: 10px;
+    }
+
+    /* Dialogue Theater Box */
+    #dialogueModal {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: min(680px, 92vw); z-index: 35; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .dlg-header { display: flex; align-items: center; gap: 12px; }
+    .dlg-portrait {
+      width: 58px; height: 58px; border-radius: 14px; object-fit: cover;
+      border: 2px solid var(--border-wood); background: #FFF5E4; flex-shrink: 0;
+    }
+    .dlg-motion { padding: 0; flex-shrink: 0; }
+    .dlg-motion canvas { display: block; width: 54px; height: 54px; }
+    .dlg-text {
+      font-size: 14.5px; line-height: 1.6; min-height: 46px;
+      padding: 10px 12px; border-radius: 12px;
+      background: #FFFDF8; border: 1.5px solid #EBD3B4;
+    }
+    .dlg-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dlg-choices .btn { flex: 1 1 200px; padding: 9px 12px; font-size: 13px; }
+    .dlg-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+    /* Slide-over Side Drawer & Center Modal */
+    #drawerOverlay {
+      position: fixed; inset: 0; z-index: 45;
+      background: rgba(70, 69, 94, 0.34);
+      display: flex; justify-content: flex-end;
+    }
+    #sideDrawer {
+      width: min(560px, 96vw); height: 100%;
+      background: #FFF8EC; border-left: 3px solid var(--border-wood);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: -8px 0 32px rgba(70, 69, 94, 0.22);
+    }
+    .drawer-tabs {
+      display: flex; gap: 4px; padding: 10px 12px; background: #F5E6C8;
+      border-bottom: 2px solid var(--border-wood); overflow-x: auto; align-items: center;
+    }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .panel-box {
+      background: #FFFDF8; border: 1.5px solid #E4BA8B; border-radius: 14px; padding: 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    .pixel-grid {
+      display: grid; grid-template-columns: repeat(12, 22px); gap: 2px;
+      padding: 8px; background: #F5E6C8; border-radius: 10px; border: 1.5px solid var(--border-wood);
+      width: fit-content; margin: 0 auto;
+    }
+    .pixel-cell {
+      width: 22px; height: 22px; border-radius: 3px; border: 1px solid rgba(90, 88, 125, 0.16);
+      cursor: pointer; padding: 0;
+    }
+    .swatch {
+      width: 24px; height: 24px; border-radius: 999px; border: 2px solid transparent; cursor: pointer;
+    }
+    .swatch.active { border-color: var(--slate-ink); transform: scale(1.12); }
+
+    /* 62 Assets Gallery Modal */
+    #galleryModal {
+      position: fixed; inset: 20px; z-index: 55;
+      background: #FFF8EC; border: 3px solid var(--border-wood); border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(70, 69, 94, 0.35);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;
+    }
+    .asset-card {
+      background: #FFFDF8; border: 1.5px solid #E4BA8B; border-radius: 12px; padding: 8px;
+      display: flex; flex-direction: column; gap: 5px; cursor: pointer; text-align: left;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .asset-card:hover { transform: translateY(-2px); border-color: var(--terracotta); }
+    .asset-thumb-wrap {
+      width: 100%; height: 106px; border-radius: 8px; background: #F8EFE0;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .asset-thumb { width: 100%; height: 100%; object-fit: contain; }
+    .asset-fallback {
+      font-size: 11px; color: var(--warm-slate); text-align: center; padding: 6px;
+    }
+
+    input[type="text"], select {
+      padding: 6px 10px; border-radius: 10px; border: 1.5px solid var(--border-wood);
+      background: #FFFDF8; color: var(--slate-ink); font-size: 12px;
+    }
+    .progress-bar {
+      width: 100%; height: 8px; border-radius: 999px; background: #EAD9BF; overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--sage-leaf); transition: width 0.25s ease; }
+    .chip-action {
+      font-size: 11px; padding: 2px 7px; border-radius: 8px; background: #EEEAF6;
+      color: var(--warm-slate); border: 1px solid #D3CCE6; font-family: monospace;
+    }
+    .res-card {
+      background: #FFFDF8; border: 1.5px solid #E4BA8B; border-radius: 12px; padding: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- 顶部左上角：主线进度与章节控制 -->
+  <div id="topLeftHud">
+    <div id="chapterCard" class="hud-pill">
+      <div class="chapter-row">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <strong style="font-size:14px;">🏡 时光小筑 · 抱月海湾 4×</strong>
+          <span id="chapterBadge" class="badge">序幕</span>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button id="toggleQuestBtn" class="btn">📋 进度清单</button>
+          <button id="toggleFreeRoamBtn" class="btn" title="切换正常剧情解锁或全岛自由漫游">🧭 漫游: 正常</button>
+        </div>
+      </div>
+      <div id="chapterSubtitle" style="font-size:11.5px;color:var(--warm-slate);"></div>
+    </div>
+
+    <div id="questDropdown" class="hud-pill hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <strong>五幕主线进度 &amp; 快速测试推进</strong>
+        <button id="closeQuestBtn" class="btn" style="padding:2px 7px;">✕</button>
+      </div>
+      <div id="questChecklist"></div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-wood);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:11px;color:var(--warm-slate);">快速审阅跳章：</span>
+        <select id="chapterJumpSelect"></select>
+        <button id="chapterJumpBtn" class="btn amber">跳转此章</button>
+        <button id="triggerConcertBtn" class="btn primary">🎵 终章回声音乐会</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顶部右上角：三时段、天气、统计数值 -->
+  <div id="topRightHud">
+    <div id="envBar" class="hud-pill">
+      <button data-tod="afternoon" class="btn tod-btn active">☀️ 午后</button>
+      <button data-tod="dusk" class="btn tod-btn">🌇 黄昏</button>
+      <button data-tod="night" class="btn tod-btn">🌙 星夜</button>
+      <select id="weatherSelect" title="海湾天气">
+        <option value="sunny">🌤️ 暖阳</option>
+        <option value="breeze">🍃 海风</option>
+        <option value="rain">🌧️ 细雨</option>
+        <option value="starlight">✨ 星芒</option>
+      </select>
+      <button id="photoSnapBtn" class="btn mint" title="拍照留念 (+1 拍照记录)">📷 拍照</button>
+      <button id="bgmToggleBtn" class="btn" title="切换柔和八音盒氛围音">🎵 音乐:关</button>
+      <button id="muteBtn" class="btn" title="静音切换">🔊</button>
+    </div>
+    <div class="hud-pill" style="padding:5px 10px;display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="stat-chip">💛 暖心 <span id="statWarm">0</span></span>
+      <span class="stat-chip">📖 记忆 <span id="statMem">0</span>/26</span>
+      <span class="stat-chip">🎭 剧本 <span id="statScripts">0</span>/27</span>
+      <span class="stat-chip">📍 <span id="statZone">Zone 0</span></span>
+    </div>
+  </div>
+
+  <!-- 室内模式提示栏 -->
+  <div id="interiorBanner" class="hud-pill hidden">
+    <strong id="interiorTitle" style="font-size:13px;">正在室内</strong>
+    <span style="font-size:11.5px;color:var(--warm-slate);">点击室内陈设或按 E 交互</span>
+    <button id="exitInteriorBtn" class="btn primary">🚪 走出室外 [E]</button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastBanner" class="hidden"></div>
+
+  <!-- 邻近交互快捷悬浮按钮 -->
+  <div id="interactPillWrap"></div>
+
+  <!-- 左下角：迷你雷达与操控提示 -->
+  <div id="miniMapWrap" class="hud-pill">
+    <canvas id="miniMapCanvas" width="176" height="152"></canvas>
+    <div class="mini-hint">
+      <b>WASD/方向键/点地面</b> 行走 · <b>滚轮</b> 缩放<br/>
+      <b>按住拖动居民</b> 轻推(つまむ) · <b>E</b> 交互<br/>
+      <span id="directorStatusLine" style="color:#8A5311;">导演调度：65/35 引力潮汐运行中</span>
+    </div>
+  </div>
+
+  <!-- 右下角：功能抽屉入口 -->
+  <div id="bottomDock" class="hud-pill">
+    <button class="btn" data-drawer="mendel">🌷 孟德尔花圃</button>
+    <button class="btn" data-drawer="flag">🚩 12×12像素旗</button>
+    <button class="btn" data-drawer="chalk">🖍️ 黑板流行语</button>
+    <button class="btn" data-drawer="codex">📖 居民与26记忆</button>
+    <button class="btn amber" id="openGalleryBtn">🖼️ 62项3D特写</button>
+    <button class="btn" data-drawer="save">💾 存档(<span id="dockBytes">0</span>B)</button>
+  </div>
+
+  <!-- 剧本 / 日常对话浮窗 -->
+  <div id="dialogueModal" class="hud-pill hidden">
+    <div class="dlg-header">
+      <img id="dlgPortrait" class="dlg-portrait" alt="resident" />
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <strong id="dlgSpeaker" style="font-size:15px;">角色</strong>
+          <span id="dlgBadge" class="badge">剧情</span>
+          <span id="dlgActionChip" class="chip-action hidden"></span>
+        </div>
+        <div id="dlgSubtitle" style="font-size:11.5px;color:var(--warm-slate);margin-top:2px;"></div>
+      </div>
+      <button id="dlgMotionReplay" class="btn dlg-portrait dlg-motion hidden" aria-label="重播当前动作" title="重播当前动作">
+        <canvas id="dlgMotionCanvas" width="108" height="108" aria-hidden="true"></canvas>
+      </button>
+      <button id="dlgCloseBtn" class="btn" style="padding:3px 9px;">✕</button>
+    </div>
+    <div id="dlgText" class="dlg-text"></div>
+    <div id="dlgHintRow" class="hidden" style="font-size:11.5px;padding:6px 10px;border-radius:10px;background:#FFF3D6;border:1px solid #E4BA8B;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span id="dlgHintText"></span>
+      <button id="dlgGoHintBtn" class="btn amber" style="padding:3px 9px;">✨ 前往演绎此幕</button>
+    </div>
+    <div id="dlgChoices" class="dlg-choices hidden"></div>
+    <div class="dlg-footer">
+      <div id="dlgFeedBar" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <select id="feedFoodSelect" style="max-width:155px;"></select>
+        <button id="feedFoodBtn" class="btn mint">🥐 投喂试吃</button>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button id="dlgReplayVoiceBtn" class="btn">🔊 重听音节</button>
+        <button id="dlgNextBtn" class="btn primary">继续 ▸ [Space]</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 侧边综合抽屉 -->
+  <div id="drawerOverlay" class="hidden">
+    <div id="sideDrawer">
+      <div class="drawer-tabs">
+        <button class="btn dtab" data-tab="mendel">🌷 花圃育种</button>
+        <button class="btn dtab" data-tab="flag">🚩 像素旗</button>
+        <button class="btn dtab" data-tab="chalk">🖍️ 黑板词库</button>
+        <button class="btn dtab" data-tab="codex">📖 居民/记忆</button>
+        <button class="btn dtab" data-tab="save">💾 存档/调试</button>
+        <button id="closeDrawerBtn" class="btn" style="margin-left:auto;">✕</button>
+      </div>
+      <div id="drawerBody" class="drawer-body"></div>
+    </div>
+  </div>
+
+  <!-- 62项 3D 资产特写图鉴弹窗 -->
+  <div id="galleryModal" class="hidden">
+    <div class="drawer-tabs" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <strong style="font-size:15px;">🖼️ 62 项 3D 建模资产干净特写图鉴</strong>
+        <span class="badge">全部本地离线路径 · 零外链</span>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <select id="galBatchFilter">
+          <option value="all">全部批次 (62)</option>
+          <option value="A">Batch A · 核心老镇 (20)</option>
+          <option value="B">Batch B · 西东翼地标 (13)</option>
+          <option value="C">Batch C · 北谷南屿捷径 (11)</option>
+          <option value="D">Batch D · 9居民与微Props (18)</option>
+        </select>
+        <select id="galCatFilter">
+          <option value="all">全部类型</option>
+          <option value="architecture">建筑 architecture (29)</option>
+          <option value="prop">道具设施 prop (20)</option>
+          <option value="character">常驻居民 character (9)</option>
+          <option value="flora">生态植被 flora (3)</option>
+          <option value="ugc">轻拼贴 UGC (1)</option>
+        </select>
+        <input id="galSearchInput" type="text" placeholder="搜索编号或名称..." style="width:140px;" />
+        <button id="closeGalleryBtn" class="btn primary">✕ 关闭</button>
+      </div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1.35fr 1fr;overflow:hidden;">
+      <div id="galleryGridWrap" style="overflow-y:auto;padding:12px;">
+        <div id="galleryGrid" class="gallery-grid"></div>
+      </div>
+      <div id="galleryDetail" style="overflow-y:auto;padding:14px;background:#FFFDF8;border-left:2px solid var(--border-wood);display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- 核心本地数据脚本（file:// 双击直接运行，零 CORS） -->
+  <script src="../workspace/data/narrative-db.js"></script>
+  <script src="../workspace/data/character-mini-scripts.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    // ==================== 0. 数据校验与 62 项 3D 资产映射表 ====================
+    const DB = window.SHIGUANG_DB;
+    const MS = window.SHIGUANG_MINI_SCRIPTS;
+    if (!DB || !MS) {
+      alert("未能加载 ../workspace/data/narrative-db.js 或 character-mini-scripts.js，请确认在项目目录中打开。");
+      return;
+    }
+
+    const ASSETS_62 = [
+      {id:"F01-arrival-dock",code:"F01",batch:"A",category:"architecture",name_zh:"登岛小码头",name_en:"Coastal Arrival Wooden Dock",zone:"Zone 0 · 潮汐沙滩 L0",dimensions:"6.0m x 5.0m x 2.6m",subject:"带有灯笼拱门的木质登岛迎宾码头"},
+      {id:"F02-fishing-pier",code:"F02",batch:"A",category:"architecture",name_zh:"木质钓鱼栈桥",name_en:"Wooden Coastal Fishing Pier",zone:"Zone 0 · 潮汐沙滩 L0",dimensions:"4.0m x 8.0m x 2.2m",subject:"延伸向海湾的亲水木栈桥与拐角灯柱"},
+      {id:"F03-beach-discovery",code:"F03",batch:"A",category:"prop",name_zh:"漂流瓶与海星贝壳礁石组",name_en:"Message Bottle, Scallop Shells and Smooth Coastal Pebble Cluster",zone:"Zone 0 · 潮汐沙滩 L0",dimensions:"2.4m x 1.8m x 0.9m",subject:"薄荷海玻璃漂流瓶、扇贝与珊瑚海星礁石簇"},
+      {id:"F04-main-cottage",code:"F04",batch:"A",category:"architecture",name_zh:"时光小筑主木屋",name_en:"Shiguang Main Timber Cottage",zone:"Zone 0 · 主庭院 L1",dimensions:"8.0m x 6.0m x 4.8m",subject:"红陶瓦扇形屋顶、石砌烟囱与可入室木门廊"},
+      {id:"F05-coffee-terrace",code:"F05",batch:"A",category:"architecture",name_zh:"户外咖啡茶桌露台",name_en:"Outdoor Wooden Coffee & Tea Terrace Set",zone:"Zone 0 · 主庭院 L1",dimensions:"5.0m x 4.0m x 1.4m",subject:"双层木露台配圆角咖啡桌与肉桂卷茶具"},
+      {id:"F06-mendel-flowerbed",code:"F06",batch:"A",category:"prop",name_zh:"孟德尔杂交花圃",name_en:"Mendel Genetics Raised Wooden Flowerbed",zone:"Zone 0 · 主庭院 L1",dimensions:"6.0m x 4.0m x 1.0m",subject:"高架蜂蜜木花床内置 3×4 彩色绘本花株"},
+      {id:"F07-pixel-flagpole",code:"F07",batch:"A",category:"prop",name_zh:"12x12像素小鱼旗杆",name_en:"Pixel Fish Banner Wooden Flagpole",zone:"Zone 0 · 主庭院 L1",dimensions:"1.6m x 1.6m x 4.2m",subject:"石座木旗杆悬挂奶油框 12×12 像素织物小旗"},
+      {id:"F08-chalkboard",code:"F08",batch:"A",category:"prop",name_zh:"庭院涂鸦留言黑板",name_en:"Courtyard Doodle Chalkboard Easel",zone:"Zone 0 · 主庭院 L1",dimensions:"2.0m x 1.2m x 1.8m",subject:"A字木框深石板黑板架配粉笔小太阳与郁金香涂鸦"},
+      {id:"F09-wish-fountain",code:"F09",batch:"A",category:"architecture",name_zh:"中心心愿喷泉",name_en:"Central Stone Wish Fountain",zone:"Zone 0 · 心愿广场 L1",dimensions:"6.0m x 6.0m x 2.2m",subject:"圆润双层卵石圆池喷泉蓄满薄荷碧水"},
+      {id:"F10-retro-vending",code:"F10",batch:"A",category:"prop",name_zh:"复古马卡龙自动售货机",name_en:"Retro Pastel Macaron Vending Machine",zone:"Zone 0 · 心愿广场 L1",dimensions:"2.5m x 2.0m x 2.4m",subject:"腮红粉与粉蓝搪瓷复古饮品贩卖机"},
+      {id:"F11-plaza-benches",code:"F11",batch:"A",category:"prop",name_zh:"广场八卦长椅与花盆组",name_en:"Town Plaza Wooden Benches and Terracotta Planters",zone:"Zone 0 · 心愿广场 L1",dimensions:"5.0m x 2.5m x 1.2m",subject:"双人木条公园长椅配薄荷坐垫与红陶花盆"},
+      {id:"F12-cafe-kiosk",code:"F12",batch:"A",category:"architecture",name_zh:"露天海风条纹咖啡小卖部",name_en:"Sea-Breeze Striped Cafe Kiosk",zone:"Zone 0 · 心愿广场 L1",dimensions:"5.0m x 4.0m x 3.4m",subject:"蓝白条纹扇贝檐蓬咖啡木亭与小铜铃吧台"},
+      {id:"F13a-house-amber",code:"F13a",batch:"A",category:"architecture",name_zh:"居民萌屋·琥珀屋",name_en:"Resident Amber Gable Cottage",zone:"Zone 0 · 生活小巷 L1",dimensions:"5.0m x 4.5m x 4.0m",subject:"奶杏粉刷墙面配暖陶陡坡屋顶的阿橘居所"},
+      {id:"F13b-house-sage",code:"F13b",batch:"A",category:"architecture",name_zh:"居民萌屋·鼠尾草屋",name_en:"Resident Sage-Green Saltbox Cottage",zone:"Zone 0 · 生活小巷 L1",dimensions:"5.0m x 4.5m x 4.4m",subject:"鼠尾草绿不对称盐盒顶萌屋（绵绵居所）"},
+      {id:"F13c-house-blue",code:"F13c",batch:"A",category:"architecture",name_zh:"居民萌屋·海风屋",name_en:"Resident Sea-Breeze Hip-Roof Cottage",zone:"Zone 0 · 生活小巷 L1",dimensions:"5.0m x 4.5m x 3.8m",subject:"灰蓝四坡瓦顶与条纹门篷海风萌屋（奶包居所）"},
+      {id:"F14-swing-pavilion",code:"F14",batch:"A",category:"architecture",name_zh:"社区秋千与小吉他亭",name_en:"Community Timber Swing Pavilion with Guitar",zone:"Zone 0 · 生活小巷 L1",dimensions:"5.0m x 5.0m x 3.2m",subject:"四柱木凉亭悬吊双人木秋千与靠柱原声吉他"},
+      {id:"F15-windmill-tower",code:"F15",batch:"A",category:"architecture",name_zh:"北高台八角木质风车塔",name_en:"Octagonal Timber & Stone Windmill Tower",zone:"Zone 0 · 观景高台 L2",dimensions:"5.0m x 5.0m x 8.5m",subject:"卵石圆基座上八角木塔与四片格栅帆布风车叶"},
+      {id:"F16-sunset-overlook",code:"F16",batch:"A",category:"architecture",name_zh:"日落观景望远镜木亭",name_en:"Hilltop Overlook Gazebo with Coin Telescope",zone:"Zone 0 · 观景高台 L2",dimensions:"5.0m x 3.0m x 3.5m",subject:"高台蓝脊木亭与黄铜蓝身海景投币望远镜"},
+      {id:"F17-three-fruit-tree",code:"F17",batch:"A",category:"flora",name_zh:"三果实标志圆润果树",name_en:"Three-Fruit Stylized Storybook Orchard Tree",zone:"Zone 0 · 秘境果林 L2",dimensions:"3.2m x 3.2m x 4.4m",subject:"三团蓬松鼠尾草树冠结三颗蜜桃珊瑚果"},
+      {id:"F18-memory-stone-corner",code:"F18",batch:"A",category:"prop",name_zh:"时光石与纸片宠物打卡坪",name_en:"Memory Inscribed Stone Tablet & Photo Spot",zone:"Zone 0 · 秘境果林 L2",dimensions:"4.5m x 4.0m x 2.2m",subject:"刻有太阳海浪徽记的圆润时光石碑与留影架"},
+      {id:"F19-windchime-post-office",code:"F19",batch:"B",category:"architecture",name_zh:"风铃旧邮局",name_en:"Wind-Chime Coastal Post Office",zone:"Zone W · 西翼 L1",dimensions:"9.0m x 7.0m x 5.5m",subject:"薄荷绿弧形双门与挂满玻璃风铃的海滨老邮局"},
+      {id:"F20-mailbox-gallery",code:"F20",batch:"B",category:"architecture",name_zh:"阶梯复古信箱画廊与邮包棚",name_en:"Stepped Mailbox Gallery & Parcel Shelter",zone:"Zone W · 西翼 L1",dimensions:"6.0m x 4.0m x 3.2m",subject:"阶梯彩色信箱墙与 12×12 像素邮票陈列架"},
+      {id:"F21-windchime-corridor",code:"F21",batch:"B",category:"architecture",name_zh:"海岬风铃长廊与信号旗台",name_en:"Cape Wind-Chime Pergola Corridor",zone:"Zone W · 西翼 L2",dimensions:"8.0m x 4.0m x 3.8m",subject:"弧木廊架垂吊彩贝风铃串与信号旗立柱"},
+      {id:"F22-west-cape-lighthouse",code:"F22",batch:"B",category:"architecture",name_zh:"西岬旧灯塔",name_en:"West Cape Storybook Lighthouse",zone:"Zone W · 西岬高崖 L3",dimensions:"7.0m x 7.0m x 11.5m",subject:"奶油红陶宽条纹圆塔配环绕木廊与旋转琥珀灯室"},
+      {id:"F23-cliff-cottage",code:"F23",batch:"B",category:"architecture",name_zh:"西北山崖灰蓝尖瓦萌屋",name_en:"Northwest Cliff Slate-Blue Pointed-Roof Cottage",zone:"Zone W · 西北高崖 L2",dimensions:"5.5m x 4.5m x 4.2m",subject:"灰蓝尖屋顶配小铜鱼风向标与门前邮筒"},
+      {id:"F24-driftwood-campfire",code:"F24",batch:"B",category:"prop",name_zh:"西滩漂流木篝火角",name_en:"Driftwood Beach Campfire Circle",zone:"Zone W · 西滩 L0",dimensions:"6.0m x 5.0m x 1.4m",subject:"海卵石篝火圈配三根日晒漂流木长凳与铁壶"},
+      {id:"F25-bakery-kiln-stall",code:"F25",batch:"B",category:"architecture",name_zh:"微光夜市红砖烤包窑炉与串灯木摊",name_en:"Night-Market Brick Bakery Kiln & String-Light Stall",zone:"Zone E · 微光夜市 L1",dimensions:"6.0m x 5.0m x 4.0m",subject:"拱顶红砖柴火面包窑炉连结暖串灯糕点摊"},
+      {id:"F26-old-boatyard",code:"F26",batch:"B",category:"architecture",name_zh:"旧造船木工坊",name_en:"Coastal Wooden Boatyard Workshop",zone:"Zone E · 东湾船坞 L0-L1",dimensions:"10.0m x 8.0m x 5.0m",subject:"开放木桁架船坞停放半完工弧底木小艇"},
+      {id:"F27-daylight-lightship",code:"F27",batch:"B",category:"architecture",name_zh:"搁浅的白昼号潮汐灯船",name_en:"Beached Daylight Tidal Lightship",zone:"Zone E · 东湾浅滩 L0",dimensions:"11.0m x 5.0m x 9.5m",subject:"薄荷蓝白船体搁浅木垫上，中央主桅悬琥珀航灯"},
+      {id:"F28-tidepool-rocks",code:"F28",batch:"B",category:"prop",name_zh:"潮间带海蚀圆礁石与浅池组",name_en:"Intertidal Smooth Coastal Rock & Tidepool Cluster",zone:"Zone E · 潮间带 L-0.5",dimensions:"4.5m x 3.8m x 1.5m",subject:"砂岩圆礁抱合的薄荷浅池含海星、海玻璃与寄居蟹"},
+      {id:"F29-kite-terrace-bench",code:"F29",batch:"B",category:"architecture",name_zh:"茶花梯田木阶与纸风筝架",name_en:"Camellia Terrace Wooden Platform & Kite Stand",zone:"Zone E · 东山梯田 L2",dimensions:"5.0m x 4.0m x 2.8m",subject:"双层木梯田坐台与粉白茶花槽及纸风筝展架"},
+      {id:"F30-studio-cottage",code:"F30",batch:"B",category:"architecture",name_zh:"东岸芥末黄工坊画室萌屋",name_en:"East-Shore Mustard-Yellow Craft Studio Cottage",zone:"Zone E · 东岸 L1-L2",dimensions:"5.5m x 4.5m x 4.2m",subject:"芥末奶油墙面配薄荷瓦天窗及门外户外小画架"},
+      {id:"F31-memory-greenhouse",code:"F31",batch:"B",category:"architecture",name_zh:"溪谷记忆温室与森林图书馆",name_en:"Valley Memory Conservatory Greenhouse & Library",zone:"Zone N · 北麓溪谷 L2",dimensions:"12.0m x 9.0m x 6.2m",subject:"圆石矮墙承托弧形木肋玻璃穹顶，内设书架与花床"},
+      {id:"F32-creek-arch-bridge",code:"F32",batch:"C",category:"architecture",name_zh:"萤火浅溪原木拱桥",name_en:"Firefly Creek Arched Timber Footbridge",zone:"Zone N · 北麓溪谷 L2",dimensions:"6.0m x 2.6m x 2.0m",subject:"≤12°缓弧蜂蜜木板小拱桥配双盏萤火风灯柱"},
+      {id:"F33-forest-watermill",code:"F33",batch:"C",category:"architecture",name_zh:"森林水车磨坊与旧留声亭",name_en:"Forest Watermill Cottage & Vintage Phonograph Kiosk",zone:"Zone N · 东溪口 L2",dimensions:"7.0m x 6.0m x 4.8m",subject:"石木磨坊侧挂大木水车轮，门廊陈列铜喇叭留声机"},
+      {id:"F34-camphor-bell-pavilion",code:"F34",batch:"C",category:"architecture",name_zh:"古樟星穹钟楼与环树观景台",name_en:"Ancient Camphor Tree Bell Tower & Circular Overlook Deck",zone:"Zone N · 北麓制高点 L3",dimensions:"12.0m x 10.0m x 12.5m",subject:"环抱百年大樟树的圆形木观景台与星穹铜钟亭"},
+      {id:"F35-timber-slide",code:"F35",batch:"C",category:"architecture",name_zh:"林间快速下行圆木滑道组件",name_en:"Smooth Curved Wooden Hillside Slide Chute",zone:"Zone N · 北坡滑道 L3->L1",dimensions:"2.4m x 8.0m x 3.2m",subject:"光润蜂蜜木半圆滑槽架于木撑柱间，底铺软干草垫"},
+      {id:"F36-tree-hollow-postbox",code:"F36",batch:"C",category:"prop",name_zh:"北林秘密树洞邮筒与回忆相框",name_en:"Secret Tree-Hollow Nook with Mailbox & Photo Frame",zone:"Zone N · 西北秘境 L2.5",dimensions:"4.5m x 4.0m x 3.5m",subject:"掏空圆润古树桩内嵌暖灯、拍立得照片墙与秘密邮筒"},
+      {id:"F37-sea-arch-bridge",code:"F37",batch:"C",category:"architecture",name_zh:"弧形跨海木拱桥",name_en:"Curved Coastal Wooden Arch Bridge",zone:"Zone S · 西南跨海 L0",dimensions:"12.0m x 2.8m x 3.0m",subject:"木桩支撑的弧形跨海木桥连结西岬与星砂小屿"},
+      {id:"F38-tidal-stepping-stones",code:"F38",batch:"C",category:"prop",name_zh:"东潮汐玄武岩踏石与苔藓柱组",name_en:"Tidal Flat Basalt Stepping Stones & Mossy Lantern Posts",zone:"Zone S · 东南跨海 L0",dimensions:"6.0m x 2.6m x 1.2m",subject:"五块扁平圆润玄武岩踏石配苔藓麻绳导航灯桩"},
+      {id:"F39-echo-amphitheater-arch",code:"F39",batch:"C",category:"architecture",name_zh:"潮汐风铃回声海风拱门",name_en:"Tidal Echo Driftwood Amphitheater Arch",zone:"Zone S · 星砂小屿 L1",dimensions:"10.0m x 9.0m x 6.5m",subject:"流线漂流木大拱门悬垂贝壳风铃，俯对半圆木舞台"},
+      {id:"F40-wooden-rowboat",code:"F40",batch:"C",category:"prop",name_zh:"摇橹小渡船",name_en:"Cozy Wooden Ferry Rowboat",zone:"Zone S · 渡口航线 L0",dimensions:"3.6m x 1.6m x 1.1m",subject:"薄荷白圆润木渡船配双木桨与船首暖灯杆"},
+      {id:"F41-mini-book-booth",code:"F41",batch:"C",category:"prop",name_zh:"星砂沙洲迷你漂流书屋",name_en:"Miniature Coastal Drift-Book Phonebooth Kiosk",zone:"Zone S · 星砂沙洲 L0",dimensions:"2.5m x 2.0m x 2.6m",subject:"电话亭尺寸薄荷木漂流书屋，内置彩色绘本与漂流短句"},
+      {id:"F42-postal-bike-stop",code:"F42",batch:"C",category:"prop",name_zh:"复古薄荷绿邮差单车驿站",name_en:"Retro Mint Postman Bicycle & Waypoint Signpost",zone:"Zone 0/W/E/N · 4区枢纽",dimensions:"2.4m x 1.2m x 2.3m",subject:"薄荷绿复古邮差单车停靠在圆形信封站牌下"},
+      {id:"C01-glasses-bear",code:"C01",batch:"D",category:"character",name_zh:"眼镜棕熊·阿木",name_en:"Bespectacled Brown Bear",zone:"全岛 · 常驻居民 #1",dimensions:"1.5m x 0.9m x 1.65m",subject:"圆框线眼镜、鼠尾草针织背心的温厚年谱守护棕熊"},
+      {id:"C02-lop-rabbit",code:"C02",batch:"D",category:"character",name_zh:"垂耳白兔·绵绵",name_en:"Lop-Eared Bunny",zone:"全岛 · 常驻居民 #2",dimensions:"1.2m x 0.7m x 1.2m",subject:"瓷白软耳与薄荷粉渐变围裙的爱花兔少女"},
+      {id:"C03-deadpan-cat",code:"C03",batch:"D",category:"character",name_zh:"面瘫橘猫·阿橘",name_en:"Deadpan Orange Tabby Cat",zone:"全岛 · 常驻居民 #3",dimensions:"1.25m x 0.8m x 1.3m",subject:"焦糖贝雷帽与标志半眯死鱼眼的面瘫慢鼓掌橘猫"},
+      {id:"C04-corgi-baker",code:"C04",batch:"D",category:"character",name_zh:"吃包柯基·奶包",name_en:"Corgi Baker",zone:"全岛 · 常驻居民 #4",dimensions:"1.35m x 0.85m x 1.35m",subject:"红白条纹烘焙围兜的六格大胃王暖心柯基"},
+      {id:"C05-floating-owl",code:"C05",batch:"D",category:"character",name_zh:"悬浮猫头鹰·墨羽",name_en:"Floating Chubby Owl",zone:"全岛 · 常驻居民 #5",dimensions:"1.25m x 0.75m x 1.05m",subject:"离地半空悬浮的圆蛋形沙褐星象猫头鹰"},
+      {id:"C06-strawhat-fox",code:"C06",batch:"D",category:"character",name_zh:"草帽狐狸·阿澈",name_en:"Straw-Hat Red Fox",zone:"全岛 · 常驻居民 #6",dimensions:"1.35m x 0.85m x 1.38m",subject:"戴草帽斜挎鱼篓包的口硬心软老船长赤狐"},
+      {id:"C07-postman-otter",code:"C07",batch:"D",category:"character",name_zh:"迷糊邮差水獭·团团",name_en:"Postman River Otter",zone:"Zone W · 新增居民 #1",dimensions:"1.3m x 0.8m x 1.32m",subject:"戴薄荷邮差帽背蜜棕邮包的迷糊热心小水獭"},
+      {id:"C08-carpenter-raccoon",code:"C08",batch:"D",category:"character",name_zh:"强迫症木工小浣熊·咔哒",name_en:"Carpenter Raccoon",zone:"Zone E · 新增居民 #2",dimensions:"1.35m x 0.85m x 1.35m",subject:"陶红工装背带裤、耳旁别黄铅笔的直角强迫症浣熊"},
+      {id:"C09-artist-sheep",code:"C09",batch:"D",category:"character",name_zh:"纸片画师小羊·绒绒",name_en:"Sheep Artist",zone:"Zone N/E · 新增居民 #3",dimensions:"1.32m x 0.85m x 1.30m",subject:"云朵奶油卷毛配天蓝画室围裙与珊瑚贝雷帽的小羊"},
+      {id:"P01-clay-street-lamp",code:"P01",batch:"D",category:"prop",name_zh:"暖陶木质矮路灯",name_en:"Short Wood & Clay Street Lamp",zone:"全岛路径 · 微契机件",dimensions:"0.7m x 0.7m x 1.9m",subject:"及膝蜂蜜木灯柱悬琥珀磨砂六角陶灯罩"},
+      {id:"P02-vintage-mailbox",code:"P02",batch:"D",category:"prop",name_zh:"歪斜复古薄荷绿海风邮筒",name_en:"Tilted Mint Coastal Mailbox",zone:"全岛路径 · 微契机件",dimensions:"0.7m x 0.7m x 1.35m",subject:"微倾5°的薄荷绿圆筒邮筒配珊瑚红小旗杆"},
+      {id:"P03-wooden-signpost",code:"P03",batch:"D",category:"prop",name_zh:"手绘微倾木质指路牌",name_en:"Pointed Wooden Signpost",zone:"全岛路径 · 微契机件",dimensions:"0.9m x 0.6m x 1.75m",subject:"绘有灯塔与小花图标的微倾木指路牌（可扶正！）"},
+      {id:"P04-shell-windchime-post",code:"P04",batch:"D",category:"prop",name_zh:"贝壳玻璃风铃木桩",name_en:"Shell & Sea-Glass Wind-Chime Post",zone:"全岛海岸 · 微契机件",dimensions:"0.8m x 0.8m x 2.1m",subject:"漂流木横架垂吊粉彩扇贝与海玻璃风铃"},
+      {id:"P05-bakery-food-cart",code:"P05",batch:"D",category:"prop",name_zh:"海风烤包木推车",name_en:"Coastal Wooden Bakery Pushcart",zone:"Zone E / Plaza · 道具件",dimensions:"1.8m x 1.1m x 1.9m",subject:"珊瑚条纹蓬双轮烤包推车陈列蜜瓜包与汽水"},
+      {id:"P06-mini-armillary-sphere",code:"P06",batch:"D",category:"prop",name_zh:"暖铜迷你星盘观测仪",name_en:"Celestial Armillary Sphere",zone:"Zone W/N L3 · 道具件",dimensions:"0.9m x 0.9m x 1.5m",subject:"圆石台座上的暖铜星环与薄荷天球仪"},
+      {id:"E01-coastal-pine-tree",code:"E01",batch:"D",category:"flora",name_zh:"海风歪颈三团圆蓬松树",name_en:"Coastal Pine Tree",zone:"Zone W/S · 海岸植被",dimensions:"3.2m x 2.8m x 4.8m",subject:"微弯树干托起三团蓝绿海泡沫松冠"},
+      {id:"E02-autumn-maple-tree",code:"E02",batch:"D",category:"flora",name_zh:"北麓柔金奶油枫树",name_en:"Golden-Cream Maple Tree",zone:"Zone N · 北麓森林",dimensions:"3.4m x 3.2m x 5.2m",subject:"奶油杏金三团圆润绘本风秋枫树冠"},
+      {id:"U01-paper-pet-standee",code:"U01",batch:"D",category:"ugc",name_zh:"2D纸片涂鸦宠物立牌",name_en:"2D Cardboard Doodle Cat Pet Standee",zone:"Zone 0/E/S · 轻拼贴 UGC",dimensions:"0.9m x 0.45m x 0.9m",subject:"粗白边纸板豆豆眼涂鸦小猫立牌（弹性形变互动）"}
+    ];
+
+    const ASSET_BY_CODE = {};
+    ASSETS_62.forEach(a => { ASSET_BY_CODE[a.code] = a; });
+
+    function getAssetForFacility(facId) {
+      if (ASSET_BY_CODE[facId]) return ASSET_BY_CODE[facId];
+      if (facId.startsWith("F13")) return ASSET_BY_CODE["F13a"];
+      if (facId.startsWith("F23")) return ASSET_BY_CODE["F23"];
+      if (facId.startsWith("F26")) return ASSET_BY_CODE["F26"];
+      if (facId.startsWith("F30")) return ASSET_BY_CODE["F30"];
+      if (facId.startsWith("F32")) return ASSET_BY_CODE["F32"];
+      if (facId.startsWith("F35")) return ASSET_BY_CODE["F35"];
+      if (facId.startsWith("F42")) return ASSET_BY_CODE["F42"];
+      return ASSET_BY_CODE["F04"];
+    }
+
+    // ==================== 1. 存档与游戏状态 ====================
+    const CHAPTER_ORDER = ["prologue", "ch1", "ch2", "ch3", "ch4", "epilogue"];
+    const PIXEL_PALETTE = ["#FFF5E4", "#7CC6E8", "#B96A59", "#FFD67A", "#93C794", "#5A587D", "#F472B6", "#E4BA8B"];
+
+    function createDefaultFishFlag() {
+      const g = Array.from({ length: 12 }, () => Array(12).fill(1)); // sky-blue base
+      for (let i = 0; i < 12; i++) { g[0][i] = 0; g[11][i] = 0; g[i][0] = 0; g[i][11] = 0; }
+      const fish = [
+        [4,5],[4,6],[4,7],
+        [5,3],[5,4],[5,5],[5,6],[5,7],[5,8],
+        [6,2],[6,3],[6,4],[6,5],[6,6],[6,7],[6,8],[6,9],
+        [7,3],[7,4],[7,5],[7,6],[7,7],[7,8],
+        [8,5],[8,6]
+      ];
+      fish.forEach(([r, c]) => { g[r][c] = 2; });
+      g[5][9] = 2; g[7][9] = 2; // tail
+      g[5][4] = 0; g[5][5] = 5; // eye
+      return g.map(r => r.join("")).join("");
+    }
+
+    function createInitialState() {
+      const aff = {}, stages = {}, nudges = {}, talks = {};
+      DB.residents.forEach(r => {
+        aff[r.id] = r.initialAffection || 25;
+        stages[r.id] = 0;
+        nudges[r.id] = 0;
+        talks[r.id] = 0;
+      });
+      return {
+        chapter: "prologue",
+        freeRoamMode: false,
+        timeSlot: "afternoon",
+        weather: "sunny",
+        warmFuzzies: 20,
+        affection: aff,
+        charStages: stages,
+        choiceMask: 0,
+        duoMask: 0,
+        duoChoiceMask: 0,
+        nudgeCounts: nudges,
+        talkCounts: talks,
+        visitedFacilities: ["F01"],
+        events: [],
+        collectedMemories: [],
+        pixelFlag12x12: createDefaultFishFlag(),
+        lingoPool: ["慢一点也没关系", "海风吹过小木屋"],
+        petName: "小白喵",
+        mendelBlueRose: false,
+        mendelBed: [
+          { geno: "RRyyWWSS", name: "珊瑚红", color: "#E86D5D" },
+          { geno: "rrYYWWSS", name: "暖金黄", color: "#F6C85F" },
+          { geno: "RRyyWWSS", name: "樱桃粉", color: "#F48FB1" },
+          { geno: "RRYYwwSS", name: "奶霜白", color: "#FFF8EC" }
+        ],
+        stats: { waterCount: 0, ferryCount: 0, photoCount: 0, bellCount: 0, straightSignIds: [] },
+        yesterdayAction: "watered_flower",
+        vinylIndex: 0,
+        concertActive: false
+      };
+    }
+
+    let state = createInitialState();
+
+    function chapterIdx(chId) {
+      const idx = CHAPTER_ORDER.indexOf(chId);
+      return idx === -1 ? 0 : idx;
+    }
+
+    function isZoneUnlocked(zoneId) {
+      if (state.freeRoamMode) return true;
+      const ch = DB.chapters[chapterIdx(state.chapter)];
+      return ch && ch.unlockedZones.includes(zoneId);
+    }
+
+    function isFacilityUnlocked(fac) {
+      if (state.freeRoamMode) return true;
+      return chapterIdx(state.chapter) >= chapterIdx(fac.unlockChapter || "prologue");
+    }
+
+    function isResidentUnlocked(res) {
+      if (state.freeRoamMode) return true;
+      return chapterIdx(state.chapter) >= chapterIdx(res.unlockChapter || "prologue");
+    }
+
+    function buildCompactSavePayload() {
+      let memMask = 0;
+      state.collectedMemories.forEach(id => {
+        const n = parseInt(id.slice(1), 10);
+        if (n >= 1 && n <= 26) memMask |= (1 << (n - 1));
+      });
+      const stArr = MS.meta.storageSchema.charIndexOrder.map(cid => state.charStages[cid] || 0);
+      const affArr = MS.meta.storageSchema.charIndexOrder.map(cid => state.affection[cid] || 25);
+      return {
+        v: 4,
+        ch: state.chapter,
+        wf: state.warmFuzzies,
+        aff: affArr,
+        st: stArr,
+        cm: state.choiceMask,
+        dm: state.duoMask,
+        dcm: state.duoChoiceMask,
+        ev: state.events.join(","),
+        vis: state.visitedFacilities.join(","),
+        mm: memMask.toString(16),
+        flg: state.pixelFlag12x12,
+        lg: state.lingoPool.slice(0, 8),
+        pet: state.petName.slice(0, 16),
+        br: state.mendelBlueRose ? 1 : 0,
+        stat: [state.stats.waterCount, state.stats.ferryCount, state.stats.photoCount, state.stats.bellCount]
+      };
+    }
+
+    function getCompactByteCount() {
+      const s = JSON.stringify(buildCompactSavePayload());
+      return new Blob([s]).size;
+    }
+
+    function saveGame(silent) {
+      const payload = {
+        compact: buildCompactSavePayload(),
+        fullExtras: {
+          freeRoamMode: state.freeRoamMode,
+          timeSlot: state.timeSlot,
+          weather: state.weather,
+          nudgeCounts: state.nudgeCounts,
+          talkCounts: state.talkCounts,
+          mendelBed: state.mendelBed,
+          straightSignIds: state.stats.straightSignIds
+        }
+      };
+      try {
+        localStorage.setItem(DB.saveSchema.datastoreKey, JSON.stringify(payload));
+        updateStatsHUD();
+        if (!silent) showToast(`💾 已保存至本地 DataStore（紧凑载荷 ${getCompactByteCount()} B / 6000 B）`);
+      } catch (err) {
+        if (!silent) showToast("⚠️ 浏览器限制了 localStorage 写入，当前仅内存运行");
+      }
+    }
+
+    function loadGame(silent) {
+      try {
+        const raw = localStorage.getItem(DB.saveSchema.datastoreKey);
+        if (!raw) { if (!silent) showToast("本地尚无存档记录"); return false; }
+        const data = JSON.parse(raw);
+        const c = data.compact;
+        if (!c) return false;
+        const fresh = createInitialState();
+        fresh.chapter = c.ch || "prologue";
+        fresh.warmFuzzies = c.wf || 0;
+        MS.meta.storageSchema.charIndexOrder.forEach((cid, i) => {
+          if (c.aff && typeof c.aff[i] === "number") fresh.affection[cid] = c.aff[i];
+          if (c.st && typeof c.st[i] === "number") fresh.charStages[cid] = c.st[i];
+        });
+        fresh.choiceMask = c.cm || 0;
+        fresh.duoMask = c.dm || 0;
+        fresh.duoChoiceMask = c.dcm || 0;
+        fresh.events = c.ev ? c.ev.split(",").filter(Boolean) : [];
+        fresh.visitedFacilities = c.vis ? c.vis.split(",").filter(Boolean) : ["F01"];
+        const mm = parseInt(c.mm || "0", 16);
+        for (let i = 0; i < 26; i++) {
+          if ((mm >> i) & 1) fresh.collectedMemories.push("M" + String(i + 1).padStart(2, "0"));
+        }
+        if (c.flg && c.flg.length === 144) fresh.pixelFlag12x12 = c.flg;
+        if (Array.isArray(c.lg) && c.lg.length) fresh.lingoPool = c.lg;
+        if (c.pet) fresh.petName = c.pet;
+        fresh.mendelBlueRose = Boolean(c.br);
+        if (Array.isArray(c.stat)) {
+          fresh.stats.waterCount = c.stat[0] || 0;
+          fresh.stats.ferryCount = c.stat[1] || 0;
+          fresh.stats.photoCount = c.stat[2] || 0;
+          fresh.stats.bellCount = c.stat[3] || 0;
+        }
+        if (data.fullExtras) {
+          fresh.freeRoamMode = Boolean(data.fullExtras.freeRoamMode);
+          fresh.timeSlot = data.fullExtras.timeSlot || "afternoon";
+          fresh.weather = data.fullExtras.weather || "sunny";
+          if (data.fullExtras.nudgeCounts) fresh.nudgeCounts = data.fullExtras.nudgeCounts;
+          if (data.fullExtras.talkCounts) fresh.talkCounts = data.fullExtras.talkCounts;
+          if (data.fullExtras.mendelBed) fresh.mendelBed = data.fullExtras.mendelBed;
+          if (data.fullExtras.straightSignIds) fresh.stats.straightSignIds = data.fullExtras.straightSignIds;
+        }
+        state = fresh;
+        syncEnvControls();
+        updateStatsHUD();
+        if (!silent) showToast("📂 已读取本地存档！");
+        return true;
+      } catch (err) {
+        if (!silent) showToast("⚠️ 存档读取异常，已保持当前状态");
+        return false;
+      }
+    }
+
+    // ==================== 2. Web Audio 程序化音频引擎 ====================
+    let audioCtx = null;
+    let isMuted = false;
+    let bgmTimer = null;
+    let bgmPlaying = false;
+
+    function ensureAudio() {
+      if (isMuted) return null;
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, ms, wave = "triangle", vol = 0.07, delaySec = 0) {
+      if (isMuted) return;
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      const t = ctx.currentTime + delaySec;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = wave;
+      osc.frequency.setValueAtTime(Math.max(80, freq), t);
+      gain.gain.setValueAtTime(0.0008, t);
+      gain.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0008, t + ms / 1000);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + ms / 1000 + 0.02);
+    }
+
+    function speakVoice(text, sfxType, voiceProfile) {
+      if (isMuted || !text) return;
+      const baseHz = (voiceProfile ? (voiceProfile.basePitch || 1) : 1) * 340;
+      const interval = voiceProfile ? (voiceProfile.charIntervalMs || 80) : 80;
+      const maxChars = Math.min(text.length, 28);
+      const chars = Array.from(text).slice(0, maxChars);
+      chars.forEach((ch, idx) => {
+        if (/[，。！？、\s「」『』—·…]/.test(ch)) return;
+        const code = ch.charCodeAt(0);
+        if (sfxType === "voice_mech" || (voiceProfile && voiceProfile.sfx === "voice_mech")) {
+          const step = ((code % 5) - 2) * 10;
+          playTone(baseHz * 0.72 + step, interval * 0.78, "square", 0.028, (idx * interval * 0.55) / 1000);
+        } else {
+          const mod = ((code * 37) % 130) - 35;
+          playTone(baseHz + mod, interval * 0.85, "triangle", 0.068, (idx * interval * 0.55) / 1000);
+        }
+      });
+    }
+
+    function playBubblePopSfx() { playTone(587, 80, "sine", 0.07, 0); playTone(880, 110, "sine", 0.07, 0.07); }
+    function playPickupSfx() { playTone(320, 65, "triangle", 0.07, 0); playTone(460, 70, "triangle", 0.06, 0.04); }
+    function playDropSfx() { playTone(380, 60, "triangle", 0.06, 0); playTone(260, 90, "sine", 0.07, 0.04); }
+    function playBellSfx() {
+      [523.25, 783.99, 1046.5].forEach((f, i) => playTone(f, 700 - i * 120, "sine", 0.06 - i * 0.015, i * 0.02));
+    }
+    function playBikeBellSfx() {
+      playTone(1174, 110, "triangle", 0.07, 0);
+      playTone(1396, 130, "triangle", 0.07, 0.11);
+      playTone(1174, 120, "triangle", 0.06, 0.24);
+    }
+    function playRowboatSfx() {
+      playTone(220, 180, "sine", 0.05, 0);
+      playTone(294, 220, "triangle", 0.05, 0.16);
+    }
+    function playSlideSfx() {
+      [660, 587, 523, 440, 392].forEach((f, i) => playTone(f, 95, "triangle", 0.055, i * 0.07));
+    }
+    function playFanfareSfx() {
+      [523, 659, 784, 1046].forEach((f, i) => playTone(f, 220, "triangle", 0.07, i * 0.1));
+    }
+
+    const VINYL_MODES = [
+      { name: "Skima·午后风铃与蝉", notes: [523, 659, 784, 659, 587, 784, 880, 784] },
+      { name: "琥珀窑炉爵士小调", notes: [392, 493, 587, 659, 587, 493, 440, 523] },
+      { name: "雨落玻璃穹顶圆舞曲", notes: [440, 523, 659, 880, 784, 659, 523, 587] },
+      { name: "白昼号归港海风协奏曲", notes: [523, 587, 659, 784, 1046, 880, 784, 659] }
+    ];
+    let bgmStep = 0;
+
+    function toggleBGM(forceOn) {
+      bgmPlaying = typeof forceOn === "boolean" ? forceOn : !bgmPlaying;
+      const btn = document.getElementById("bgmToggleBtn");
+      if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+      if (bgmPlaying) {
+        ensureAudio();
+        btn.textContent = "🎵 音乐:开";
+        btn.classList.add("active");
+        bgmTimer = setInterval(() => {
+          if (isMuted) return;
+          const mode = VINYL_MODES[state.vinylIndex % VINYL_MODES.length];
+          const n = mode.notes[bgmStep % mode.notes.length];
+          if (bgmStep % 2 === 0 || state.concertActive) {
+            playTone(n, 380, "sine", 0.025, 0);
+          }
+          bgmStep++;
+        }, 520);
+      } else {
+        btn.textContent = "🎵 音乐:关";
+        btn.classList.remove("active");
+      }
+    }
+
+    // ==================== 3. 4× 世界地图微契机、高程、室内状态 ====================
+    const MICRO_PROPS = [
+      { id: "MP01", code: "P01", x: -6, z: -13.5, kind: "lamp" },
+      { id: "MP02", code: "P01", x: 10, z: -13.5, kind: "lamp" },
+      { id: "MP03", code: "P01", x: 2, z: -1, kind: "lamp" },
+      { id: "MP04", code: "P01", x: 20, z: -8, kind: "lamp" },
+      { id: "MP05", code: "P01", x: -30, z: 0, kind: "lamp" },
+      { id: "MP06", code: "P01", x: -42, z: -12, kind: "lamp" },
+      { id: "MP07", code: "P01", x: 38, z: -8, kind: "lamp" },
+      { id: "MP08", code: "P01", x: 50, z: 4, kind: "lamp" },
+      { id: "MP09", code: "P01", x: -8, z: 34, kind: "lamp" },
+      { id: "MP10", code: "P01", x: 14, z: 42, kind: "lamp" },
+      { id: "MP11", code: "P01", x: -10, z: -42, kind: "lamp" },
+      { id: "MP12", code: "P01", x: 10, z: -41, kind: "lamp" },
+      { id: "MS01", code: "P03", x: -28, z: -3, kind: "sign", label: "西巷路牌" },
+      { id: "MS02", code: "P03", x: 34, z: -3, kind: "sign", label: "东湾路牌" },
+      { id: "MS03", code: "P03", x: -6, z: 27, kind: "sign", label: "北麓路牌" },
+      { id: "MC01", code: "P04", x: -24, z: -20, kind: "chime" },
+      { id: "MC02", code: "P04", x: -48, z: -28, kind: "chime" },
+      { id: "MC03", code: "P04", x: 40, z: -30, kind: "chime" },
+      { id: "MM01", code: "P02", x: -34, z: 5, kind: "mailbox" },
+      { id: "MM02", code: "P02", x: -51, z: 16, kind: "mailbox" },
+      { id: "MB01", code: "P05", x: 39, z: -7, kind: "cart" },
+      { id: "MA01", code: "P06", x: -52, z: -21, kind: "armillary" },
+      { id: "MA02", code: "P06", x: 5, z: 56, kind: "armillary" },
+      // Trees
+      { id: "T01", code: "E01", x: -58, z: -13, kind: "pine" },
+      { id: "T02", code: "E01", x: -53, z: -10, kind: "pine" },
+      { id: "T03", code: "E01", x: -61, z: 2, kind: "pine" },
+      { id: "T04", code: "E01", x: -16, z: -46, kind: "pine" },
+      { id: "T05", code: "E01", x: 16, z: -45, kind: "pine" },
+      { id: "T06", code: "E02", x: -26, z: 48, kind: "maple" },
+      { id: "T07", code: "E02", x: -8, z: 52, kind: "maple" },
+      { id: "T08", code: "E02", x: 12, z: 51, kind: "maple" },
+      { id: "T09", code: "E02", x: 34, z: 46, kind: "maple" },
+      { id: "T10", code: "F17", x: 9, z: 20, kind: "fruit" },
+      { id: "T11", code: "F17", x: 16, z: 21, kind: "fruit" },
+      { id: "T12", code: "F17", x: 20, z: 14, kind: "fruit" }
+    ];
+
+    function getZoneAt(x, z) {
+      if (z >= 28) return "ZoneN";
+      if (z <= -33 && x >= -38 && x <= 32) return "ZoneS";
+      if (x < -32) return "ZoneW";
+      if (x > 32) return "ZoneE";
+      return "Zone0";
+    }
+
+    function getElevationAt(x, z) {
+      // L3 Twin Peaks
+      if (Math.hypot(x - (-56), z - (-24)) < 10) return 5.4;
+      if (Math.hypot(x - 0, z - 58) < 12) return 5.4;
+      // L-0.5 East Intertidal Pool
+      if (x >= 29 && x <= 43 && z >= -31 && z <= -21) return -0.25;
+      // Zone S
+      if (z <= -34 && x >= -36 && x <= 28) {
+        if (Math.hypot(x - (-2), z - (-45)) < 9) return 1.4;
+        return 0.2;
+      }
+      // Zone N
+      if (z >= 28) {
+        if (Math.hypot(x - (-36), z - 46) < 6) return 4.2;
+        if (x >= -6 && x <= 30 && z >= 33 && z <= 38) return 3.2;
+        return 3.6;
+      }
+      // Core + W + E
+      if (z >= 14) return 3.6;
+      if (x <= -45 && z >= -18 && z <= -9) return 3.6; // F21
+      if (x <= -42 && z >= 12) return 3.6; // F23
+      if (x >= 40 && z >= 10) return 3.6; // F29/F30a
+      if (z >= -14) return 1.8;
+      return 0.2;
+    }
+
+    function isWalkable(x, z) {
+      if (x < -66 || x > 66 || z < -52 || z > 66) return false;
+      // Main Land Envelope
+      const inCore = (x >= -32 && x <= 32 && z >= -26 && z <= 28);
+      const inWest = (x >= -64 && x <= -32 && z >= -34 && z <= 32);
+      const inEast = (x >= 32 && x <= 64 && z >= -35 && z <= 30);
+      const inNorth = (x >= -50 && x <= 50 && z >= 28 && z <= 64);
+      const inSouthIslet = (x >= -20 && x <= 18 && z >= -51 && z <= -36);
+      const onWestBridge = (x >= -37 && x <= -18 && z >= -37 && z <= -32);
+      const onEastStones = (x >= 16 && x <= 34 && z >= -38 && z <= -32);
+      const onPier = (x >= -9 && x <= -3 && z >= -25 && z <= -19) || (x >= 8 && x <= 12 && z >= -27 && z <= -19);
+      return inCore || inWest || inEast || inNorth || inSouthIslet || onWestBridge || onEastStones || onPier;
+    }
+
+    // ==================== 4. 玩家、纸片宠物与 9 位居民 AI ====================
+    const player = {
+      x: -6, z: -18, y: 0.2,
+      vx: 0, vz: 0,
+      speed: 3.2, // m/s
+      target: null,
+      facing: 1,
+      walkPhase: 0,
+      sliding: null, // { sx, sz, ex, ez, t, dur }
+      ferrying: null // { sx, sz, ex, ez, t, dur }
+    };
+
+    const paperPet = {
+      x: -3.5, z: -17.5, squash: 1, phase: 0
+    };
+
+    const CHAR_COLORS = {
+      C01: { body: "#9E6E4B", ear: "#7D5236", accent: "#93C794", muzzle: "#F7E6CF" },
+      C02: { body: "#FFFDF7", ear: "#F7DFE2", accent: "#A8E0D4", muzzle: "#F4A9B8" },
+      C03: { body: "#F29C50", ear: "#D97A34", accent: "#9D623E", muzzle: "#FFF4E3" },
+      C04: { body: "#E8A44A", ear: "#C8812E", accent: "#D95F55", muzzle: "#FFF8EC" },
+      C05: { body: "#D8C6AE", ear: "#A7947C", accent: "#FFD67A", muzzle: "#FFF5E4" },
+      C06: { body: "#DC7244", ear: "#B24F27", accent: "#E9C46A", muzzle: "#FFF5E4" },
+      C07: { body: "#AE8260", ear: "#8B6244", accent: "#7CC6E8", muzzle: "#F3DEC0" },
+      C08: { body: "#9E9A95", ear: "#5A587D", accent: "#B96A59", muzzle: "#EFE9DD" },
+      C09: { body: "#FFF5E4", ear: "#F4C2B8", accent: "#7CC6E8", muzzle: "#F7D9C4" }
+    };
+
+    const npcs = DB.residents.map((res, idx) => {
+      const homeFac = DB.facilities.find(f => f.id === res.homeFacility) || DB.facilities[3];
+      const angle = (idx * 2.1);
+      const sx = homeFac.pos[0] + Math.cos(angle) * 2.2;
+      const sz = homeFac.pos[2] + Math.sin(angle) * 2.0 - 1.5;
+      const msChar = MS.characters.find(c => c.id === res.id);
+      return {
+        def: res,
+        ms: msChar,
+        id: res.id,
+        name: res.name,
+        species: res.species,
+        x: sx, z: sz, y: getElevationAt(sx, sz),
+        tx: sx, tz: sz,
+        targetFacId: homeFac.id,
+        state: "idle", // idle | wander | dragged | director_approach | scripted
+        waitTimer: 1 + idx * 0.6,
+        aiTimer: 0.4 * idx,
+        bubble: null,
+        bubbleTimer: 8 + idx * 3,
+        actionAnim: null, // { type, t, dur }
+        floatText: null, // { text, t }
+        walkPhase: idx * 0.9
+      };
+    });
+
+    const particles = [];
+    const BUBBLE_COLORS = {
+      bubble_yellow: "#FACC15",
+      bubble_orange: "#FB923C",
+      bubble_pink: "#F472B6",
+      bubble_purple: "#A855F7"
+    };
+
+    function spawnParticles(wx, wy, wz, fxType, count = 8) {
+      if (!fxType || fxType === "none") return;
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          type: fxType,
+          x: wx + (Math.random() - 0.5) * 1.4,
+          y: wy + 0.8 + Math.random() * 0.7,
+          z: wz + (Math.random() - 0.5) * 1.0,
+          vx: (Math.random() - 0.5) * 0.9,
+          vy: 0.8 + Math.random() * 1.1,
+          life: 1.4 + Math.random() * 0.7,
+          maxLife: 2.0,
+          size: 4 + Math.random() * 4
+        });
+      }
+    }
+
+    const RESIDENT_MOTION = {
+      C01: { duration: 1.85, energy: 0.72, lean: 0.10, beats: 2, lead: -1 },
+      C02: { duration: 1.55, energy: 0.82, lean: 0.24, beats: 2, lead: 1 },
+      C03: { duration: 1.90, energy: 0.58, lean: 0.10, beats: 2, lead: 1 },
+      C04: { duration: 1.30, energy: 1.35, lean: 0.15, beats: 3, lead: -1 },
+      C05: { duration: 2.00, energy: 0.81, lean: 0.20, beats: 1, lead: -1 },
+      C06: { duration: 2.10, energy: 0.75, lean: 0.17, beats: 1, lead: 1 },
+      C07: { duration: 1.25, energy: 1.13, lean: 0.20, beats: 3, lead: 1 },
+      C08: { duration: 1.45, energy: 0.88, lean: 0.11, beats: 2, lead: -1 },
+      C09: { duration: 1.65, energy: 0.72, lean: 0.25, beats: 1, lead: 1 }
+    };
+    const MOTION_LABELS = {
+      turn_to_player: "转向", greet: "打招呼", wave: "挥手", nod_tilt: "歪头点头",
+      clap: "拍手", cheer: "欢呼", hop_bounce: "轻蹦", hover_bob: "悬浮起伏",
+      pivot_spin: "转身", dance: "轻舞", paper_pet_squash: "纸片伸缩", sit: "坐下",
+      water_bend: "弯腰浇水", photo: "合影", walk: "散步", run: "小跑"
+    };
+
+    function triggerNpcAction(npc, action, fx) {
+      if (!npc) return;
+      if (Object.hasOwn(MOTION_LABELS, action)) {
+        npc.actionAnim = { type: action, t: 0, dur: RESIDENT_MOTION[npc.id].duration };
+      }
+      if (fx && fx !== "none") {
+        spawnParticles(npc.x, npc.y, npc.z, fx, 10);
+      }
+    }
+
+    // ==================== 5. 三时段 65/35 引力调度 + 8 秒软牵引防稀释 ====================
+    let emptyOuterTimer = 0;
+    let lastDirectorTrigger = 0;
+
+    function pickUtilityTarget(npc) {
+      const slot = DB.gravitySchedule.slots[state.timeSlot] || DB.gravitySchedule.slots.afternoon;
+      const weights = npc.def.gravityWeights[state.timeSlot] || npc.def.gravityWeights.afternoon;
+      const candidates = [];
+
+      DB.facilities.forEach(fac => {
+        if (!isFacilityUnlocked(fac)) return;
+        let w = 0.05;
+        if (weights && weights[fac.id]) w += weights[fac.id] * 2.5;
+        if (slot.hotspotA.includes(fac.id)) w += 0.65;
+        else if (slot.hotspotB.includes(fac.id)) w += 0.35;
+        else if (slot.outerSlots.includes(fac.id)) w += 0.25;
+
+        // Soft bias toward resident's next mini-script facility so player finds stories naturally
+        const st = state.charStages[npc.id] || 0;
+        if (npc.ms && st < 3) {
+          const nextScript = npc.ms.scripts[st];
+          if (nextScript && nextScript.trigger.facilityId === fac.id) w += 0.9;
+        }
+        candidates.push({ fac, w });
+      });
+
+      const total = candidates.reduce((s, c) => s + c.w, 0);
+      let r = Math.random() * total;
+      for (const c of candidates) {
+        r -= c.w;
+        if (r <= 0) return c.fac;
+      }
+      return candidates[0].fac;
+    }
+
+    function updateResidentsAI(dt) {
+      const pZone = getZoneAt(player.x, player.z);
+      const isOuter = pZone !== "Zone0";
+      let nearbyCount = 0;
+      npcs.forEach(n => {
+        if (isResidentUnlocked(n.def) && Math.hypot(n.x - player.x, n.z - player.z) <= 28) nearbyCount++;
+      });
+
+      if (isOuter && nearbyCount === 0 && !interiorState) {
+        emptyOuterTimer += dt;
+        const dirEl = document.getElementById("directorStatusLine");
+        if (dirEl) dirEl.textContent = `外围防空窗计时：${emptyOuterTimer.toFixed(1)}s / 8.0s`;
+        if (emptyOuterTimer >= DB.gravitySchedule.directorSoftBias.triggerDelaySeconds && Date.now() - lastDirectorTrigger > 12000) {
+          triggerSoftDirector(pZone);
+          emptyOuterTimer = 0;
+          lastDirectorTrigger = Date.now();
+        }
+      } else {
+        emptyOuterTimer = Math.max(0, emptyOuterTimer - dt * 2);
+        const dirEl = document.getElementById("directorStatusLine");
+        if (dirEl) dirEl.textContent = `65/35 引力潮汐 · 视野内居民 ${nearbyCount} 位`;
+      }
+
+      npcs.forEach(npc => {
+        if (npc.actionAnim) {
+          npc.actionAnim.t += dt;
+          if (npc.actionAnim.t >= npc.actionAnim.dur) npc.actionAnim = null;
+        }
+        if (!isResidentUnlocked(npc.def)) return;
+        if (npc.state === "dragged") return;
+        if (npc.floatText) {
+          npc.floatText.t -= dt;
+          if (npc.floatText.t <= 0) npc.floatText = null;
+        }
+
+        // Worry bubbles spawn occasionally
+        npc.bubbleTimer -= dt;
+        if (npc.bubbleTimer <= 0 && !npc.bubble) {
+          const keys = ["yellow", "orange", "pink", "purple"];
+          const k = keys[Math.floor(Math.random() * keys.length)];
+          const pool = DB.worryBubbles[k];
+          const ev = pool.events[Math.floor(Math.random() * pool.events.length)];
+          npc.bubble = { key: k, id: pool.bubbleId, hex: pool.hex, label: pool.label, event: ev };
+          npc.bubbleTimer = 22 + Math.random() * 18;
+        }
+
+        if (npc.state === "scripted") return;
+
+        const dx = npc.tx - npc.x, dz = npc.tz - npc.z;
+        const dist = Math.hypot(dx, dz);
+
+        if (dist > 0.35) {
+          const spd = npc.state === "director_approach" ? 2.8 : (npc.id === "C07" ? 2.2 : 1.55);
+          npc.x += (dx / dist) * spd * dt;
+          npc.z += (dz / dist) * spd * dt;
+          npc.y = getElevationAt(npc.x, npc.z);
+          npc.walkPhase += dt * spd * 3.5;
+
+          if (npc.state === "director_approach" && Math.hypot(npc.x - player.x, npc.z - player.z) < 13) {
+            npc.state = "idle";
+            npc.waitTimer = 5;
+            npc.floatText = { text: "咦，真巧呀！正好顺路来这里看海风～", t: 4.5 };
+            triggerNpcAction(npc, "greet", "fx_sparkle");
+          }
+        } else {
+          if (npc.state === "wander" || npc.state === "director_approach") {
+            npc.state = "idle";
+            npc.waitTimer = 4 + Math.random() * 5;
+            const fac = DB.facilities.find(f => f.id === npc.targetFacId);
+            if (fac && fac.allowedAction) triggerNpcAction(npc, fac.allowedAction, "none");
+          } else {
+            npc.waitTimer -= dt;
+            if (npc.waitTimer <= 0) {
+              const targetFac = pickUtilityTarget(npc);
+              npc.targetFacId = targetFac.id;
+              const ang = Math.random() * Math.PI * 2;
+              const rad = 1.6 + Math.random() * 2.2;
+              const nx = Math.max(-62, Math.min(62, targetFac.pos[0] + Math.cos(ang) * rad));
+              const nz = Math.max(-49, Math.min(62, targetFac.pos[2] + Math.sin(ang) * rad));
+              npc.tx = nx; npc.tz = nz;
+              npc.state = "wander";
+            }
+          }
+        }
+      });
+    }
+
+    function triggerSoftDirector(zoneId) {
+      const unlockedNpcs = npcs.filter(n => isResidentUnlocked(n.def) && n.state !== "dragged" && n.state !== "scripted");
+      if (!unlockedNpcs.length) return;
+      // Pick one far from player (> 20m) so no onscreen teleport!
+      let candidate = unlockedNpcs
+        .filter(n => Math.hypot(n.x - player.x, n.z - player.z) > 20)
+        .sort((a, b) => Math.hypot(a.x - player.x, a.z - player.z) - Math.hypot(b.x - player.x, b.z - player.z))[0];
+      if (!candidate) candidate = unlockedNpcs[0];
+
+      // Position softly outside camera edge (22–26m from player, inside walkable zone) if super far (> 50m), else walk straight from current pos
+      const d = Math.hypot(candidate.x - player.x, candidate.z - player.z);
+      if (d > 44) {
+        const ang = Math.atan2(candidate.z - player.z, candidate.x - player.x);
+        const sx = Math.max(-60, Math.min(60, player.x + Math.cos(ang) * 24));
+        const sz = Math.max(-48, Math.min(60, player.z + Math.sin(ang) * 24));
+        if (isWalkable(sx, sz)) { candidate.x = sx; candidate.z = sz; }
+      }
+      const zoneFac = DB.facilities.find(f => f.zone === zoneId && isFacilityUnlocked(f)) || DB.facilities[0];
+      candidate.tx = player.x + (Math.random() - 0.5) * 6;
+      candidate.tz = player.z + (Math.random() - 0.5) * 6;
+      candidate.targetFacId = zoneFac.id;
+      candidate.state = "director_approach";
+      const el = document.getElementById("directorStatusLine");
+      if (el) el.textContent = `🎬 软牵引生效：${candidate.name} 从视野外自然踱步走来`;
+    }
+
+    // ==================== 6. Tracery 文本生成 & 黑板规则 ====================
+    function expandTracery(expr, depth = 0) {
+      if (depth > 6) return expr;
+      return expr.replace(/#([a-zA-Z0-9_]+)#/g, (full, key) => {
+        if (key === "lingo") {
+          const pool = state.lingoPool.length ? state.lingoPool : DB.traceryGrammar.lingo;
+          return pool[Math.floor(Math.random() * pool.length)];
+        }
+        if (key === "petName") return state.petName || "小白喵";
+        const arr = DB.traceryGrammar[key];
+        if (!arr || !arr.length) return full;
+        const pick = arr[Math.floor(Math.random() * arr.length)];
+        return expandTracery(pick, depth + 1);
+      });
+    }
+
+    function pickBlackboardLine(npc) {
+      const pZone = getZoneAt(npc.x, npc.z);
+      const nearFac = DB.facilities.find(f => Math.hypot(f.pos[0] - npc.x, f.pos[2] - npc.z) < 9);
+      const scored = DB.blackboardLines.map(bb => {
+        if (bb.residentId !== "any" && bb.residentId !== npc.id) return null;
+        const cond = bb.conditions || {};
+        let score = bb.priority || 50;
+        if (cond.chapter && cond.chapter !== state.chapter) score -= 45;
+        if (cond.zone && cond.zone !== pZone) score -= 35;
+        if (cond.facilityId && (!nearFac || nearFac.id !== cond.facilityId)) score -= 30;
+        if (cond.timeSlot && cond.timeSlot !== state.timeSlot) score -= 25;
+        if (cond.weather && cond.weather !== state.weather) score -= 18;
+        if (cond.affectionMin && (state.affection[npc.id] || 0) < cond.affectionMin) return null;
+        if (cond.yesterdayAction && cond.yesterdayAction !== state.yesterdayAction) score -= 20;
+        score += Math.random() * 14;
+        return { bb, score };
+      }).filter(Boolean).sort((a, b) => b.score - a.score);
+
+      if (scored.length) {
+        const chosen = scored[0].bb;
+        return {
+          text: expandTracery(chosen.text),
+          action: chosen.action || "greet",
+          bubble: chosen.bubble
+        };
+      }
+      return { text: expandTracery("#gossipBit#"), action: "greet", bubble: null };
+    }
+
+    // ==================== 7. 27 幕个人小剧本 & 3 段双人剧场引擎 ====================
+    let activeDlg = null; // { mode, npc, script, lines, lineIdx, inReply, onComplete, typingTimer }
+
+    function matchScriptTime(reqTod) {
+      if (!reqTod || reqTod === "any") return true;
+      if (reqTod === "day") return state.timeSlot === "afternoon";
+      if (reqTod === "sunset") return state.timeSlot === "dusk" || state.timeSlot === "night";
+      if (reqTod === "night") return state.timeSlot === "night";
+      return true;
+    }
+
+    function checkConditionMet(npc, script) {
+      const t = script.trigger;
+      const cond = t.condition || {};
+      const fac = DB.facilities.find(f => f.id === t.facilityId);
+      const facUnlocked = !fac || isFacilityUnlocked(fac);
+      const nearFac = !fac || Math.hypot(player.x - fac.pos[0], player.z - fac.pos[2]) < 15 || state.visitedFacilities.includes(t.facilityId);
+      const todOk = matchScriptTime(t.timeOfDay);
+      let condOk = true;
+      if (cond.type === "nudge") condOk = (state.nudgeCounts[npc.id] || 0) >= (cond.minCount || 1);
+      else if (cond.type === "water_flower") condOk = state.stats.waterCount >= (cond.minCount || 1);
+      else if (cond.type === "ring_bell") condOk = state.stats.bellCount >= (cond.minCount || 1);
+      else if (cond.type === "use_ferry") condOk = state.stats.ferryCount >= (cond.minCount || 1);
+      else if (cond.type === "take_photo") condOk = state.stats.photoCount >= (cond.minCount || 1);
+      else if (cond.type === "visit_facility") condOk = Math.hypot(player.x - fac.pos[0], player.z - fac.pos[2]) < 14 || state.visitedFacilities.includes(cond.facilityId);
+      return { ok: facUnlocked && nearFac && todOk && condOk, facUnlocked, nearFac, todOk, condOk, fac };
+    }
+
+    function checkDuoReady(npc) {
+      for (const d of MS.duoEncounters) {
+        if ((state.duoMask >> d.duoBitIndex) & 1) continue;
+        if (!d.participants.includes(npc.id)) continue;
+        const okStages = d.participants.every(pid => (state.charStages[pid] || 0) >= (d.trigger.requireCharStages[pid] || 1));
+        if (!okStages) continue;
+        const p1 = npcs.find(n => n.id === d.participants[0]);
+        const p2 = npcs.find(n => n.id === d.participants[1]);
+        if (!p1 || !p2) continue;
+        const dist = Math.hypot(p1.x - p2.x, p1.z - p2.z);
+        const nearPlayer = Math.hypot(player.x - p1.x, player.z - p1.z) < 12;
+        if (dist <= 8.0 && nearPlayer) return d;
+      }
+      return null;
+    }
+
+    function talkToNpc(npc) {
+      if (!npc) return;
+      state.talkCounts[npc.id] = (state.talkCounts[npc.id] || 0) + 1;
+
+      // 1. Check Duo Encounter first
+      const duo = checkDuoReady(npc);
+      if (duo) {
+        startDuoDialogue(duo);
+        return;
+      }
+
+      // 2. Check Personal Stage Script
+      const st = state.charStages[npc.id] || 0;
+      if (npc.ms && st < 3) {
+        const nextScript = npc.ms.scripts[st];
+        const check = checkConditionMet(npc, nextScript);
+        if (check.ok) {
+          startMiniScriptDialogue(npc, nextScript);
+          return;
+        }
+        // Fallback blackboard + helpful stage hint
+        const bb = pickBlackboardLine(npc);
+        startCasualDialogue(npc, bb, nextScript, check);
+        return;
+      }
+
+      // 3. Epilogue / completed all 3 stages -> Blackboard / Tracery + Food Feeding
+      const bb = pickBlackboardLine(npc);
+      startCasualDialogue(npc, bb, null, null);
+    }
+
+    function startMiniScriptDialogue(npc, script) {
+      npc.state = "scripted";
+      activeDlg = {
+        mode: "script",
+        npc,
+        script,
+        lines: script.lines,
+        lineIdx: 0,
+        inReply: false,
+        hintScript: null
+      };
+      renderDialogueStep();
+    }
+
+    function startDuoDialogue(duo) {
+      const p1 = npcs.find(n => n.id === duo.participants[0]);
+      const p2 = npcs.find(n => n.id === duo.participants[1]);
+      if (p1) p1.state = "scripted";
+      if (p2) p2.state = "scripted";
+      activeDlg = {
+        mode: "duo",
+        npc: p1,
+        npc2: p2,
+        script: duo,
+        lines: duo.lines,
+        lineIdx: 0,
+        inReply: false,
+        hintScript: null
+      };
+      renderDialogueStep();
+    }
+
+    function startCasualDialogue(npc, bb, hintScript, hintCheck) {
+      npc.state = "scripted";
+      const lineObj = {
+        speaker: npc.id,
+        text: bb.text,
+        action: bb.action || "greet",
+        bubble: bb.bubble || "none",
+        fx: "fx_sparkle",
+        sfx: npc.ms ? npc.ms.defaultSfx : "voice_soft"
+      };
+      activeDlg = {
+        mode: "casual",
+        npc,
+        script: null,
+        lines: [lineObj],
+        lineIdx: 0,
+        inReply: true,
+        hintScript,
+        hintCheck
+      };
+      renderDialogueStep();
+    }
+
+    let typeTimer = null;
+    const motionReplay = document.getElementById("dlgMotionReplay");
+    const motionCanvas = document.getElementById("dlgMotionCanvas");
+    const motionCtx = motionCanvas.getContext("2d");
+    let dialogueMotion = null;
+    motionReplay.addEventListener("click", () => {
+      if (activeDlg && dialogueMotion) triggerNpcAction(dialogueMotion.npc, dialogueMotion.action);
+    });
+    function renderDialogueStep() {
+      if (!activeDlg) return;
+      const modal = document.getElementById("dialogueModal");
+      modal.classList.remove("hidden");
+
+      const line = activeDlg.lines[activeDlg.lineIdx];
+      const speakerNpc = npcs.find(n => n.id === line.speaker) || activeDlg.npc;
+      const asset = ASSET_BY_CODE[speakerNpc.id];
+
+      const img = document.getElementById("dlgPortrait");
+      img.src = asset ? `../workspace/assets/3d-modeling-closeups/${asset.id}.png` : "";
+      img.onerror = () => { img.removeAttribute("src"); };
+
+      document.getElementById("dlgSpeaker").textContent = `${speakerNpc.def.species} · ${speakerNpc.name}`;
+      const badge = document.getElementById("dlgBadge");
+      if (activeDlg.mode === "script") {
+        badge.textContent = `阶段 ${activeDlg.script.stage}/3 · ${activeDlg.script.stageLabel}`;
+        document.getElementById("dlgSubtitle").textContent = `《${activeDlg.script.title}》 · 好感 ${state.affection[speakerNpc.id]}/255`;
+      } else if (activeDlg.mode === "duo") {
+        badge.textContent = `双人微剧场 ${activeDlg.script.scriptId}`;
+        document.getElementById("dlgSubtitle").textContent = `${activeDlg.script.title} · ${activeDlg.script.participantNames.join(" × ")}`;
+      } else {
+        badge.textContent = "日常对话";
+        const tier = speakerNpc.def.bondTiers.find(t => state.affection[speakerNpc.id] >= t.range[0] && state.affection[speakerNpc.id] <= t.range[1]) || speakerNpc.def.bondTiers[0];
+        document.getElementById("dlgSubtitle").textContent = `${tier.label} (${state.affection[speakerNpc.id]}/255) · ${speakerNpc.def.quirk.name}`;
+      }
+
+      const actChip = document.getElementById("dlgActionChip");
+      const motionLabel = Object.hasOwn(MOTION_LABELS, line.action) ? MOTION_LABELS[line.action] : null;
+      dialogueMotion = motionLabel ? { npc: speakerNpc, action: line.action } : null;
+      motionReplay.classList.toggle("hidden", !dialogueMotion);
+      if (motionLabel) {
+        motionReplay.setAttribute("aria-label", `重播${speakerNpc.name}的${motionLabel}动作`);
+        motionReplay.title = motionReplay.getAttribute("aria-label");
+      }
+      if (line.action && line.action !== "none") {
+        actChip.classList.remove("hidden");
+        actChip.textContent = `🎬 ${motionLabel || line.action}` + (line.fx && line.fx !== "none" ? ` + ${line.fx}` : "");
+      } else {
+        actChip.classList.add("hidden");
+      }
+
+      // Trigger visual action & bubble on live Canvas!
+      triggerNpcAction(speakerNpc, line.action, line.fx);
+      if (line.bubble && line.bubble !== "none") {
+        speakerNpc.bubble = {
+          key: line.bubble.replace("bubble_", ""),
+          id: line.bubble,
+          hex: BUBBLE_COLORS[line.bubble] || "#FACC15",
+          label: "剧场表情",
+          event: null
+        };
+      }
+
+      // Typewriter + Voice
+      if (typeTimer) clearInterval(typeTimer);
+      const textEl = document.getElementById("dlgText");
+      textEl.textContent = "";
+      const fullText = line.text;
+      let idx = 0;
+      speakVoice(fullText, line.sfx, speakerNpc.ms ? speakerNpc.ms.voiceProfile : null);
+      typeTimer = setInterval(() => {
+        idx += 2;
+        textEl.textContent = fullText.slice(0, idx);
+        if (idx >= fullText.length) { clearInterval(typeTimer); typeTimer = null; }
+      }, 28);
+
+      // Show hint row if casual dialogue has a pending next script
+      const hintRow = document.getElementById("dlgHintRow");
+      if (activeDlg.hintScript && activeDlg.hintCheck) {
+        hintRow.classList.remove("hidden");
+        const hs = activeDlg.hintScript;
+        document.getElementById("dlgHintText").textContent = `💡 下一幕「${hs.title}」：${hs.trigger.summaryZh}`;
+        const goBtn = document.getElementById("dlgGoHintBtn");
+        goBtn.style.display = activeDlg.hintCheck.facUnlocked ? "inline-flex" : "none";
+      } else {
+        hintRow.classList.add("hidden");
+      }
+
+      // Choices or Next button
+      const choicesEl = document.getElementById("dlgChoices");
+      const nextBtn = document.getElementById("dlgNextBtn");
+      const isLastLine = activeDlg.lineIdx >= activeDlg.lines.length - 1;
+
+      if (!activeDlg.inReply && isLastLine && activeDlg.script && activeDlg.script.choice) {
+        choicesEl.classList.remove("hidden");
+        choicesEl.innerHTML = "";
+        activeDlg.script.choice.options.forEach(opt => {
+          const b = document.createElement("button");
+          b.className = "btn amber";
+          b.textContent = `${opt.id}. ${opt.label}`;
+          b.addEventListener("click", () => chooseDialogueOption(opt));
+          choicesEl.appendChild(b);
+        });
+        nextBtn.classList.add("hidden");
+      } else {
+        choicesEl.classList.add("hidden");
+        nextBtn.classList.remove("hidden");
+        nextBtn.textContent = isLastLine ? "完成对话 ✓" : "继续 ▸ [Space]";
+      }
+
+      // Populate Food Select
+      const feedSel = document.getElementById("feedFoodSelect");
+      if (!feedSel.options.length) {
+        DB.foodMatrix.signatureCatalog.forEach(fd => {
+          const o = document.createElement("option");
+          o.value = fd.name;
+          o.textContent = fd.name;
+          feedSel.appendChild(o);
+        });
+      }
+    }
+
+    function chooseDialogueOption(opt) {
+      if (!activeDlg || !activeDlg.script) return;
+      const sc = activeDlg.script;
+      if (activeDlg.mode === "script") {
+        const charIdx = MS.meta.storageSchema.charIndexOrder.indexOf(sc.charId);
+        const bitPos = charIdx * 3 + (sc.stage - 1);
+        if (opt.bit === 1) state.choiceMask |= (1 << bitPos);
+        state.charStages[sc.charId] = Math.max(state.charStages[sc.charId] || 0, sc.stage);
+        addAffection(sc.charId, opt.affectionDelta || 10);
+        state.warmFuzzies += 15;
+        playFanfareSfx();
+      } else if (activeDlg.mode === "duo") {
+        state.duoMask |= (1 << sc.duoBitIndex);
+        if (opt.bit === 1) state.duoChoiceMask |= (1 << sc.duoBitIndex);
+        sc.participants.forEach(pid => addAffection(pid, opt.affectionDelta || 10));
+        state.warmFuzzies += 25;
+        playFanfareSfx();
+      }
+      activeDlg.inReply = true;
+      activeDlg.lines = opt.replyLines;
+      activeDlg.lineIdx = 0;
+      renderDialogueStep();
+      checkChapterAdvance();
+      updateStatsHUD();
+    }
+
+    function advanceDialogue() {
+      if (!activeDlg) return;
+      if (typeTimer) {
+        clearInterval(typeTimer); typeTimer = null;
+        document.getElementById("dlgText").textContent = activeDlg.lines[activeDlg.lineIdx].text;
+        return;
+      }
+      if (activeDlg.lineIdx < activeDlg.lines.length - 1) {
+        activeDlg.lineIdx++;
+        renderDialogueStep();
+        return;
+      }
+      // Finished!
+      closeDialogue(true);
+    }
+
+    function closeDialogue(completed) {
+      if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
+      if (activeDlg) {
+        if (activeDlg.npc) activeDlg.npc.state = "idle";
+        if (activeDlg.npc2) activeDlg.npc2.state = "idle";
+        if (completed && activeDlg.mode === "casual") {
+          addAffection(activeDlg.npc.id, 3);
+          state.warmFuzzies += 4;
+        }
+      }
+      activeDlg = null;
+      dialogueMotion = null;
+      document.getElementById("dialogueModal").classList.add("hidden");
+      checkChapterAdvance();
+      updateStatsHUD();
+    }
+
+    function addAffection(charId, delta) {
+      state.affection[charId] = Math.min(255, Math.max(0, (state.affection[charId] || 25) + delta));
+    }
+
+    // ==================== 8. 美食投喂 465 极值反应矩阵 ====================
+    function feedResident(npc, foodName) {
+      const prefs = npc.def.foodPreferences;
+      let tierId = "neutral";
+      if (prefs.superLove.includes(foodName)) tierId = "super_love";
+      else if (prefs.like.includes(foodName)) tierId = "like";
+      else if (prefs.dislike.includes(foodName)) tierId = "dislike";
+      else if (prefs.soulLeave.includes(foodName)) tierId = "soul_leave";
+
+      const tier = DB.foodMatrix.reactionTiers.find(t => t.id === tierId);
+      addAffection(npc.id, tier.affectionDelta);
+      state.warmFuzzies += tier.warmFuzzies;
+      state.yesterdayAction = "fed_bun";
+      triggerNpcAction(npc, tier.action, tier.particle || "fx_sparkle");
+
+      const lines = {
+        super_love: `哇呜！！「${foodName}」是我这辈子最爱吃的东西！幸福得想原地跳舞！`,
+        like: `真香呀～「${foodName}」太合我胃口了，谢谢你的投喂！`,
+        neutral: `嗯嗯，「${foodName}」味道挺温和的，慢慢吃真不错。`,
+        dislike: `唔……「${foodName}」稍微有点特别呢，不过心意我收下啦！`,
+        soul_leave: `呃啊啊——「${foodName}」的味道直冲天灵盖，灵魂都要飘出半米啦！（依然感谢！）`
+      };
+      playTone(tierId === "soul_leave" ? 210 : 620, 140, tierId === "soul_leave" ? "square" : "triangle", 0.07, 0);
+      showToast(`🍽️ 投喂 ${npc.name}「${foodName}」：${tier.label} (+${tier.affectionDelta}好感)`);
+
+      if (activeDlg && activeDlg.npc === npc) {
+        document.getElementById("dlgText").textContent = lines[tierId];
+        speakVoice(lines[tierId], npc.ms ? npc.ms.defaultSfx : "voice_soft", npc.ms ? npc.ms.voiceProfile : null);
+      } else {
+        npc.floatText = { text: lines[tierId], t: 4.0 };
+      }
+      updateStatsHUD();
+    }
+
+    // ==================== 9. 设施交互、三层捷径、章节门控与室内模式 ====================
+    let interiorState = null; // null | "F04" | "F31" | "F19"
+
+    function markFacilityVisited(facId) {
+      if (!state.visitedFacilities.includes(facId)) {
+        state.visitedFacilities.push(facId);
+      }
+    }
+
+    function collectMemory(memId, silent) {
+      if (state.collectedMemories.includes(memId)) return false;
+      const m = DB.collectibles.find(c => c.id === memId);
+      if (!m) return false;
+      state.collectedMemories.push(memId);
+      state.warmFuzzies += 12;
+      playFanfareSfx();
+      if (!silent) showToast(`✨ 收集记忆 [${m.id}] 《${m.title}》 (+12 暖心值)`);
+      checkChapterAdvance();
+      updateStatsHUD();
+      return true;
+    }
+
+    function triggerEvent(evName) {
+      if (!state.events.includes(evName)) {
+        state.events.push(evName);
+      }
+      checkChapterAdvance();
+      updateStatsHUD();
+    }
+
+    function interactWithFacility(fac) {
+      markFacilityVisited(fac.id);
+      // Also collect any collectible linked to this facility!
+      const linkedMems = DB.collectibles.filter(c => c.facilityId === fac.id);
+      linkedMems.forEach(m => {
+        if (!state.collectedMemories.includes(m.id)) collectMemory(m.id, false);
+      });
+
+      if (fac.id === "F04" || fac.id === "F31") {
+        enterInterior(fac.id);
+        return;
+      }
+      if (fac.id === "F06") { openDrawer("mendel"); return; }
+      if (fac.id === "F07") { openDrawer("flag"); return; }
+      if (fac.id === "F08") { openDrawer("chalk"); return; }
+      if (fac.id === "F03") {
+        collectMemory("M01", false);
+        collectMemory("M08", true);
+        spawnParticles(fac.pos[0], 0.5, fac.pos[2], "fx_sparkle", 12);
+        showToast("🍾 拾起沙滩漂流瓶！发现泛黄回信《风铃绳断掉的那天》");
+        return;
+      }
+      if (fac.id === "F09") {
+        state.warmFuzzies += 5;
+        spawnParticles(fac.pos[0], 2.5, fac.pos[2], "fx_ripple", 14);
+        playBubblePopSfx();
+        showToast("⛲ 向心愿喷泉投下暖意，泉水泛起薄荷涟漪 (+5 暖心值)");
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F10") {
+        const weirds = DB.foodMatrix.signatureCatalog.filter(f => f.origin === "F10");
+        const pick = weirds[Math.floor(Math.random() * weirds.length)];
+        playBubblePopSfx();
+        showToast(`🥤 叮咚！复古售货机掉出「${pick.name}」，快去投喂居民试试极值反应吧！`);
+        return;
+      }
+      if (fac.id === "F16") {
+        showToast("🔭 通过山顶望远镜眺望：西岬灯塔、白昼号灯船、北麓玻璃温室与南屿回声拱门尽收眼底！");
+        state.stats.photoCount++;
+        playBubblePopSfx();
+        return;
+      }
+      if (fac.id === "F17") {
+        spawnParticles(fac.pos[0], 4.0, fac.pos[2], "fx_petal", 14);
+        state.warmFuzzies += 4;
+        playDropSfx();
+        showToast("🍑 摇晃三果树，掉下三颗香甜的粉嫩水蜜桃 (+4 暖心值)");
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F18") {
+        state.stats.photoCount++;
+        paperPet.squash = 1.45;
+        spawnParticles(fac.pos[0], 4.2, fac.pos[2], "fx_heart", 10);
+        playBubblePopSfx();
+        showToast(`📸 与纸片宠物「${state.petName}」在时光石前合了张影！(已记录拍照次数)`);
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F22") {
+        triggerEvent("lighthouse_relight");
+        spawnParticles(fac.pos[0], 8.0, fac.pos[2], "fx_sparkle", 18);
+        playFanfareSfx();
+        showToast("🗼 西岬旧灯塔黄铜棱镜重燃！黄昏与星夜将自动开启 12 秒旋转琥珀光束，同时解锁单车快传！");
+        return;
+      }
+      if (fac.id === "F24") {
+        spawnParticles(fac.pos[0], 1.2, fac.pos[2], "fx_firefly", 14);
+        state.warmFuzzies += 6;
+        playBubblePopSfx();
+        showToast("🔥 在西滩漂流木篝火角烤了棉花糖，听着海浪声心都暖了 (+6 暖心)");
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F25") {
+        spawnParticles(fac.pos[0], 2.8, fac.pos[2], "fx_sparkle", 14);
+        state.warmFuzzies += 6;
+        playBubblePopSfx();
+        showToast("🥐 红砖烤包窑炉飘出黄油蜜瓜包香气，大家正陆续往微光夜市聚集！");
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F27") {
+        triggerEvent("lightship_relight");
+        state.stats.bellCount++;
+        playBellSfx();
+        spawnParticles(fac.pos[0], 4.0, fac.pos[2], "fx_sparkle", 18);
+        showToast("🔔 当——！白昼号潮汐灯船重新挂起桅杆暖灯！已解锁 F40 摇橹小渡船！");
+        return;
+      }
+      if (fac.id === "F28") {
+        spawnParticles(fac.pos[0], 0.4, fac.pos[2], "fx_ripple", 14);
+        state.warmFuzzies += 5;
+        playRowboatSfx();
+        showToast("🐚 涉入 L-0.5 东潮间带浅池，拾起一块打磨光滑的薄荷色海玻璃！");
+        updateStatsHUD();
+        return;
+      }
+      if (fac.id === "F33") {
+        state.vinylIndex = (state.vinylIndex + 1) % VINYL_MODES.length;
+        triggerEvent("vinyl_played");
+        toggleBGM(true);
+        spawnParticles(fac.pos[0], 4.5, fac.pos[2], "fx_sparkle", 12);
+        showToast(`💿 水车磨坊留声机换上黑胶《${VINYL_MODES[state.vinylIndex].name}》！`);
+        return;
+      }
+      if (fac.id === "F34") {
+        state.stats.bellCount++;
+        triggerEvent("summit_bell_rung");
+        playBellSfx();
+        spawnParticles(fac.pos[0], 8.0, fac.pos[2], "fx_firefly", 22);
+        showToast("🔔 悠扬的古樟钟声传遍整个抱月海湾！全镇居民都抬头望向星穹台！");
+        if (state.chapter === "ch4" || state.chapter === "epilogue") {
+          startEchoConcertFinale();
+        }
+        return;
+      }
+      if (fac.id === "F39") {
+        startEchoConcertFinale();
+        return;
+      }
+      if (fac.id === "F41") {
+        const quote = expandTracery("#bottleEcho#");
+        playBubblePopSfx();
+        showToast(`📚 漂流书屋抽读：「${quote}」`);
+        return;
+      }
+      if (fac.id === "F01" || fac.id === "F40" || fac.id === "F26") {
+        triggerFerryFrom(fac.id);
+        return;
+      }
+      if (fac.id === "F42") {
+        openBikeFastTravel();
+        return;
+      }
+      // Generic cozy feedback
+      spawnParticles(fac.pos[0], fac.pos[1] + 1.5, fac.pos[2], "fx_sparkle", 10);
+      playBubblePopSfx();
+      showToast(`✨ 造访了「${fac.name}」`);
+    }
+
+    function triggerFerryFrom(sourceId) {
+      if (!state.freeRoamMode && chapterIdx(state.chapter) < 2 && !state.events.includes("lightship_relight")) {
+        showToast("🚣 摇橹小渡船将在第二章点亮白昼号后通航（或开启漫游模式抢先乘坐）");
+        return;
+      }
+      const route = {
+        F01: { ex: -5, ez: -36, label: "南屿小屿渡口 F40" },
+        F40: { ex: 48, ez: -24, label: "东湾船坞码头 F26" },
+        F26: { ex: -6, ez: -22, label: "老镇登岛码头 F01" }
+      }[sourceId] || { ex: -5, ez: -36, label: "南屿小屿渡口 F40" };
+
+      player.ferrying = { sx: player.x, sz: player.z, ex: route.ex, ez: route.ez, t: 0, dur: 2.0 };
+      state.stats.ferryCount++;
+      playRowboatSfx();
+      showToast(`🚣 乘摇橹小渡船滑向 ${route.label}（2 秒海岛浪漫过场）...`);
+      markFacilityVisited("F40");
+      checkChapterAdvance();
+      updateStatsHUD();
+    }
+
+    function triggerTimberSlide(anchor) {
+      player.sliding = {
+        sx: anchor.pos[0], sz: anchor.pos[2],
+        ex: anchor.exitPos[0], ez: anchor.exitPos[2],
+        t: 0, dur: 2.8
+      };
+      playSlideSfx();
+      markFacilityVisited("F35");
+      showToast(`🛝 咻——！沿着${anchor.name}畅快滑向 L1（7m/s 下行体验）！`);
+    }
+
+    function openBikeFastTravel() {
+      const f42 = DB.facilities.find(f => f.id === "F42");
+      const wrap = document.getElementById("interactPillWrap");
+      wrap.innerHTML = "";
+      f42.subAnchors.forEach(st => {
+        const b = document.createElement("button");
+        b.className = "btn mint";
+        b.textContent = `🚲 快传至：${st.name}`;
+        b.addEventListener("click", () => {
+          player.x = st.pos[0]; player.z = st.pos[2] - 2; player.y = getElevationAt(player.x, player.z);
+          player.target = null;
+          paperPet.x = player.x + 1.5; paperPet.z = player.z;
+          playBikeBellSfx();
+          spawnParticles(player.x, player.y + 1, player.z, "fx_sparkle", 14);
+          showToast(`🚲 叮铃铃～ 1.5 秒邮差单车直达「${st.name}」！`);
+        });
+        wrap.appendChild(b);
+      });
+    }
+
+    function enterInterior(facId) {
+      interiorState = facId;
+      document.getElementById("interiorBanner").classList.remove("hidden");
+      document.getElementById("interiorTitle").textContent =
+        facId === "F04" ? "🏠 室内：时光小筑主木屋（暖炉 · 茶桌 · 像素挂画）" : "🌿 室内：记忆温室与森林图书馆（玻璃穹顶 · 年谱书架 · 蓝玫瑰苗床）";
+      playBubblePopSfx();
+      if (facId === "F31") {
+        triggerEvent("chronicle_restored");
+        collectMemory("M16", true);
+        showToast("🌿 踏入第二座可进入室内「记忆温室图书馆」，已协助阿木拼合《四季年谱》！");
+      }
+    }
+
+    function exitInterior() {
+      interiorState = null;
+      document.getElementById("interiorBanner").classList.add("hidden");
+      playDropSfx();
+    }
+
+    function startEchoConcertFinale() {
+      state.concertActive = true;
+      state.timeSlot = "dusk";
+      syncEnvControls();
+      triggerEvent("pixel_flag_customized");
+      triggerEvent("lingo_injected");
+      triggerEvent("summit_bell_rung");
+      markFacilityVisited("F39");
+      collectMemory("M26", true);
+
+      player.x = -2; player.z = -41; player.y = getElevationAt(-2, -41);
+      player.target = null;
+      // Summon all 9 residents around F39 Amphitheater!
+      npcs.forEach((n, idx) => {
+        const ang = -Math.PI * 0.85 + (idx / 8) * Math.PI * 0.7;
+        const rad = 5.5 + (idx % 2) * 1.8;
+        n.x = -2 + Math.cos(ang) * rad;
+        n.z = -45 + Math.sin(ang) * rad + 2.5;
+        n.tx = n.x; n.tz = n.z;
+        n.y = getElevationAt(n.x, n.z);
+        n.state = "idle";
+        triggerNpcAction(n, idx === 2 ? "clap" : "dance", "fx_firefly");
+        n.floatText = { text: idx === 2 ? "啪啪啪！" : expandTracery("#concertLyric#"), t: 7 };
+      });
+      toggleBGM(true);
+      playFanfareSfx();
+      if (state.chapter === "ch4") {
+        state.chapter = "epilogue";
+      }
+      showToast(`🎶 终章《潮汐退去后的回声音乐会》盛大开启！${expandTracery("#concertLyric#")}`);
+      updateStatsHUD();
+    }
+
+    function checkChapterAdvance() {
+      let advanced = true;
+      while (advanced) {
+        advanced = false;
+        const idx = chapterIdx(state.chapter);
+        if (idx === 0) {
+          const ok = state.visitedFacilities.includes("F08") && state.visitedFacilities.includes("F03") &&
+            state.collectedMemories.includes("M01") &&
+            Object.values(state.talkCounts).reduce((a, b) => a + b, 0) >= 2;
+          if (ok) { state.chapter = "ch1"; advanced = true; onChapterUnlocked("ch1"); }
+        } else if (idx === 1) {
+          const ok = state.visitedFacilities.includes("F19") && state.visitedFacilities.includes("F20") &&
+            state.visitedFacilities.includes("F22") && state.events.includes("lighthouse_relight") &&
+            state.collectedMemories.length >= 3;
+          if (ok) { state.chapter = "ch2"; advanced = true; onChapterUnlocked("ch2"); }
+        } else if (idx === 2) {
+          const ok = state.visitedFacilities.includes("F25") && state.visitedFacilities.includes("F26") &&
+            state.visitedFacilities.includes("F27") && state.events.includes("lightship_relight") &&
+            state.events.includes("blue_rose_bred");
+          if (ok) { state.chapter = "ch3"; advanced = true; onChapterUnlocked("ch3"); }
+        } else if (idx === 3) {
+          const ok = state.visitedFacilities.includes("F31") && state.visitedFacilities.includes("F33") &&
+            state.visitedFacilities.includes("F34") && state.events.includes("chronicle_restored") &&
+            state.events.includes("vinyl_played") && state.collectedMemories.length >= 10;
+          if (ok) { state.chapter = "ch4"; advanced = true; onChapterUnlocked("ch4"); }
+        } else if (idx === 4) {
+          const ok = state.visitedFacilities.includes("F34") && state.visitedFacilities.includes("F39") &&
+            state.events.includes("pixel_flag_customized") && state.events.includes("lingo_injected") &&
+            state.events.includes("summit_bell_rung");
+          if (ok) { state.chapter = "epilogue"; advanced = true; onChapterUnlocked("epilogue"); }
+        }
+      }
+    }
+
+    function onChapterUnlocked(chId) {
+      const ch = DB.chapters.find(c => c.id === chId);
+      if (!ch) return;
+      playFanfareSfx();
+      showToast(`🎉 解锁新篇章：${ch.title}！`);
+      saveGame(true);
+    }
+
+    // ==================== 10. Canvas 世界 & 室内渲染 ====================
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    let viewW = window.innerWidth, viewH = window.innerHeight;
+    let camX = -6, camZ = -14, camZoom = 14.5; // pixels per meter (~14.5 => 1200px shows ~82m, cozy close diorama at ~18)
+    camZoom = 17.5;
+    let camPanOffset = { x: 0, z: 0 };
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      viewW = window.innerWidth; viewH = window.innerHeight;
+      canvas.width = Math.round(viewW * dpr);
+      canvas.height = Math.round(viewH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function rRect(c, x, y, w, h, r) {
+      const rad = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+      c.beginPath();
+      c.moveTo(x + rad, y);
+      c.lineTo(x + w - rad, y);
+      c.quadraticCurveTo(x + w, y, x + w, y + rad);
+      c.lineTo(x + w, y + h - rad);
+      c.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+      c.lineTo(x + rad, y + h);
+      c.quadraticCurveTo(x, y + h, x, y + h - rad);
+      c.lineTo(x, y + rad);
+      c.quadraticCurveTo(x, y, x + rad, y);
+      c.closePath();
+    }
+
+    function worldToScreen(wx, wy, wz) {
+      const sx = viewW / 2 + (wx - camX) * camZoom;
+      const sy = viewH / 2 - (wz - camZ) * camZoom * 0.86 - wy * camZoom * 0.65;
+      return { sx, sy };
+    }
+
+    function screenToWorldGround(sx, sy) {
+      const wx = camX + (sx - viewW / 2) / camZoom;
+      const wz = camZ - (sy - viewH / 2 + 1.2 * camZoom * 0.65) / (camZoom * 0.86);
+      return { wx, wz };
+    }
+
+    function drawPolyWorld(pts, fill, stroke, lineW = 1.5) {
+      ctx.beginPath();
+      pts.forEach(([x, y, z], i) => {
+        const p = worldToScreen(x, y, z);
+        if (i === 0) ctx.moveTo(p.sx, p.sy);
+        else ctx.lineTo(p.sx, p.sy);
+      });
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineW; ctx.stroke(); }
+    }
+
+    function drawTerrainLayer(tSec) {
+      // 3-band emerald/turquoise sea
+      const seaGrad = ctx.createLinearGradient(0, 0, 0, viewH);
+      if (state.timeSlot === "night") {
+        seaGrad.addColorStop(0, "#213654"); seaGrad.addColorStop(1, "#2D5278");
+      } else if (state.timeSlot === "dusk") {
+        seaGrad.addColorStop(0, "#6BA8C7"); seaGrad.addColorStop(1, "#98C5D4");
+      } else {
+        seaGrad.addColorStop(0, "#5EB4DA"); seaGrad.addColorStop(0.5, "#7CC6E8"); seaGrad.addColorStop(1, "#9AD8F0");
+      }
+      ctx.fillStyle = seaGrad;
+      ctx.fillRect(0, 0, viewW, viewH);
+
+      // Gentle wave ripples
+      ctx.strokeStyle = state.timeSlot === "night" ? "rgba(255,214,122,0.14)" : "rgba(255,255,255,0.28)";
+      ctx.lineWidth = 1.8;
+      for (let gx = -78; gx <= 78; gx += 16) {
+        for (let gz = -60; gz <= 70; gz += 14) {
+          const ox = Math.sin(tSec * 1.1 + gz) * 1.2;
+          const p1 = worldToScreen(gx + ox, 0, gz);
+          const p2 = worldToScreen(gx + 5 + ox, 0, gz);
+          ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
+        }
+      }
+
+      // L0 Crescent Bay Sand Base (Zone 0 + Zone W + Zone E + Zone S)
+      const sandRim = state.timeSlot === "night" ? "#9C927F" : "#F5E6C8";
+      const sandEdge = "rgba(255, 250, 240, 0.55)";
+      // Main Crescent Landmass L0
+      drawPolyWorld([
+        [-64, 0.1, -33], [-42, 0.1, -35], [-31, 0.1, -24], [0, 0.1, -22], [31, 0.1, -24],
+        [45, 0.1, -36], [63, 0.1, -34], [64, 0.1, 34], [52, 0.1, 64], [-52, 0.1, 64], [-64, 0.1, 34]
+      ], sandRim, sandEdge, 5);
+
+      // Zone S Crescent Islet L0
+      drawPolyWorld([
+        [-22, 0.1, -35], [16, 0.1, -35], [20, 0.1, -49], [-20, 0.1, -51]
+      ], sandRim, sandEdge, 5);
+
+      // South Islet L1 Stage Platform (-2, -45)
+      drawPolyWorld([
+        [-12, 0.2, -50], [10, 0.2, -50], [10, 1.4, -39], [-12, 1.4, -39]
+      ], "#B89A74", null, 0);
+      drawPolyWorld([
+        [-12, 1.4, -50], [10, 1.4, -50], [10, 1.4, -39], [-12, 1.4, -39]
+      ], state.timeSlot === "night" ? "#698B68" : "#B7DDA8", "#93C794", 2);
+
+      // L-0.5 East Tidepool Recession
+      drawPolyWorld([
+        [29, -0.25, -31], [43, -0.25, -31], [43, -0.25, -21], [29, -0.25, -21]
+      ], "#6ED3CE", "#FFF5E4", 2.5);
+
+      // L1 Core & Wings Grass Plateau (+1.8m)
+      const grass1 = state.timeSlot === "night" ? "#6D946C" : "#B7DDA8";
+      const cliff1 = "#D4A878";
+      // South cliff face L0 -> L1
+      drawPolyWorld([
+        [-61, 0.1, -14], [61, 0.1, -14], [61, 1.8, -14], [-61, 1.8, -14]
+      ], cliff1, null, 0);
+      drawPolyWorld([
+        [-61, 1.8, -14], [61, 1.8, -14], [61, 1.8, 30], [-61, 1.8, 30]
+      ], grass1, "#8CB889", 2);
+
+      // L2 North & Wing Terraces (+3.6m)
+      const grass2 = state.timeSlot === "night" ? "#5A7D5B" : "#93C794";
+      const cliff2 = "#BA8F64";
+      // Core North L2 + North Valley L2
+      drawPolyWorld([
+        [-50, 1.8, 14], [50, 1.8, 14], [50, 3.6, 14], [-50, 3.6, 14]
+      ], cliff2, null, 0);
+      drawPolyWorld([
+        [-50, 3.6, 14], [50, 3.6, 14], [50, 3.6, 62], [-50, 3.6, 62]
+      ], grass2, "#76AA79", 2);
+
+      // West Cape L2 ridge (-58..-43, -20..-6)
+      drawPolyWorld([
+        [-58, 1.8, -20], [-43, 1.8, -20], [-43, 3.6, -20], [-58, 3.6, -20]
+      ], cliff2, null, 0);
+      drawPolyWorld([
+        [-58, 3.6, -20], [-43, 3.6, -20], [-43, 3.6, -6], [-58, 3.6, -6]
+      ], grass2, "#76AA79", 2);
+
+      // West NW Cottages L2 (-62..-41, 12..30)
+      drawPolyWorld([
+        [-62, 1.8, 12], [-41, 1.8, 12], [-41, 3.6, 12], [-62, 3.6, 12]
+      ], cliff2, null, 0);
+      drawPolyWorld([
+        [-62, 3.6, 12], [-41, 3.6, 12], [-41, 3.6, 30], [-62, 3.6, 30]
+      ], grass2, "#76AA79", 2);
+
+      // L3 Twin Peaks (+5.4m)
+      // 1) West Cape Lighthouse Cliff (-56, -24) with clean north grass slope
+      drawPolyWorld([
+        [-64, 1.8, -32], [-48, 1.8, -32], [-48, 5.4, -32], [-64, 5.4, -32]
+      ], "#B99A7B", null, 0);
+      drawPolyWorld([
+        [-64, 5.4, -32], [-48, 5.4, -32], [-48, 5.4, -18], [-64, 5.4, -18]
+      ], "#88BC8B", "#6F9E72", 2);
+      // 2) North Camphor Peak (0, +58)
+      drawPolyWorld([
+        [-12, 3.6, 51], [12, 3.6, 51], [12, 5.4, 51], [-12, 5.4, 51]
+      ], "#B99A7B", null, 0);
+      drawPolyWorld([
+        [-12, 5.4, 51], [12, 5.4, 51], [12, 5.4, 65], [-12, 5.4, 65]
+      ], "#88BC8B", "#6F9E72", 2);
+
+      // Firefly Creek (F32) winding stream across Zone N
+      ctx.save();
+      ctx.strokeStyle = state.timeSlot === "night" ? "#4F94B8" : "#7CC6E8";
+      ctx.lineWidth = Math.max(8, 3.2 * camZoom);
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      const creekPts = [[-8, 3.2, 36], [2, 3.2, 34], [12, 3.2, 36], [24, 3.2, 34], [35, 3.2, 38]];
+      creekPts.forEach(([x, y, z], i) => {
+        const p = worldToScreen(x, y, z);
+        if (i === 0) ctx.moveTo(p.sx, p.sy);
+        else ctx.lineTo(p.sx, p.sy);
+      });
+      ctx.stroke();
+      ctx.restore();
+
+      // Stone Walkways & Loops (130m Core Loop + 385m Outer Loop)
+      const drawPath = (pts, col, wM) => {
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.lineWidth = Math.max(4, wM * camZoom);
+        ctx.lineCap = "round"; ctx.lineJoin = "round";
+        ctx.beginPath();
+        pts.forEach(([x, y, z], i) => {
+          const p = worldToScreen(x, y, z);
+          if (i === 0) ctx.moveTo(p.sx, p.sy);
+          else ctx.lineTo(p.sx, p.sy);
+        });
+        ctx.stroke();
+        ctx.restore();
+      };
+      const pathCol = state.timeSlot === "night" ? "rgba(229,215,193,0.45)" : "rgba(255,245,228,0.82)";
+      // Core Inner Loop
+      drawPath([
+        [-6, 0.2, -20], [-6, 1.8, -11], [14, 1.8, -10], [14, 1.8, 5],
+        [14, 3.6, 17], [-12, 3.6, 17], [-22, 1.8, 4], [-22, 1.8, -6], [-6, 1.8, -11]
+      ], pathCol, 2.2);
+      // Outer Bay-Mountain Loop
+      drawPath([
+        [-22, 1.8, 4], [-44, 1.8, 4], [-38, 1.8, -8], [-50, 3.6, -14], [-56, 5.4, -24],
+        [-42, 0.3, -30], [-28, 1.0, -35], [-2, 1.4, -45], [22, 0.15, -36],
+        [36, -0.25, -26], [52, 0.2, -32], [54, 1.2, -18], [44, 1.8, -4], [48, 3.6, 14],
+        [26, 3.6, 42], [0, 5.4, 58], [-16, 3.6, 42], [-36, 4.2, 46], [-48, 3.6, 20], [-44, 1.8, 4]
+      ], pathCol, 1.8);
+
+      // Ramps (L0<->L1, L1<->L2)
+      [
+        { x: -6, z: -14, y: 1.0 }, { x: 10, z: -14, y: 1.0 },
+        { x: -16, z: 14, y: 2.7 }, { x: 16, z: 14, y: 2.7 },
+        { x: -38, z: -14, y: 2.7 }, { x: 42, z: 10, y: 2.7 }
+      ].forEach(rp => {
+        const p = worldToScreen(rp.x, rp.y, rp.z);
+        ctx.fillStyle = "#E4BA8B";
+        rRect(ctx, p.sx - 2.2 * camZoom, p.sy - 1.2 * camZoom, 4.4 * camZoom, 2.4 * camZoom, 4);
+        ctx.fill();
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.2; ctx.stroke();
+      });
+
+      // Downhill Slide Chutes (F35W & F35E)
+      const slideSub = DB.facilities.find(f => f.id === "F35").subAnchors;
+      slideSub.forEach(s => {
+        const p1 = worldToScreen(s.pos[0], s.pos[1], s.pos[2]);
+        const p2 = worldToScreen(s.exitPos[0], s.exitPos[1], s.exitPos[2]);
+        ctx.save();
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = Math.max(7, 1.9 * camZoom); ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.quadraticCurveTo((p1.sx + p2.sx) / 2, p1.sy + 20, p2.sx, p2.sy); ctx.stroke();
+        ctx.strokeStyle = "#E4BA8B"; ctx.lineWidth = Math.max(4, 1.2 * camZoom);
+        ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.quadraticCurveTo((p1.sx + p2.sx) / 2, p1.sy + 20, p2.sx, p2.sy); ctx.stroke();
+        ctx.restore();
+      });
+
+      // Ferry route dotted arc
+      const pf1 = worldToScreen(-6, 0.2, -22);
+      const pf40 = worldToScreen(-5, 0.2, -36);
+      const pf26 = worldToScreen(48, 0.2, -24);
+      ctx.save();
+      ctx.setLineDash([6, 6]);
+      ctx.strokeStyle = "rgba(255, 245, 228, 0.65)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pf1.sx, pf1.sy); ctx.lineTo(pf40.sx, pf40.sy);
+      ctx.quadraticCurveTo((pf40.sx + pf26.sx) / 2, pf40.sy + 18, pf26.sx, pf26.sy);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawFlagCanvasIcon(px, py, sizePx, tSec) {
+      const cell = sizePx / 12;
+      const str = state.pixelFlag12x12;
+      for (let r = 0; r < 12; r++) {
+        const wave = Math.sin(tSec * 4 + r * 0.4) * 1.3;
+        for (let c = 0; c < 12; c++) {
+          const code = parseInt(str[r * 12 + c] || "0", 10);
+          ctx.fillStyle = PIXEL_PALETTE[code] || "#FFF5E4";
+          ctx.fillRect(px + c * cell, py + r * cell + wave * (c / 12), cell + 0.5, cell + 0.5);
+        }
+      }
+    }
+
+    function drawFacilityVisual(fac, tSec) {
+      const p = worldToScreen(fac.pos[0], fac.pos[1], fac.pos[2]);
+      const s = camZoom;
+      const locked = !isFacilityUnlocked(fac);
+      ctx.save();
+      if (locked) ctx.globalAlpha = 0.48;
+
+      // Ground shadow
+      ctx.fillStyle = "rgba(90, 88, 125, 0.22)";
+      ctx.beginPath();
+      ctx.ellipse(p.sx + 0.4 * s, p.sy + 0.3 * s, Math.max(12, fac.size[0] * 0.45 * s), Math.max(8, fac.size[1] * 0.35 * s), 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const id = fac.id;
+      if (id === "F04" || id === "F19" || id === "F13" || id === "F13b" || id === "F13c" || id === "F23" || id === "F23b" || id === "F30" || id === "F30b") {
+        // Storybook Cottage
+        const bw = (id === "F19" ? 4.4 : id === "F04" ? 4.2 : 3.2) * s;
+        const bh = (id === "F04" ? 2.5 : 2.1) * s;
+        const wallCol = (id === "F30" || id === "F30b") ? "#F2D88F" : id === "F13b" ? "#B7C69B" : id === "F19" ? "#FFF5E4" : "#F6E7D1";
+        const roofCol = (id === "F23" || id === "F23b" || id === "F13c") ? "#638A9E" : id === "F13b" ? "#65765F" : (id === "F30" || id === "F30b") ? "#89B7A2" : "#B96A59";
+        // Walls
+        ctx.fillStyle = wallCol;
+        rRect(ctx, p.sx - bw / 2, p.sy - bh, bw, bh, 5);
+        ctx.fill(); ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.6; ctx.stroke();
+        // Roof
+        ctx.fillStyle = roofCol;
+        ctx.beginPath();
+        ctx.moveTo(p.sx - bw * 0.62, p.sy - bh + 2);
+        ctx.lineTo(p.sx, p.sy - bh - bh * 0.72);
+        ctx.lineTo(p.sx + bw * 0.62, p.sy - bh + 2);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        // Door
+        ctx.fillStyle = id === "F19" ? "#7EC8B5" : "#9D623E";
+        rRect(ctx, p.sx - bw * 0.14, p.sy - bh * 0.56, bw * 0.28, bh * 0.56, 4);
+        ctx.fill();
+        // Warm Windows (GI glow at dusk/night)
+        const warmWin = state.timeSlot !== "afternoon";
+        ctx.fillStyle = warmWin ? "#FFD67A" : "#CBEAF7";
+        rRect(ctx, p.sx - bw * 0.36, p.sy - bh * 0.62, bw * 0.18, bh * 0.26, 3); ctx.fill();
+        rRect(ctx, p.sx + bw * 0.18, p.sy - bh * 0.62, bw * 0.18, bh * 0.26, 3); ctx.fill();
+      } else if (id === "F31") {
+        // Memory Conservatory Glass Greenhouse
+        const bw = 5.4 * s, bh = 2.8 * s;
+        ctx.fillStyle = "#B8B1A6"; // dwarf stone wall
+        rRect(ctx, p.sx - bw / 2, p.sy - bh * 0.35, bw, bh * 0.35, 4); ctx.fill();
+        // Glass dome
+        ctx.fillStyle = state.timeSlot === "afternoon" ? "rgba(166, 232, 224, 0.76)" : "rgba(255, 223, 145, 0.82)";
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy - bh * 0.35, bw * 0.48, Math.PI, 0);
+        ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "#E4BA8B"; ctx.lineWidth = 2.4; ctx.stroke();
+        // Arch ribs
+        ctx.beginPath(); ctx.moveTo(p.sx, p.sy - bh * 0.35 - bw * 0.48); ctx.lineTo(p.sx, p.sy); ctx.stroke();
+      } else if (id === "F22") {
+        // West Cape Lighthouse
+        const r = 1.9 * s, h = 6.8 * s;
+        ctx.fillStyle = "#FFF5E4";
+        ctx.beginPath();
+        ctx.moveTo(p.sx - r, p.sy); ctx.lineTo(p.sx - r * 0.65, p.sy - h);
+        ctx.lineTo(p.sx + r * 0.65, p.sy - h); ctx.lineTo(p.sx + r, p.sy);
+        ctx.closePath(); ctx.fill(); ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.6; ctx.stroke();
+        // Red stripes
+        ctx.fillStyle = "#B96A59";
+        ctx.fillRect(p.sx - r * 0.85, p.sy - h * 0.45, r * 1.7, h * 0.16);
+        ctx.fillRect(p.sx - r * 0.72, p.sy - h * 0.8, r * 1.44, h * 0.14);
+        // Lantern room
+        const lit = state.events.includes("lighthouse_relight") || state.freeRoamMode || state.timeSlot !== "afternoon";
+        ctx.fillStyle = lit ? "#FFD67A" : "#94A3B8";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - h - 0.5 * s, r * 0.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#B96A59";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - h - 0.9 * s, r * 0.7, Math.PI, 0); ctx.fill();
+      } else if (id === "F15") {
+        // Octagonal Windmill
+        const w = 2.6 * s, h = 5.0 * s;
+        ctx.fillStyle = "#E4BA8B";
+        ctx.beginPath();
+        ctx.moveTo(p.sx - w * 0.6, p.sy); ctx.lineTo(p.sx - w * 0.38, p.sy - h);
+        ctx.lineTo(p.sx + w * 0.38, p.sy - h); ctx.lineTo(p.sx + w * 0.6, p.sy);
+        ctx.closePath(); ctx.fill(); ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = "#B96A59";
+        ctx.beginPath(); ctx.moveTo(p.sx - w * 0.46, p.sy - h); ctx.lineTo(p.sx, p.sy - h - 1.3 * s); ctx.lineTo(p.sx + w * 0.46, p.sy - h); ctx.closePath(); ctx.fill();
+        // Rotating sails
+        ctx.save();
+        ctx.translate(p.sx, p.sy - h + 0.3 * s);
+        ctx.rotate(tSec * 0.7);
+        for (let k = 0; k < 4; k++) {
+          ctx.rotate(Math.PI / 2);
+          ctx.fillStyle = "#FFF5E4"; ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.2;
+          ctx.fillRect(0, -0.25 * s, 2.7 * s, 0.55 * s);
+          ctx.strokeRect(0, -0.25 * s, 2.7 * s, 0.55 * s);
+        }
+        ctx.restore();
+      } else if (id === "F27") {
+        // Daylight Lightship
+        const bw = 5.4 * s;
+        ctx.save(); ctx.translate(p.sx, p.sy); ctx.rotate(-0.08);
+        ctx.fillStyle = "#7CC6E8"; ctx.strokeStyle = "#5A587D"; ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(-bw * 0.52, -1.0 * s); ctx.lineTo(bw * 0.52, -1.0 * s);
+        ctx.lineTo(bw * 0.36, 0.3 * s); ctx.lineTo(-bw * 0.36, 0.3 * s); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#FFF5E4"; ctx.fillRect(-bw * 0.25, -1.9 * s, bw * 0.42, 0.9 * s);
+        // Mast + glowing beacon
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(0, -1.0 * s); ctx.lineTo(0, -5.2 * s); ctx.stroke();
+        ctx.fillStyle = (state.events.includes("lightship_relight") || state.freeRoamMode) ? "#FFD67A" : "#CBD5E1";
+        ctx.beginPath(); ctx.arc(0, -5.3 * s, 0.65 * s, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      } else if (id === "F34") {
+        // Ancient Camphor Tree + Bell Pavilion
+        ctx.fillStyle = "#E4BA8B";
+        ctx.beginPath(); ctx.ellipse(p.sx, p.sy, 4.6 * s, 2.6 * s, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.8; ctx.stroke();
+        ctx.fillStyle = "#9D623E"; ctx.fillRect(p.sx - 0.7 * s, p.sy - 4.2 * s, 1.4 * s, 4.2 * s);
+        [[-1.6, -4.6, 2.0], [1.6, -4.5, 2.0], [0, -5.8, 2.6]].forEach(([ox, oy, rr]) => {
+          ctx.fillStyle = "#93C794";
+          ctx.beginPath(); ctx.arc(p.sx + ox * s, p.sy + oy * s, rr * s, 0, Math.PI * 2); ctx.fill();
+        });
+        // Bronze Bell
+        ctx.fillStyle = "#D9A441";
+        ctx.beginPath(); ctx.arc(p.sx + 2.8 * s, p.sy - 2.1 * s, 0.65 * s, 0, Math.PI * 2); ctx.fill();
+      } else if (id === "F39") {
+        // Driftwood Echo Arch
+        ctx.fillStyle = "#E4BA8B";
+        ctx.beginPath(); ctx.ellipse(p.sx, p.sy, 4.2 * s, 2.2 * s, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#C79C6E"; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - 0.5 * s, 3.3 * s, Math.PI, 0); ctx.stroke();
+        // Hanging shell chimes
+        for (let i = -2; i <= 2; i++) {
+          const cx = p.sx + i * 0.95 * s;
+          const sway = Math.sin(tSec * 2.5 + i) * 3;
+          ctx.strokeStyle = "#FFF5E4"; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.moveTo(cx, p.sy - 3.3 * s); ctx.lineTo(cx + sway, p.sy - 2.0 * s); ctx.stroke();
+          ctx.fillStyle = i % 2 === 0 ? "#F472B6" : "#7CC6E8";
+          ctx.beginPath(); ctx.arc(cx + sway, p.sy - 1.9 * s, 0.28 * s, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (id === "F07" || id === "F21") {
+        // Pixel Flagpole or Windchime Corridor with live 12x12 pixel flag!
+        if (id === "F21") {
+          ctx.fillStyle = "#E4BA8B"; rRect(ctx, p.sx - 2.8 * s, p.sy - 0.5 * s, 5.6 * s, 1.0 * s, 4); ctx.fill();
+          ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.moveTo(p.sx - 2.2 * s, p.sy); ctx.lineTo(p.sx - 2.2 * s, p.sy - 2.2 * s);
+          ctx.lineTo(p.sx + 2.2 * s, p.sy - 2.2 * s); ctx.lineTo(p.sx + 2.2 * s, p.sy); ctx.stroke();
+        }
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(p.sx, p.sy); ctx.lineTo(p.sx, p.sy - 3.6 * s); ctx.stroke();
+        drawFlagCanvasIcon(p.sx + 2, p.sy - 3.5 * s, 1.7 * s, tSec);
+      } else if (id === "F06") {
+        // Mendel Raised Flowerbed
+        ctx.fillStyle = "#9D623E";
+        rRect(ctx, p.sx - 2.6 * s, p.sy - 1.0 * s, 5.2 * s, 1.8 * s, 5); ctx.fill();
+        ctx.fillStyle = "#6B442A";
+        rRect(ctx, p.sx - 2.3 * s, p.sy - 0.8 * s, 4.6 * s, 1.3 * s, 4); ctx.fill();
+        state.mendelBed.slice(0, 6).forEach((fl, i) => {
+          const fx = p.sx - 1.7 * s + (i % 3) * 1.6 * s;
+          const fz = p.sy - 0.4 * s + Math.floor(i / 3) * 0.65 * s;
+          ctx.fillStyle = fl.color;
+          ctx.beginPath(); ctx.arc(fx, fz, 0.38 * s, 0, Math.PI * 2); ctx.fill();
+        });
+      } else if (id === "F09") {
+        // Central Wish Fountain
+        ctx.fillStyle = "#B8B1A6";
+        ctx.beginPath(); ctx.ellipse(p.sx, p.sy, 2.8 * s, 1.8 * s, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#7CC6E8";
+        ctx.beginPath(); ctx.ellipse(p.sx, p.sy - 0.1 * s, 2.2 * s, 1.3 * s, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#D4CEC3";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - 1.0 * s, 0.7 * s, 0, Math.PI * 2); ctx.fill();
+      } else if (id === "F25") {
+        // Night Market Bakery Kiln & String Lights
+        ctx.fillStyle = "#B96A59";
+        ctx.beginPath(); ctx.arc(p.sx - 1.4 * s, p.sy - 0.6 * s, 1.5 * s, Math.PI, 0); ctx.fill();
+        ctx.fillRect(p.sx - 2.9 * s, p.sy - 0.6 * s, 3.0 * s, 0.8 * s);
+        ctx.fillStyle = "#FFD67A";
+        ctx.beginPath(); ctx.arc(p.sx - 1.4 * s, p.sy - 0.3 * s, 0.5 * s, Math.PI, 0); ctx.fill();
+        // Stall + String lights
+        ctx.fillStyle = "#E4BA8B"; rRect(ctx, p.sx + 0.5 * s, p.sy - 1.4 * s, 3.0 * s, 1.5 * s, 4); ctx.fill();
+        ctx.fillStyle = "#F5E6C8"; rRect(ctx, p.sx + 0.3 * s, p.sy - 2.0 * s, 3.4 * s, 0.7 * s, 3); ctx.fill();
+        for (let b = 0; b < 5; b++) {
+          ctx.fillStyle = "#FFD67A";
+          ctx.beginPath(); ctx.arc(p.sx - 2.0 * s + b * 1.2 * s, p.sy - 2.4 * s + Math.sin(b) * 3, 0.22 * s, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (id === "F33") {
+        // Forest Watermill with spinning paddle wheel
+        ctx.fillStyle = "#FFF5E4"; rRect(ctx, p.sx - 1.8 * s, p.sy - 2.0 * s, 3.6 * s, 2.0 * s, 4); ctx.fill();
+        ctx.fillStyle = "#B96A59";
+        ctx.beginPath(); ctx.moveTo(p.sx - 2.2 * s, p.sy - 2.0 * s); ctx.lineTo(p.sx, p.sy - 3.5 * s); ctx.lineTo(p.sx + 2.2 * s, p.sy - 2.0 * s); ctx.closePath(); ctx.fill();
+        ctx.save(); ctx.translate(p.sx + 2.1 * s, p.sy - 0.7 * s); ctx.rotate(tSec * 1.4);
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(0, 0, 1.0 * s, 0, Math.PI * 2); ctx.stroke();
+        for (let k = 0; k < 6; k++) {
+          ctx.rotate(Math.PI / 3);
+          ctx.beginPath(); ctx.moveTo(-1.0 * s, 0); ctx.lineTo(1.0 * s, 0); ctx.stroke();
+        }
+        ctx.restore();
+      } else if (id === "F37" || id === "F32" || id === "F32W" || id === "F32E") {
+        // Wooden Arch Bridge
+        const bw = (id === "F37" ? 8.5 : 4.2) * s;
+        ctx.fillStyle = "#E4BA8B"; ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(p.sx - bw / 2, p.sy + 0.4 * s);
+        ctx.quadraticCurveTo(p.sx, p.sy - 1.4 * s, p.sx + bw / 2, p.sy + 0.4 * s);
+        ctx.lineTo(p.sx + bw / 2, p.sy + 1.0 * s);
+        ctx.quadraticCurveTo(p.sx, p.sy - 0.7 * s, p.sx - bw / 2, p.sy + 1.0 * s);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+      } else if (id === "F38") {
+        // Tidal Basalt Stepping Stones
+        for (let i = -2; i <= 2; i++) {
+          ctx.fillStyle = "#7B828E";
+          ctx.beginPath(); ctx.ellipse(p.sx + i * 1.9 * s, p.sy, 0.85 * s, 0.55 * s, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = "#93C794"; ctx.lineWidth = 1.5; ctx.stroke();
+        }
+      } else if (id === "F40") {
+        // Wooden Ferry Rowboat
+        const bob = Math.sin(tSec * 2.4) * 3;
+        ctx.fillStyle = "#7CC6E8"; ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.ellipse(p.sx, p.sy + bob, 1.8 * s, 0.8 * s, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#FFD67A"; ctx.beginPath(); ctx.arc(p.sx + 1.3 * s, p.sy - 0.9 * s + bob, 0.25 * s, 0, Math.PI * 2); ctx.fill();
+      } else if (id === "F41") {
+        // Drift Book Phonebooth
+        ctx.fillStyle = "#7EC8B5"; rRect(ctx, p.sx - 0.9 * s, p.sy - 2.3 * s, 1.8 * s, 2.3 * s, 4); ctx.fill();
+        ctx.fillStyle = "#FFD67A"; rRect(ctx, p.sx - 0.55 * s, p.sy - 1.9 * s, 1.1 * s, 1.1 * s, 2); ctx.fill();
+        ctx.fillStyle = "#B96A59";
+        ctx.beginPath(); ctx.moveTo(p.sx - 1.1 * s, p.sy - 2.3 * s); ctx.lineTo(p.sx, p.sy - 3.0 * s); ctx.lineTo(p.sx + 1.1 * s, p.sy - 2.3 * s); ctx.closePath(); ctx.fill();
+      } else if (id === "F42") {
+        drawBikeStopAt(fac.pos[0], fac.pos[1], fac.pos[2]);
+      } else if (id === "F24") {
+        // Campfire
+        ctx.fillStyle = "#9D623E"; rRect(ctx, p.sx - 0.9 * s, p.sy - 0.3 * s, 1.8 * s, 0.6 * s, 3); ctx.fill();
+        const fl = 0.8 + Math.sin(tSec * 8) * 0.15;
+        ctx.fillStyle = "#FF8C42";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - 0.5 * s * fl, 0.7 * s * fl, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#FFD67A";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - 0.4 * s, 0.4 * s, 0, Math.PI * 2); ctx.fill();
+      } else {
+        // Stylish fallback wooden kiosk / bench / dock / arch
+        const bw = Math.min(4.2, Math.max(1.8, fac.size[0] * 0.55)) * s;
+        const bh = Math.min(2.4, Math.max(0.9, fac.size[2] * 0.45)) * s;
+        ctx.fillStyle = id === "F08" ? "#46455E" : id === "F10" ? "#F4A9B8" : "#E4BA8B";
+        rRect(ctx, p.sx - bw / 2, p.sy - bh, bw, bh, 5);
+        ctx.fill(); ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+
+      // Facility Name Tag
+      if (camZoom >= 12) {
+        const labelTxt = `${fac.id} ${fac.name.slice(0, 7)}`;
+        ctx.font = "bold 10.5px sans-serif";
+        const tw = ctx.measureText(labelTxt).width + 10;
+        ctx.fillStyle = locked ? "rgba(90,88,125,0.72)" : "rgba(255,248,235,0.88)";
+        rRect(ctx, p.sx - tw / 2, p.sy + 5, tw, 16, 6); ctx.fill();
+        ctx.fillStyle = locked ? "#FFF5E4" : "#46455E";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(labelTxt, p.sx, p.sy + 13);
+      }
+      ctx.restore();
+    }
+
+    function drawBikeStopAt(wx, wy, wz) {
+      const p = worldToScreen(wx, wy, wz);
+      const s = camZoom;
+      ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(p.sx, p.sy); ctx.lineTo(p.sx, p.sy - 2.1 * s); ctx.stroke();
+      ctx.fillStyle = "#7EC8B5"; ctx.beginPath(); ctx.arc(p.sx, p.sy - 2.2 * s, 0.55 * s, 0, Math.PI * 2); ctx.fill();
+      // Cute Mint Bike beside pole
+      ctx.strokeStyle = "#48A999"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(p.sx + 0.7 * s, p.sy - 0.3 * s, 0.35 * s, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.sx + 1.6 * s, p.sy - 0.3 * s, 0.35 * s, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.sx + 0.7 * s, p.sy - 0.3 * s); ctx.lineTo(p.sx + 1.2 * s, p.sy - 0.8 * s); ctx.lineTo(p.sx + 1.6 * s, p.sy - 0.3 * s); ctx.stroke();
+    }
+
+    function drawMicroProp(mp, tSec) {
+      const y = getElevationAt(mp.x, mp.z);
+      const p = worldToScreen(mp.x, y, mp.z);
+      const s = camZoom;
+      if (mp.kind === "lamp") {
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(p.sx, p.sy); ctx.lineTo(p.sx, p.sy - 1.5 * s); ctx.stroke();
+        ctx.fillStyle = state.timeSlot !== "afternoon" ? "#FFD67A" : "#FFF5E4";
+        ctx.beginPath(); ctx.arc(p.sx, p.sy - 1.6 * s, 0.35 * s, 0, Math.PI * 2); ctx.fill();
+      } else if (mp.kind === "sign") {
+        const straight = state.stats.straightSignIds.includes(mp.id);
+        ctx.save(); ctx.translate(p.sx, p.sy);
+        ctx.rotate(straight ? 0 : 0.14);
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 2.4;
+        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -1.5 * s); ctx.stroke();
+        ctx.fillStyle = "#E4BA8B"; rRect(ctx, -0.7 * s, -1.5 * s, 1.4 * s, 0.45 * s, 2); ctx.fill();
+        ctx.restore();
+      } else if (mp.kind === "pine" || mp.kind === "maple" || mp.kind === "fruit") {
+        ctx.fillStyle = "#9D623E"; ctx.fillRect(p.sx - 0.28 * s, p.sy - 1.6 * s, 0.56 * s, 1.6 * s);
+        const col = mp.kind === "pine" ? "#7BB59D" : mp.kind === "maple" ? "#E8C37D" : "#93C794";
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy - 2.6 * s, 1.25 * s, 0, Math.PI * 2);
+        ctx.arc(p.sx - 0.85 * s, p.sy - 2.0 * s, 0.9 * s, 0, Math.PI * 2);
+        ctx.arc(p.sx + 0.85 * s, p.sy - 2.0 * s, 0.9 * s, 0, Math.PI * 2);
+        ctx.fill();
+        if (mp.kind === "fruit") {
+          ctx.fillStyle = "#F4847A";
+          [[-0.5, -2.8], [0.5, -2.5], [0, -1.8]].forEach(([ox, oy]) => {
+            ctx.beginPath(); ctx.arc(p.sx + ox * s, p.sy + oy * s, 0.22 * s, 0, Math.PI * 2); ctx.fill();
+          });
+        }
+      } else if (mp.kind === "chime") {
+        ctx.strokeStyle = "#C79C6E"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(p.sx, p.sy); ctx.lineTo(p.sx, p.sy - 1.8 * s); ctx.stroke();
+        ctx.fillStyle = "#7CC6E8"; ctx.beginPath(); ctx.arc(p.sx + Math.sin(tSec * 3) * 2, p.sy - 1.4 * s, 0.25 * s, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    function sampleResidentPose(ch) {
+      const pose = { lift: 0, tilt: 0, head: 0, width: 1, height: 1, shift: 0, left: 0, right: 0, step: 0 };
+      const a = ch.actionAnim;
+      if (!a) return pose;
+      const style = RESIDENT_MOTION[ch.id];
+      const t = a.t / a.dur;
+      const ease = Math.sin(Math.PI * t) ** 1.5;
+      const beat = Math.sin(Math.PI * 2 * style.beats * t);
+      const pulse = (1 - Math.cos(Math.PI * 2 * style.beats * t)) / 2;
+      const lead = style.lead;
+      const paw = lead < 0 ? "left" : "right";
+      const bounce = pulse * ease * style.energy;
+
+      switch (a.type) {
+        case "greet":
+        case "wave":
+          pose[paw] = lead * (2.15 + beat * 0.34) * ease;
+          pose.head = lead * style.lean * ease;
+          pose.lift = ch.id === "C07" ? bounce * 0.18 : 0;
+          break;
+        case "turn_to_player":
+        case "pivot_spin":
+          pose.width = 1 - Math.abs(Math.sin(Math.PI * (a.type === "pivot_spin" ? 2 : 1) * t)) * 0.45;
+          pose.tilt = lead * style.lean * Math.sin(Math.PI * 2 * t);
+          pose.shift = lead * 0.17 * ease;
+          break;
+        case "nod_tilt":
+          pose.head = lead * style.lean * ease;
+          pose.height = 1 - bounce * 0.13;
+          if (ch.id === "C02" || ch.id === "C09") {
+            pose.left = 0.58 * ease;
+            pose.right = -pose.left;
+          }
+          break;
+        case "clap":
+          pose.left = (0.50 + 0.85 * pulse) * ease;
+          pose.right = -pose.left;
+          pose.head = lead * style.lean * ease;
+          pose.lift = ch.id === "C03" ? 0 : bounce * 0.16;
+          break;
+        case "cheer":
+        case "hop_bounce":
+          pose.lift = bounce * 0.64;
+          pose.height = 1 - 0.12 * ease + 0.22 * bounce;
+          pose.width = 2 - pose.height;
+          pose.left = -2.35 * ease;
+          pose.right = -pose.left;
+          break;
+        case "dance":
+          pose.shift = beat * ease * 0.23;
+          pose.tilt = beat * ease * style.lean;
+          pose.left = -(0.95 + beat * 0.55) * ease;
+          pose.right = (0.95 - beat * 0.55) * ease;
+          pose.step = beat * ease * 0.25;
+          break;
+        case "hover_bob":
+          pose.lift = bounce * 0.42;
+          pose.left = -0.75 * ease;
+          pose.right = -pose.left;
+          pose.tilt = lead * style.lean * 0.6 * ease;
+          break;
+        case "paper_pet_squash":
+          pose.width = 1 + beat * ease * 0.24;
+          pose.height = 2 - pose.width;
+          break;
+        case "sit":
+          pose.height = 1 - 0.25 * ease;
+          pose.width = 1 + 0.09 * ease;
+          pose.head = lead * style.lean * ease;
+          break;
+        case "water_bend":
+          pose.tilt = lead * 0.31 * ease;
+          pose[paw] = lead * 1.05 * ease;
+          pose.height = 1 - 0.12 * ease;
+          break;
+        case "photo":
+          pose.head = lead * style.lean * ease;
+          pose[paw] = lead * 1.46 * ease;
+          pose.shift = lead * 0.14 * ease;
+          break;
+        case "walk":
+        case "run":
+          pose.step = beat * ease * (a.type === "run" ? 0.45 : 0.26);
+          pose.left = pose.step * 2;
+          pose.right = -pose.left;
+          pose.lift = bounce * 0.20;
+          break;
+      }
+      return pose;
+    }
+
+    function drawChibiCharacter(ch, isPlayer, tSec) {
+      const p = worldToScreen(ch.x, ch.y, ch.z);
+      const s = camZoom;
+      const r = 0.56 * s;
+      const pose = sampleResidentPose(ch);
+      let bobY = -pose.lift * r;
+
+      if (!isPlayer && ch.id === "C05") {
+        bobY -= 0.35 * s + Math.sin(tSec * 3.5) * 4;
+      }
+      if (isPlayer) {
+        if (Math.hypot(player.vx, player.vz) > 0.1 || player.sliding) bobY -= Math.abs(Math.sin(player.walkPhase)) * 4;
+      } else if (ch.state === "wander" || ch.state === "director_approach") {
+        bobY -= Math.abs(Math.sin(ch.walkPhase)) * 3.5;
+      }
+
+      if (!isPlayer && ch.state === "dragged") {
+        bobY -= 16; pose.width = 0.92; pose.height = 1.12;
+      }
+
+      // Shadow
+      ctx.fillStyle = "rgba(90, 88, 125, 0.28)";
+      ctx.beginPath(); ctx.ellipse(p.sx, p.sy + 2, 0.65 * s, 0.3 * s, 0, 0, Math.PI * 2); ctx.fill();
+
+      drawChibiPose(ctx, ch, isPlayer, r, pose, p.sx, p.sy + bobY);
+
+      // Nameplate
+      ctx.font = "bold 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillStyle = state.timeSlot === "night" ? "#FFF5E4" : "#46455E";
+      const label = isPlayer ? "我 (旅人)" : ch.name;
+      ctx.fillText(label, p.sx, p.sy + 14);
+
+      // Worry Bubble & Stage Star above NPC
+      if (!isPlayer) {
+        drawResidentBubbles(ch, p, r, bobY, tSec);
+      }
+    }
+
+    function drawChibiPose(ctx, ch, isPlayer, r, pose, x, y) {
+      ctx.save();
+      ctx.translate(x + pose.shift * r, y);
+      ctx.rotate(pose.tilt);
+      ctx.scale(pose.width, pose.height);
+      const pal = isPlayer
+        ? { body: "#FFD67A", ear: "#E4BA8B", accent: "#B96A59", muzzle: "#FFF5E4" }
+        : (CHAR_COLORS[ch.id] || CHAR_COLORS.C01);
+
+      // Body
+      ctx.fillStyle = pal.accent;
+      rRect(ctx, -r * 0.72, -r * 1.15, r * 1.44, r * 1.05, 6); ctx.fill();
+      if (!isPlayer) {
+        ctx.strokeStyle = pal.body;
+        ctx.lineCap = "round";
+        ctx.lineWidth = r * 0.33;
+        for (const side of [-1, 1]) {
+          const angle = side < 0 ? pose.left : pose.right;
+          ctx.beginPath();
+          ctx.moveTo(side * r * 0.62, -r * 0.82);
+          ctx.lineTo(r * (side * 0.62 + Math.sin(angle) * 0.63), r * (-0.82 + Math.cos(angle) * 0.63));
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(side * r * 0.39, -r * 0.28);
+          ctx.lineTo(side * r * 0.43, r * Math.min(0, side * pose.step));
+          ctx.stroke();
+        }
+      }
+      ctx.translate(0, -r * 1.14);
+      ctx.rotate(pose.head);
+      ctx.translate(0, r * 1.14);
+      // Ears
+      ctx.fillStyle = pal.ear;
+      if (!isPlayer && ch.id === "C02") { // lop ears
+        ctx.beginPath(); ctx.ellipse(-r * 0.9, -r * 1.45, r * 0.25, r * 0.6, 0.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(r * 0.9, -r * 1.45, r * 0.25, r * 0.6, -0.2, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.arc(-r * 0.68, -r * 2.15, r * 0.34, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(r * 0.68, -r * 2.15, r * 0.34, 0, Math.PI * 2); ctx.fill();
+      }
+      // Head
+      ctx.fillStyle = pal.body;
+      ctx.beginPath(); ctx.arc(0, -r * 1.65, r * 0.95, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "rgba(70,69,94,0.3)"; ctx.lineWidth = 1.2; ctx.stroke();
+
+      // Hat/Glasses/Beret accents
+      if (isPlayer) {
+        ctx.fillStyle = "#B96A59"; // cozy traveler beret
+        ctx.beginPath(); ctx.ellipse(0, -r * 2.45, r * 0.72, r * 0.26, -0.1, 0, Math.PI * 2); ctx.fill();
+      } else if (ch.id === "C03" || ch.id === "C09") {
+        ctx.fillStyle = ch.id === "C03" ? "#9D623E" : "#F4847A";
+        ctx.beginPath(); ctx.ellipse(r * 0.15, -r * 2.45, r * 0.68, r * 0.24, 0.15, 0, Math.PI * 2); ctx.fill();
+      } else if (ch.id === "C06") {
+        ctx.fillStyle = "#E9C46A";
+        ctx.beginPath(); ctx.ellipse(0, -r * 2.35, r * 1.25, r * 0.32, 0, 0, Math.PI * 2); ctx.fill();
+      } else if (ch.id === "C07") {
+        ctx.fillStyle = "#7CC6E8";
+        ctx.beginPath(); ctx.ellipse(0, -r * 2.42, r * 0.75, r * 0.26, -0.1, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // Muzzle & Eyes
+      ctx.fillStyle = pal.muzzle;
+      ctx.beginPath(); ctx.ellipse(0, -r * 1.4, r * 0.42, r * 0.28, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#2E2D40";
+      if (!isPlayer && ch.id === "C03") {
+        // Deadpan half-lidded eyes
+        ctx.fillRect(-r * 0.52, -r * 1.75, r * 0.32, 2.2);
+        ctx.fillRect(r * 0.2, -r * 1.75, r * 0.32, 2.2);
+      } else {
+        ctx.beginPath(); ctx.arc(-r * 0.36, -r * 1.7, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(r * 0.36, -r * 1.7, 2.2, 0, Math.PI * 2); ctx.fill();
+      }
+      if (!isPlayer && ch.id === "C01") {
+        ctx.strokeStyle = "#46455E"; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(-r * 0.36, -r * 1.7, r * 0.26, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(r * 0.36, -r * 1.7, r * 0.26, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawResidentBubbles(ch, p, r, bobY, tSec) {
+        const st = state.charStages[ch.id] || 0;
+        if (st < 3 && ch.ms) {
+          const chk = checkConditionMet(ch, ch.ms.scripts[st]);
+          if (chk.ok) {
+            ctx.fillStyle = "#FFD67A";
+            ctx.beginPath(); ctx.arc(p.sx - 15, p.sy - r * 3.1 + bobY, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#8A5311"; ctx.font = "bold 11px sans-serif";
+            ctx.fillText("★", p.sx - 15, p.sy - r * 3.1 + bobY + 4);
+          }
+        }
+        if (ch.bubble) {
+          const bx = p.sx + 16, by = p.sy - r * 3.0 + bobY + Math.sin(tSec * 4) * 2;
+          ctx.fillStyle = ch.bubble.hex;
+          ctx.beginPath(); ctx.arc(bx, by, 10, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = "#FFF8EC"; ctx.lineWidth = 2; ctx.stroke();
+          ctx.fillStyle = "#FFF"; ctx.font = "bold 11px sans-serif";
+          ctx.fillText("!", bx, by + 4);
+        }
+        if (ch.floatText) {
+          const ft = ch.floatText.text.slice(0, 22);
+          const tw = ctx.measureText(ft).width + 14;
+          ctx.fillStyle = "rgba(255, 248, 235, 0.95)";
+          rRect(ctx, p.sx - tw / 2, p.sy - r * 4.4 + bobY, tw, 22, 10); ctx.fill();
+          ctx.strokeStyle = "#D9AC7C"; ctx.lineWidth = 1.5; ctx.stroke();
+          ctx.fillStyle = "#46455E"; ctx.font = "11px sans-serif";
+          ctx.fillText(ft, p.sx, p.sy - r * 4.4 + bobY + 14);
+        }
+    }
+
+    function drawPaperPet(tSec) {
+      const y = getElevationAt(paperPet.x, paperPet.z);
+      const p = worldToScreen(paperPet.x, y, paperPet.z);
+      const sq = 1 + Math.sin(tSec * 5) * 0.06 * paperPet.squash;
+      paperPet.squash = Math.max(1, paperPet.squash - 0.02);
+      ctx.save();
+      ctx.translate(p.sx, p.sy);
+      ctx.scale(sq, 2 - sq);
+      // Thick cream die-cut outline
+      ctx.fillStyle = "#FFFDF8"; ctx.strokeStyle = "#46455E"; ctx.lineWidth = 2;
+      rRect(ctx, -14, -20, 28, 20, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#46455E"; ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("=^･^=", 0, -6);
+      ctx.restore();
+    }
+
+    function drawAtmosphereAndLights(tSec) {
+      if (state.timeSlot === "dusk") {
+        ctx.fillStyle = "rgba(255, 174, 102, 0.14)";
+        ctx.fillRect(0, 0, viewW, viewH);
+      } else if (state.timeSlot === "night") {
+        ctx.fillStyle = "rgba(33, 47, 82, 0.42)";
+        ctx.fillRect(0, 0, viewW, viewH);
+      }
+
+      // Rotating West Cape Lighthouse Beam (dusk or night when relit or freeRoam)
+      const lhLit = (state.timeSlot !== "afternoon") && (state.events.includes("lighthouse_relight") || state.freeRoamMode || chapterIdx(state.chapter) >= 2);
+      if (lhLit) {
+        const lp = worldToScreen(-56, 5.4 + 6.5, -24);
+        const angle = (tSec * (Math.PI * 2 / 12)) % (Math.PI * 2); // 12-second sweep!
+        ctx.save();
+        ctx.translate(lp.sx, lp.sy);
+        ctx.rotate(angle);
+        const grad = ctx.createLinearGradient(0, 0, 28 * camZoom, 0);
+        grad.addColorStop(0, "rgba(255, 214, 122, 0.52)");
+        grad.addColorStop(1, "rgba(255, 214, 122, 0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(28 * camZoom, -5 * camZoom);
+        ctx.lineTo(28 * camZoom, 5 * camZoom);
+        ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+
+      // Night/Dusk Warm Amber Glow Pools
+      if (state.timeSlot !== "afternoon") {
+        const glowSpots = [[-10, 1.8, -2], [44, 1.8, -4], [-16, 3.6, 42], [-42, 0.3, -30], [52, 0.2, -32], [0, 5.4, 58]];
+        glowSpots.forEach(([x, y, z]) => {
+          const gp = worldToScreen(x, y, z);
+          const rg = ctx.createRadialGradient(gp.sx, gp.sy, 4, gp.sx, gp.sy, 5.5 * camZoom);
+          rg.addColorStop(0, "rgba(255, 214, 122, 0.32)");
+          rg.addColorStop(1, "rgba(255, 214, 122, 0)");
+          ctx.fillStyle = rg;
+          ctx.beginPath(); ctx.arc(gp.sx, gp.sy, 5.5 * camZoom, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+
+      // Fireflies at night around Zone N & Zone S
+      if (state.timeSlot === "night" || state.weather === "starlight") {
+        for (let i = 0; i < 24; i++) {
+          const fx = -10 + Math.sin(tSec * 0.7 + i * 1.9) * 32;
+          const fz = 36 + Math.cos(tSec * 0.5 + i * 2.3) * 18;
+          const fp = worldToScreen(fx, 4.2, fz);
+          ctx.fillStyle = `rgba(255, 232, 130, ${0.45 + Math.sin(tSec * 4 + i) * 0.45})`;
+          ctx.beginPath(); ctx.arc(fp.sx, fp.sy, 3, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+
+      // Rain drops
+      if (state.weather === "rain") {
+        ctx.strokeStyle = "rgba(215, 240, 255, 0.48)";
+        ctx.lineWidth = 1.3;
+        for (let i = 0; i < 60; i++) {
+          const rx = ((i * 97 + tSec * 120) % viewW);
+          const ry = ((i * 53 + tSec * 380) % viewH);
+          ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx - 4, ry + 14); ctx.stroke();
+        }
+      }
+
+      // Soft Mist over locked zones
+      if (!state.freeRoamMode) {
+        const lockedOverlay = [
+          { zone: "ZoneW", box: [-68, -42, -32, 34], label: "🔒 西翼 · 完成序幕解锁" },
+          { zone: "ZoneE", box: [32, -40, 68, 32], label: "🔒 东翼 · 完成第一章解锁" },
+          { zone: "ZoneN", box: [-54, 28, 54, 68], label: "🔒 北麓 · 完成第二章培育蓝玫瑰解锁" },
+          { zone: "ZoneS", box: [-34, -54, 28, -33], label: "🔒 南屿 · 完成第三章合龙解锁" }
+        ];
+        lockedOverlay.forEach(item => {
+          if (isZoneUnlocked(item.zone)) return;
+          const [x1, z1, x2, z2] = item.box;
+          const tl = worldToScreen(x1, 3.6, z2), br = worldToScreen(x2, 0.2, z1);
+          ctx.fillStyle = "rgba(245, 248, 252, 0.46)";
+          ctx.fillRect(tl.sx, tl.sy, br.sx - tl.sx, br.sy - tl.sy);
+          ctx.fillStyle = "#5A587D"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+          ctx.fillText(item.label, (tl.sx + br.sx) / 2, (tl.sy + br.sy) / 2);
+        });
+      }
+    }
+
+    // ==================== 10B. 室内剖面模式渲染 (F04 & F31) ====================
+    let interiorHotspots = [];
+    function drawInteriorScene(tSec) {
+      ctx.fillStyle = "#2E2C3E";
+      ctx.fillRect(0, 0, viewW, viewH);
+
+      const cw = Math.min(820, viewW - 60);
+      const ch = Math.min(500, viewH - 150);
+      const ox = (viewW - cw) / 2;
+      const oy = (viewH - ch) / 2 + 12;
+
+      interiorHotspots = [];
+
+      if (interiorState === "F04") {
+        // Cozy Main Timber Cottage Interior
+        ctx.fillStyle = "#FFF5E4"; rRect(ctx, ox, oy, cw, ch, 22); ctx.fill();
+        ctx.strokeStyle = "#9D623E"; ctx.lineWidth = 8; ctx.stroke();
+        // Wooden floor
+        ctx.fillStyle = "#E4BA8B"; ctx.fillRect(ox + 10, oy + ch * 0.46, cw - 20, ch * 0.52);
+        // Planks
+        ctx.strokeStyle = "rgba(157,98,62,0.28)"; ctx.lineWidth = 1.5;
+        for (let py = oy + ch * 0.52; py < oy + ch - 12; py += 26) {
+          ctx.beginPath(); ctx.moveTo(ox + 12, py); ctx.lineTo(ox + cw - 12, py); ctx.stroke();
+        }
+        // Fireplace (left)
+        const fx = ox + cw * 0.18, fy = oy + ch * 0.46;
+        ctx.fillStyle = "#B96A59"; rRect(ctx, fx - 54, fy - 120, 108, 120, 8); ctx.fill();
+        ctx.fillStyle = "#46455E"; rRect(ctx, fx - 32, fy - 58, 64, 58, 6); ctx.fill();
+        ctx.fillStyle = "#FF8C42"; ctx.beginPath(); ctx.arc(fx, fy - 18, 22 + Math.sin(tSec * 7) * 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#FFD67A"; ctx.beginPath(); ctx.arc(fx, fy - 14, 12, 0, Math.PI * 2); ctx.fill();
+        interiorHotspots.push({ x: fx, y: fy - 50, r: 58, label: "🔥 暖心壁炉", onClick: () => { state.warmFuzzies += 5; playBubblePopSfx(); showToast("🔥 烤烤火暖洋洋，木柴噼啪作响 (+5 暖心值)"); updateStatsHUD(); } });
+
+        // Framed 12x12 Pixel Flag Painting on Wall (center)
+        const px = ox + cw * 0.5, py = oy + ch * 0.24;
+        ctx.fillStyle = "#9D623E"; rRect(ctx, px - 54, py - 54, 108, 108, 8); ctx.fill();
+        drawFlagCanvasIcon(px - 42, py - 42, 84, 0);
+        interiorHotspots.push({ x: px, y: py, r: 58, label: "🖼️ 像素挂画", onClick: () => openDrawer("flag") });
+
+        // Tea Table (center-right)
+        const tx = ox + cw * 0.55, ty = oy + ch * 0.72;
+        ctx.fillStyle = "#9D623E"; ctx.beginPath(); ctx.ellipse(tx, ty, 74, 34, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#FFF5E4"; ctx.beginPath(); ctx.arc(tx - 22, ty - 6, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(tx + 20, ty - 4, 10, 0, Math.PI * 2); ctx.fill();
+        interiorHotspots.push({ x: tx, y: ty, r: 65, label: "☕ 泡玄米茶", onClick: () => { state.warmFuzzies += 5; playBubblePopSfx(); showToast("☕ 喝了一口温热的蜂蜜肉桂茶 (+5 暖心值)"); updateStatsHUD(); } });
+
+        // Bookshelf (right)
+        const bx = ox + cw * 0.84, by = oy + ch * 0.46;
+        ctx.fillStyle = "#9D623E"; rRect(ctx, bx - 44, by - 130, 88, 130, 6); ctx.fill();
+        ["#7CC6E8", "#B96A59", "#FFD67A", "#93C794"].forEach((col, i) => {
+          ctx.fillStyle = col; ctx.fillRect(bx - 32 + i * 16, by - 110, 12, 32);
+          ctx.fillRect(bx - 32 + ((i + 2) % 4) * 16, by - 64, 12, 32);
+        });
+        interiorHotspots.push({ x: bx, y: by - 60, r: 55, label: "📖 翻阅年谱", onClick: () => openDrawer("codex") });
+      } else if (interiorState === "F31") {
+        // Valley Memory Conservatory Greenhouse & Library
+        ctx.fillStyle = "#E6F7F2"; rRect(ctx, ox, oy, cw, ch, 30); ctx.fill();
+        // Arched timber ribs
+        ctx.strokeStyle = "#E4BA8B"; ctx.lineWidth = 6;
+        for (let i = 1; i <= 4; i++) {
+          ctx.beginPath(); ctx.moveTo(ox + (cw / 5) * i, oy); ctx.lineTo(ox + (cw / 5) * i, oy + ch * 0.48); ctx.stroke();
+        }
+        // Stone floor
+        ctx.fillStyle = "#D8D1C5"; ctx.fillRect(ox + 8, oy + ch * 0.48, cw - 16, ch * 0.5);
+        // Rose Nursery Bed (left)
+        const nx = ox + cw * 0.25, ny = oy + ch * 0.72;
+        ctx.fillStyle = "#9D623E"; rRect(ctx, nx - 95, ny - 36, 190, 72, 10); ctx.fill();
+        ctx.fillStyle = "#5E3B24"; rRect(ctx, nx - 85, ny - 28, 170, 56, 8); ctx.fill();
+        state.mendelBed.slice(0, 4).forEach((f, i) => {
+          ctx.fillStyle = f.color; ctx.beginPath(); ctx.arc(nx - 58 + i * 38, ny, 14, 0, Math.PI * 2); ctx.fill();
+        });
+        interiorHotspots.push({ x: nx, y: ny, r: 75, label: "🌷 温室育种床", onClick: () => openDrawer("mendel") });
+
+        // Warm Reading Lamp & Chronicle Table (center)
+        const rx = ox + cw * 0.56, ry = oy + ch * 0.66;
+        ctx.fillStyle = "#E4BA8B"; rRect(ctx, rx - 60, ry - 25, 120, 55, 8); ctx.fill();
+        ctx.fillStyle = "#FFD67A"; ctx.beginPath(); ctx.arc(rx, ry - 48, 22, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = "rgba(255,214,122,0.35)"; ctx.beginPath(); ctx.arc(rx, ry - 25, 65, 0, Math.PI * 2); ctx.fill();
+        interiorHotspots.push({ x: rx, y: ry - 20, r: 60, label: "📜 修复四季年谱", onClick: () => { triggerEvent("chronicle_restored"); playFanfareSfx(); showToast("📜 已协助阿木整理好《四季年谱》全部篇章！"); } });
+
+        // Tall Library Bookshelves (right)
+        const lx = ox + cw * 0.84, ly = oy + ch * 0.48;
+        ctx.fillStyle = "#9D623E"; rRect(ctx, lx - 48, ly - 140, 96, 140, 8); ctx.fill();
+        ["#7CC6E8", "#FFD67A", "#93C794", "#F48FB1"].forEach((c, i) => {
+          ctx.fillStyle = c; ctx.fillRect(lx - 34 + i * 17, ly - 118, 12, 34);
+          ctx.fillRect(lx - 34 + i * 17, ly - 66, 12, 34);
+        });
+        interiorHotspots.push({ x: lx, y: ly - 70, r: 60, label: "📖 查阅 26 件记忆", onClick: () => openDrawer("codex") });
+      }
+
+      // Draw Hotspot Labels
+      interiorHotspots.forEach(hs => {
+        ctx.fillStyle = "rgba(255, 248, 235, 0.94)";
+        ctx.font = "bold 12px sans-serif";
+        const tw = ctx.measureText(hs.label).width + 16;
+        rRect(ctx, hs.x - tw / 2, hs.y + 34, tw, 24, 10); ctx.fill();
+        ctx.strokeStyle = "#D9AC7C"; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = "#46455E"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(hs.label, hs.x, hs.y + 46);
+      });
+    }
+
+    // ==================== 11. 主游戏循环、交互检测与迷你雷达 ====================
+    let lastTime = performance.now();
+    const keys = {};
+
+    function updatePlayer(dt) {
+      if (interiorState) return;
+
+      if (player.sliding) {
+        const s = player.sliding;
+        s.t += dt;
+        const k = Math.min(1, s.t / s.dur);
+        player.x = s.sx + (s.ex - s.sx) * k;
+        player.z = s.sz + (s.ez - s.sz) * k;
+        player.y = 4.5 * (1 - k) + 1.8 * k;
+        spawnParticles(player.x, player.y + 0.5, player.z, "fx_sparkle", 1);
+        if (k >= 1) { player.sliding = null; player.y = getElevationAt(player.x, player.z); }
+        return;
+      }
+      if (player.ferrying) {
+        const f = player.ferrying;
+        f.t += dt;
+        const k = Math.min(1, f.t / f.dur);
+        player.x = f.sx + (f.ex - f.sx) * k;
+        player.z = f.sz + (f.ez - f.sz) * k;
+        player.y = 0.35 + Math.sin(k * Math.PI) * 0.4;
+        if (k >= 1) { player.ferrying = null; player.y = getElevationAt(player.x, player.z); }
+        return;
+      }
+
+      let mx = 0, mz = 0;
+      if (keys["KeyW"] || keys["ArrowUp"]) mz += 1;
+      if (keys["KeyS"] || keys["ArrowDown"]) mz -= 1;
+      if (keys["KeyA"] || keys["ArrowLeft"]) mx -= 1;
+      if (keys["KeyD"] || keys["ArrowRight"]) mx += 1;
+
+      if (mx !== 0 || mz !== 0) {
+        player.target = null;
+        const len = Math.hypot(mx, mz);
+        mx /= len; mz /= len;
+      } else if (player.target) {
+        const dx = player.target.x - player.x, dz = player.target.z - player.z;
+        const d = Math.hypot(dx, dz);
+        if (d < 0.35) { player.target = null; }
+        else { mx = dx / d; mz = dz / d; }
+      }
+
+      player.vx = mx * player.speed;
+      player.vz = mz * player.speed;
+
+      if (mx !== 0 || mz !== 0) {
+        const nx = player.x + player.vx * dt;
+        const nz = player.z + player.vz * dt;
+        const zone = getZoneAt(nx, nz);
+        if (!isZoneUnlocked(zone)) {
+          player.target = null;
+          if (Math.random() < 0.08) showToast(`🔒 ${zone} 尚未解锁，完成当前章节软门控（或点左上角开启「漫游模式」）即可进入`);
+        } else if (isWalkable(nx, nz)) {
+          player.x = nx; player.z = nz;
+          player.y = getElevationAt(nx, nz);
+          player.walkPhase += dt * 10;
+          if (player.y < 0 && Math.random() < 0.16) spawnParticles(player.x, 0, player.z, "fx_ripple", 1);
+        } else {
+          player.target = null;
+        }
+      }
+
+      // Paper pet follows player gently!
+      const pdx = (player.x + 1.8) - paperPet.x, pdz = (player.z - 0.6) - paperPet.z;
+      if (Math.hypot(pdx, pdz) > 1.2) {
+        paperPet.x += pdx * Math.min(1, dt * 2.4);
+        paperPet.z += pdz * Math.min(1, dt * 2.4);
+      }
+
+      // Smooth camera follow
+      camX += (player.x + camPanOffset.x - camX) * Math.min(1, dt * 6);
+      camZ += (player.z + camPanOffset.z - camZ) * Math.min(1, dt * 6);
+
+      // Auto-mark visited facilities within 5m
+      DB.facilities.forEach(fac => {
+        if (isFacilityUnlocked(fac) && Math.hypot(player.x - fac.pos[0], player.z - fac.pos[2]) < 5.0) {
+          markFacilityVisited(fac.id);
+        }
+      });
+    }
+
+    function updateParticles(dt) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const pt = particles[i];
+        pt.x += pt.vx * dt;
+        pt.y += pt.vy * dt;
+        pt.life -= dt;
+        if (pt.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function drawParticles() {
+      particles.forEach(pt => {
+        const p = worldToScreen(pt.x, pt.y, pt.z);
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+        if (pt.type === "fx_heart") {
+          ctx.fillStyle = "#F472B6"; ctx.font = "14px sans-serif"; ctx.fillText("♥", p.sx, p.sy);
+        } else if (pt.type === "fx_petal") {
+          ctx.fillStyle = "#F9A8D4"; ctx.beginPath(); ctx.ellipse(p.sx, p.sy, 4, 2.5, pt.life * 3, 0, Math.PI * 2); ctx.fill();
+        } else if (pt.type === "fx_ripple") {
+          ctx.strokeStyle = "#7CC6E8"; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.ellipse(p.sx, p.sy, (2.2 - pt.life) * 12, (2.2 - pt.life) * 6, 0, 0, Math.PI * 2); ctx.stroke();
+        } else {
+          ctx.fillStyle = "#FFD67A"; ctx.beginPath(); ctx.arc(p.sx, p.sy, 3.5, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+      });
+    }
+
+    function updateProximityButtons() {
+      if (interiorState || activeDlg) {
+        document.getElementById("interactPillWrap").innerHTML = "";
+        return;
+      }
+      const nearNpc = npcs.filter(n => isResidentUnlocked(n.def))
+        .map(n => ({ n, d: Math.hypot(n.x - player.x, n.z - player.z) }))
+        .filter(o => o.d < 5.5).sort((a, b) => a.d - b.d)[0];
+
+      const nearFac = DB.facilities.filter(f => isFacilityUnlocked(f))
+        .map(f => ({ f, d: Math.hypot(f.pos[0] - player.x, f.pos[2] - player.z) }))
+        .filter(o => o.d < 6.5).sort((a, b) => a.d - b.d)[0];
+
+      const f42 = DB.facilities.find(f => f.id === "F42");
+      const nearBike = isFacilityUnlocked(f42) && f42.subAnchors.some(s => Math.hypot(s.pos[0] - player.x, s.pos[2] - player.z) < 5.0);
+      const f35 = DB.facilities.find(f => f.id === "F35");
+      const nearSlide = isFacilityUnlocked(f35) && f35.subAnchors.find(s => Math.hypot(s.pos[0] - player.x, s.pos[2] - player.z) < 5.5);
+      const nearSign = MICRO_PROPS.find(m => m.kind === "sign" && !state.stats.straightSignIds.includes(m.id) && Math.hypot(m.x - player.x, m.z - player.z) < 4.5);
+
+      const sig = `${nearNpc ? nearNpc.n.id : ""}|${nearFac ? nearFac.f.id : ""}|${nearBike}|${nearSlide ? nearSlide.id : ""}|${nearSign ? nearSign.id : ""}`;
+      const wrap = document.getElementById("interactPillWrap");
+      if (wrap.dataset.sig === sig) return;
+      wrap.dataset.sig = sig;
+      wrap.innerHTML = "";
+
+      if (nearNpc) {
+        const b = document.createElement("button");
+        b.className = "btn primary";
+        b.textContent = `💬 对话 ${nearNpc.n.name} [E]`;
+        b.addEventListener("click", () => talkToNpc(nearNpc.n));
+        wrap.appendChild(b);
+      }
+      if (nearFac) {
+        const b = document.createElement("button");
+        b.className = "btn amber";
+        const verb = nearFac.f.id === "F04" || nearFac.f.id === "F31" ? "进入室内" :
+          (nearFac.f.id === "F01" || nearFac.f.id === "F40" || nearFac.f.id === "F26") ? "乘摇橹渡船" : "交互";
+        b.textContent = `✨ ${verb}·${nearFac.f.name.slice(0, 8)} [E]`;
+        b.addEventListener("click", () => interactWithFacility(nearFac.f));
+        wrap.appendChild(b);
+      }
+      if (nearBike) {
+        const b = document.createElement("button");
+        b.className = "btn mint";
+        b.textContent = "🚲 邮差单车4区快传";
+        b.addEventListener("click", openBikeFastTravel);
+        wrap.appendChild(b);
+      }
+      if (nearSlide) {
+        const b = document.createElement("button");
+        b.className = "btn mint";
+        b.textContent = `🛝 滑下${nearSlide.name}`;
+        b.addEventListener("click", () => triggerTimberSlide(nearSlide));
+        wrap.appendChild(b);
+      }
+      if (nearSign) {
+        const b = document.createElement("button");
+        b.className = "btn";
+        b.textContent = `📐 扶正${nearSign.label} (取悦咔哒)`;
+        b.addEventListener("click", () => {
+          state.stats.straightSignIds.push(nearSign.id);
+          state.warmFuzzies += 8;
+          playBubblePopSfx();
+          showToast("📐 咔哒看到歪指路牌被扶正了，幸福得原地敬礼 (+8 暖心)");
+          wrap.dataset.sig = "";
+          updateStatsHUD();
+        });
+        wrap.appendChild(b);
+      }
+    }
+
+    function drawMiniMap() {
+      const mc = document.getElementById("miniMapCanvas");
+      const mctx = mc.getContext("2d");
+      const mw = mc.width, mh = mc.height;
+      mctx.fillStyle = "#7CC6E8"; mctx.fillRect(0, 0, mw, mh);
+      const tx = (x) => ((x + 68) / 136) * mw;
+      const tz = (z) => ((68 - z) / 122) * mh;
+      // Zone shapes
+      mctx.fillStyle = "#F5E6C8"; mctx.fillRect(tx(-64), tz(34), tx(64) - tx(-64), tz(-34) - tz(34));
+      mctx.fillStyle = "#B7DDA8"; mctx.fillRect(tx(-61), tz(64), tx(61) - tx(-61), tz(-14) - tz(64));
+      mctx.fillStyle = "#93C794"; mctx.fillRect(tx(-50), tz(62), tx(50) - tx(-50), tz(14) - tz(62));
+      mctx.fillStyle = "#F5E6C8"; mctx.fillRect(tx(-22), tz(-35), tx(20) - tx(-22), tz(-51) - tz(-35));
+
+      // Residents
+      npcs.forEach(n => {
+        if (!isResidentUnlocked(n.def)) return;
+        mctx.fillStyle = "#FFD67A";
+        mctx.beginPath(); mctx.arc(tx(n.x), tz(n.z), 3, 0, Math.PI * 2); mctx.fill();
+      });
+      // Player
+      mctx.fillStyle = "#B96A59";
+      mctx.beginPath(); mctx.arc(tx(player.x), tz(player.z), 4.5, 0, Math.PI * 2); mctx.fill();
+      mctx.strokeStyle = "#FFF"; mctx.lineWidth = 1.5; mctx.stroke();
+    }
+
+    function renderFrame(now) {
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+      const tSec = now / 1000;
+
+      updatePlayer(dt);
+      updateResidentsAI(dt);
+      updateParticles(dt);
+
+      if (interiorState) {
+        drawInteriorScene(tSec);
+      } else {
+        drawTerrainLayer(tSec);
+
+        // Draw sub-anchors of F42
+        const f42 = DB.facilities.find(f => f.id === "F42");
+        if (f42 && isFacilityUnlocked(f42)) {
+          f42.subAnchors.slice(1).forEach(st => drawBikeStopAt(st.pos[0], st.pos[1], st.pos[2]));
+        }
+
+        // Depth-sorted render list (North-to-South: larger Z first)
+        const drawQueue = [];
+        DB.facilities.forEach(f => {
+          drawQueue.push({ z: f.pos[2], fn: () => drawFacilityVisual(f, tSec) });
+          if (f.subAnchors && f.id !== "F42" && f.id !== "F35") {
+            f.subAnchors.forEach(sub => {
+              if (Math.hypot(sub.pos[0] - f.pos[0], sub.pos[2] - f.pos[2]) < 1.0) return;
+              const vFac = { id: sub.id, name: sub.name, pos: sub.pos, size: f.size, unlockChapter: f.unlockChapter };
+              drawQueue.push({ z: sub.pos[2], fn: () => drawFacilityVisual(vFac, tSec) });
+            });
+          }
+        });
+        MICRO_PROPS.forEach(m => {
+          drawQueue.push({ z: m.z, fn: () => drawMicroProp(m, tSec) });
+        });
+        npcs.forEach(n => {
+          if (isResidentUnlocked(n.def)) drawQueue.push({ z: n.z, fn: () => drawChibiCharacter(n, false, tSec) });
+        });
+        drawQueue.push({ z: paperPet.z, fn: () => drawPaperPet(tSec) });
+        drawQueue.push({ z: player.z, fn: () => drawChibiCharacter(player, true, tSec) });
+
+        drawQueue.sort((a, b) => b.z - a.z);
+        drawQueue.forEach(item => item.fn());
+
+        // Click waypoint marker
+        if (player.target) {
+          const wp = worldToScreen(player.target.x, getElevationAt(player.target.x, player.target.z), player.target.z);
+          ctx.strokeStyle = "#FFD67A"; ctx.lineWidth = 2.5;
+          ctx.beginPath(); ctx.ellipse(wp.sx, wp.sy, 8 + Math.sin(tSec * 6) * 2, 4 + Math.sin(tSec * 6), 0, 0, Math.PI * 2); ctx.stroke();
+        }
+
+        drawParticles();
+        drawAtmosphereAndLights(tSec);
+        updateProximityButtons();
+      }
+
+      drawMiniMap();
+      if (activeDlg && dialogueMotion) {
+        const { npc } = dialogueMotion;
+        const pose = sampleResidentPose(npc);
+        const r = 28;
+        const hover = npc.id === "C05" ? 4 + Math.sin(tSec * 3.5) * 3 : 0;
+        motionCtx.clearRect(0, 0, motionCanvas.width, motionCanvas.height);
+        drawChibiPose(motionCtx, npc, false, r, pose, 54, 96 - pose.lift * r - hover);
+      }
+      requestAnimationFrame(renderFrame);
+    }
+
+    // ==================== 12. 指针抓起轻推 (つまむ) & 键盘/鼠标操控 ====================
+    let draggedNpc = null;
+    let panning = false, panStart = null, pointerMoved = false;
+
+    canvas.addEventListener("pointerdown", e => {
+      ensureAudio();
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+
+      if (interiorState) {
+        const hit = interiorHotspots.find(h => Math.hypot(sx - h.x, sy - h.y) <= h.r);
+        if (hit) hit.onClick();
+        return;
+      }
+
+      // 1. Click Worry Bubble?
+      for (const npc of npcs) {
+        if (!isResidentUnlocked(npc.def) || !npc.bubble) continue;
+        const p = worldToScreen(npc.x, npc.y, npc.z);
+        const bx = p.sx + 16, by = p.sy - 0.56 * camZoom * 3.0;
+        if (Math.hypot(sx - bx, sy - by) < 16) {
+          state.warmFuzzies += 10;
+          addAffection(npc.id, 6);
+          playBubblePopSfx();
+          spawnParticles(npc.x, npc.y + 1, npc.z, "fx_heart", 10);
+          showToast(`💭 安抚了 ${npc.name} 的「${npc.bubble.label}」：${npc.bubble.event.title} (+10 暖心)`);
+          npc.bubble = null;
+          updateStatsHUD();
+          return;
+        }
+      }
+
+      // 2. Pick up Resident (つまむ)?
+      for (const npc of npcs) {
+        if (!isResidentUnlocked(npc.def)) continue;
+        const p = worldToScreen(npc.x, npc.y, npc.z);
+        if (Math.hypot(sx - p.sx, sy - (p.sy - 0.6 * camZoom)) < Math.max(20, 0.9 * camZoom)) {
+          draggedNpc = npc;
+          npc.state = "dragged";
+          pointerMoved = false;
+          canvas.classList.add("dragging");
+          playPickupSfx();
+          return;
+        }
+      }
+
+      if (e.button === 2 || e.button === 1) {
+        panning = true; panStart = { sx, sy, ox: camPanOffset.x, oz: camPanOffset.z };
+      } else {
+        panStart = { sx, sy, ox: camPanOffset.x, oz: camPanOffset.z };
+        pointerMoved = false;
+      }
+    });
+
+    canvas.addEventListener("pointermove", e => {
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+      if (draggedNpc) {
+        pointerMoved = true;
+        const w = screenToWorldGround(sx, sy);
+        if (isWalkable(w.wx, w.wz)) {
+          draggedNpc.x = w.wx; draggedNpc.z = w.wz;
+          draggedNpc.y = getElevationAt(w.wx, w.wz);
+        }
+        return;
+      }
+      if (panning && panStart) {
+        camPanOffset.x = Math.max(-25, Math.min(25, panStart.ox - (sx - panStart.sx) / camZoom));
+        camPanOffset.z = Math.max(-25, Math.min(25, panStart.oz + (sy - panStart.sy) / (camZoom * 0.86)));
+      }
+    });
+
+    canvas.addEventListener("pointerup", e => {
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+      if (draggedNpc) {
+        const npc = draggedNpc;
+        draggedNpc = null;
+        canvas.classList.remove("dragging");
+        if (!pointerMoved) {
+          npc.state = "idle";
+          talkToNpc(npc);
+          return;
+        }
+        npc.state = "idle"; npc.tx = npc.x; npc.tz = npc.z;
+        state.nudgeCounts[npc.id] = (state.nudgeCounts[npc.id] || 0) + 1;
+        state.yesterdayAction = "nudged_resident";
+        playDropSfx();
+        const other = npcs.find(o => o !== npc && isResidentUnlocked(o.def) && Math.hypot(o.x - npc.x, o.z - npc.z) < 4.5);
+        const nearFac = DB.facilities.find(f => Math.hypot(f.pos[0] - npc.x, f.pos[2] - npc.z) < 5.5);
+
+        if (npc.id === "C03") {
+          triggerNpcAction(npc, "clap", "fx_sparkle");
+          npc.floatText = { text: "……啪、啪。我面瘫但我记在心里了。", t: 3.5 };
+        } else if (other) {
+          triggerNpcAction(npc, "hop_bounce", "fx_heart");
+          npc.floatText = { text: `呀，跟 ${other.name} 打了个照面！`, t: 3.5 };
+        } else if (nearFac) {
+          triggerNpcAction(npc, "nod_tilt", "fx_sparkle");
+          npc.floatText = { text: `嗯，${nearFac.name} 旁边风挺软。`, t: 3.5 };
+        } else {
+          triggerNpcAction(npc, "hop_bounce", "none");
+          npc.floatText = { text: npc.def.quirk.behaviorHint.slice(0, 18) + "…", t: 3.5 };
+        }
+        showToast(`🖐️ 轻推了 ${npc.name} (累计 ${state.nudgeCounts[npc.id]} 次，可在对应景点对话触发第 2 幕小剧本！)`);
+        return;
+      }
+      if (panning) { panning = false; return; }
+
+      if (!interiorState && e.button === 0) {
+        const w = screenToWorldGround(sx, sy);
+        // Check if user clicked a facility directly within 3.5m -> walk there!
+        camPanOffset = { x: 0, z: 0 };
+        if (isZoneUnlocked(getZoneAt(w.wx, w.wz)) && isWalkable(w.wx, w.wz)) {
+          player.target = { x: w.wx, z: w.wz };
+        } else {
+          showToast("🌊 那片区域在海面或待解锁边界外");
+        }
+      }
+    });
+
+    canvas.addEventListener("contextmenu", e => e.preventDefault());
+    canvas.addEventListener("wheel", e => {
+      e.preventDefault();
+      camZoom = Math.max(9.5, Math.min(28, camZoom - Math.sign(e.deltaY) * 1.4));
+    }, { passive: false });
+
+    document.getElementById("miniMapCanvas").addEventListener("click", e => {
+      const r = e.target.getBoundingClientRect();
+      const wx = ((e.clientX - r.left) / r.width) * 136 - 68;
+      const wz = 68 - ((e.clientY - r.top) / r.height) * 122;
+      if (isZoneUnlocked(getZoneAt(wx, wz)) && isWalkable(wx, wz)) {
+        player.target = { x: wx, z: wz };
+        camPanOffset = { x: 0, z: 0 };
+      } else {
+        showToast("🔒 请先解锁该片区或开启右上「漫游模式」");
+      }
+    });
+
+    window.addEventListener("keydown", e => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+      keys[e.code] = true;
+      if (e.code === "KeyE") {
+        if (interiorState) { exitInterior(); return; }
+        const firstBtn = document.querySelector("#interactPillWrap .btn");
+        if (firstBtn) firstBtn.click();
+      } else if (e.code === "Escape" && interiorState) {
+        exitInterior();
+      } else if (e.code === "Space" && activeDlg) {
+        e.preventDefault();
+        advanceDialogue();
+      }
+    });
+    window.addEventListener("keyup", e => { keys[e.code] = false; });
+
+    // ==================== 13. 综合侧边抽屉（孟德尔、像素旗、黑板、图鉴、存档） ====================
+    let activeDrawerTab = "mendel";
+
+    function openDrawer(tab) {
+      activeDrawerTab = tab;
+      document.getElementById("drawerOverlay").classList.remove("hidden");
+      renderDrawer();
+    }
+    function closeDrawer() { document.getElementById("drawerOverlay").classList.add("hidden"); }
+
+    function renderDrawer() {
+      document.querySelectorAll(".dtab").forEach(b => b.classList.toggle("active", b.dataset.tab === activeDrawerTab));
+      const body = document.getElementById("drawerBody");
+      body.innerHTML = "";
+
+      if (activeDrawerTab === "mendel") {
+        renderMendelPanel(body);
+      } else if (activeDrawerTab === "flag") {
+        renderPixelFlagPanel(body);
+      } else if (activeDrawerTab === "chalk") {
+        renderChalkboardPanel(body);
+      } else if (activeDrawerTab === "codex") {
+        renderCodexPanel(body);
+      } else if (activeDrawerTab === "save") {
+        renderSavePanel(body);
+      }
+    }
+
+    function renderMendelPanel(body) {
+      const box = document.createElement("div");
+      box.className = "panel-box";
+      box.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>🌷 F06 孟德尔玫瑰遗传实验圃（4 基因 81 种基因型）</strong>
+          <span class="badge ${state.mendelBlueRose ? "" : "amber"}">${state.mendelBlueRose ? "💙 已育出星砂蓝玫瑰" : "待育出 RRYYwwss"}</span>
+        </div>
+        <p style="font-size:12px;color:var(--warm-slate);">按四对基因 <code>R/Y/W/S</code> 浇水杂交！关键配方：<code>RRyyWwSs × RRyyWwSs</code> → 稀有纯合蓝玫瑰 <code>RRYYwwss</code>（解开北麓花藤门）。</p>
+        <div class="grid-2">
+          <div>
+            <div style="font-size:11px;margin-bottom:3px;">亲本 A</div>
+            <select id="mParentA" style="width:100%;">
+              <option value="RRyyWwSs">杂交红玫瑰 (RRyyWwSs · 推荐)</option>
+              <option value="RrYyWWSS">商店红籽 (RrYyWWSS)</option>
+              <option value="RRyyWWSS">纯红玫瑰 (RRyyWWSS)</option>
+              <option value="rrYYWWSS">暖金黄玫瑰 (rrYYWWSS)</option>
+              <option value="RRYYwwSS">奶霜白玫瑰 (RRYYwwSS)</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:11px;margin-bottom:3px;">亲本 B</div>
+            <select id="mParentB" style="width:100%;">
+              <option value="RRyyWwSs">杂交红玫瑰 (RRyyWwSs · 推荐)</option>
+              <option value="rrYYWWSS">暖金黄玫瑰 (rrYYWWSS)</option>
+              <option value="RRyywwSS">深红隐白 (RRyywwSS)</option>
+              <option value="RrYyWWSS">商店红籽 (RrYyWWSS)</option>
+              <option value="RRYYwwss">星砂蓝玫瑰 (RRYYwwss)</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="mBreedBtn" class="btn primary" style="flex:1;">💧 浇水杂交配对</button>
+          <button id="mCloneBtn" class="btn mint" style="flex:1;">🌱 单株无性克隆</button>
+          <button id="mBlueRecipeBtn" class="btn amber">✨ 试育星砂蓝玫瑰</button>
+        </div>
+        <div style="font-size:12px;font-weight:700;margin-top:4px;">当前花床培育成果（实时同步 F06 场景花圃）：</div>
+        <div id="mBedGrid" class="grid-4"></div>
+      `;
+      body.appendChild(box);
+
+      const classifyRose = (g) => {
+        if (g === "RRYYwwss") return { name: "星砂蓝玫瑰", color: "#3B82F6", text: "#FFF" };
+        if (g.includes("ww")) return { name: "晴空浅蓝", color: "#7CC6E8", text: "#1E293B" };
+        if (g.includes("R") && !g.includes("Y")) return { name: "珊瑚红玫瑰", color: "#E86D5D", text: "#FFF" };
+        if (!g.includes("R") && g.includes("Y")) return { name: "暖金黄玫瑰", color: "#F6C85F", text: "#46455E" };
+        if (g.includes("R") && g.includes("Y")) return { name: "樱桃粉橙", color: "#F48FB1", text: "#46455E" };
+        return { name: "奶霜白玫瑰", color: "#FFF8EC", text: "#46455E" };
+      };
+      const pickPair = (g1, g2, i1, i2, upper, lower) => {
+        const a = Math.random() < 0.5 ? g1[i1] : g1[i2];
+        const b = Math.random() < 0.5 ? g2[i1] : g2[i2];
+        return [a, b].sort((x, y) => (x === upper ? -1 : y === upper ? 1 : 0)).join("");
+      };
+      const renderBed = () => {
+        const grid = box.querySelector("#mBedGrid");
+        grid.innerHTML = "";
+        state.mendelBed.slice(-8).forEach(fl => {
+          const d = document.createElement("div");
+          d.style.cssText = `padding:8px 4px;border-radius:10px;border:1.5px solid #D9AC7C;background:${fl.color};color:${fl.text || "#46455E"};text-align:center;font-size:11px;`;
+          d.innerHTML = `<div style="font-weight:700;">${fl.name}</div><div style="font-family:monospace;font-size:10px;opacity:0.9;">${fl.geno}</div>`;
+          grid.appendChild(d);
+        });
+      };
+      renderBed();
+
+      box.querySelector("#mBreedBtn").addEventListener("click", () => {
+        const g1 = box.querySelector("#mParentA").value, g2 = box.querySelector("#mParentB").value;
+        const child = pickPair(g1, g2, 0, 1, "R", "r") + pickPair(g1, g2, 2, 3, "Y", "y") + pickPair(g1, g2, 4, 5, "W", "w") + pickPair(g1, g2, 6, 7, "S", "s");
+        const ph = classifyRose(child);
+        state.mendelBed.push({ geno: child, ...ph });
+        state.stats.waterCount++;
+        state.yesterdayAction = "watered_flower";
+        state.warmFuzzies += 6;
+        if (child === "RRYYwwss") {
+          state.mendelBlueRose = true;
+          triggerEvent("blue_rose_bred");
+          collectMemory("M18", true);
+          playFanfareSfx();
+          showToast("💙 奇迹绽放！培育出纯合星砂蓝玫瑰 (RRYYwwss)！");
+        } else {
+          playBubblePopSfx();
+          showToast(`🌷 杂交培育出「${ph.name}」(${child})，已记录浇水次数！`);
+        }
+        renderDrawer();
+        updateStatsHUD();
+      });
+
+      box.querySelector("#mCloneBtn").addEventListener("click", () => {
+        const g1 = box.querySelector("#mParentA").value;
+        const ph = classifyRose(g1);
+        state.mendelBed.push({ geno: g1, ...ph });
+        state.stats.waterCount++;
+        playDropSfx();
+        showToast(`🌱 触发有丝分裂无性克隆，100% 保留基因型 ${g1}`);
+        renderBed();
+      });
+
+      box.querySelector("#mBlueRecipeBtn").addEventListener("click", () => {
+        state.mendelBed.push({ geno: "RRYYwwss", name: "星砂蓝玫瑰", color: "#3B82F6", text: "#FFF" });
+        state.mendelBlueRose = true;
+        state.stats.waterCount++;
+        triggerEvent("blue_rose_bred");
+        collectMemory("M18", true);
+        playFanfareSfx();
+        showToast("💙 成功培育出星砂蓝玫瑰 RRYYwwss！绵绵的北麓花藤门已经唤醒！");
+        renderDrawer();
+        updateStatsHUD();
+      });
+    }
+
+    function renderPixelFlagPanel(body) {
+      const box = document.createElement("div");
+      box.className = "panel-box";
+      box.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>🚩 12×12 像素小旗涂鸦板 (F07 / F21 / F04 实时同步)</strong>
+          <span class="badge">字节 ${getCompactByteCount()} B / 6000 B</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+          <div id="flagPalette" style="display:flex;gap:5px;"></div>
+          <div style="display:flex;gap:5px;">
+            <button class="btn" data-fp="fish">🐟 小鱼</button>
+            <button class="btn" data-fp="heart">❤️ 爱心</button>
+            <button class="btn" data-fp="cat">🐱 猫脸</button>
+            <button class="btn" data-fp="clear">🧹 清空</button>
+          </div>
+        </div>
+        <div id="flagGrid" class="pixel-grid"></div>
+        <div style="font-size:11px;color:var(--warm-slate);font-family:monospace;word-break:break-all;">
+          DataStore 紧凑串：<span id="flagCompactText">${state.pixelFlag12x12.slice(0, 48)}...</span>
+        </div>
+      `;
+      body.appendChild(box);
+
+      let brush = 2;
+      let painting = false;
+      const palEl = box.querySelector("#flagPalette");
+      PIXEL_PALETTE.forEach((col, i) => {
+        const sw = document.createElement("button");
+        sw.className = "swatch" + (i === brush ? " active" : "");
+        sw.style.background = col;
+        sw.addEventListener("click", () => {
+          brush = i;
+          palEl.querySelectorAll(".swatch").forEach((el, k) => el.classList.toggle("active", k === i));
+        });
+        palEl.appendChild(sw);
+      });
+
+      const gridEl = box.querySelector("#flagGrid");
+      const paintCell = (idx, cellEl) => {
+        const arr = state.pixelFlag12x12.split("");
+        arr[idx] = String(brush);
+        state.pixelFlag12x12 = arr.join("");
+        cellEl.style.background = PIXEL_PALETTE[brush];
+        state.yesterdayAction = "changed_flag";
+        triggerEvent("pixel_flag_customized");
+        box.querySelector("#flagCompactText").textContent = state.pixelFlag12x12.slice(0, 48) + "...";
+        updateStatsHUD();
+      };
+
+      const rebuildGrid = () => {
+        gridEl.innerHTML = "";
+        for (let i = 0; i < 144; i++) {
+          const cell = document.createElement("button");
+          cell.className = "pixel-cell";
+          const code = parseInt(state.pixelFlag12x12[i] || "0", 10);
+          cell.style.background = PIXEL_PALETTE[code];
+          cell.addEventListener("pointerdown", () => { painting = true; paintCell(i, cell); });
+          cell.addEventListener("pointerenter", () => { if (painting) paintCell(i, cell); });
+          gridEl.appendChild(cell);
+        }
+      };
+      window.addEventListener("pointerup", () => { painting = false; }, { once: false });
+      rebuildGrid();
+
+      box.querySelectorAll("[data-fp]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const p = btn.dataset.fp;
+          if (p === "fish") state.pixelFlag12x12 = createDefaultFishFlag();
+          else if (p === "clear") state.pixelFlag12x12 = "0".repeat(144);
+          else if (p === "heart") {
+            const g = Array.from({ length: 12 }, () => Array(12).fill(0));
+            [[2,3],[2,4],[2,7],[2,8],[3,2],[3,5],[3,6],[3,9],[4,2],[4,9],[5,3],[5,8],[6,4],[6,7],[7,5],[7,6]].forEach(([r, c]) => g[r][c] = 2);
+            state.pixelFlag12x12 = g.map(r => r.join("")).join("");
+          } else if (p === "cat") {
+            const g = Array.from({ length: 12 }, () => Array(12).fill(7));
+            [[2,2],[2,9],[3,2],[3,3],[3,8],[3,9],[4,2],[4,9],[5,2],[5,4],[5,7],[5,9],[6,2],[6,9],[7,3],[7,5],[7,6],[7,8],[8,4],[8,5],[8,6],[8,7]].forEach(([r, c]) => g[r][c] = 5);
+            state.pixelFlag12x12 = g.map(r => r.join("")).join("");
+          }
+          triggerEvent("pixel_flag_customized");
+          playBubblePopSfx();
+          rebuildGrid();
+          showToast("🚩 12×12 像素旗已升上 F07 与 F21 信号旗杆！");
+        });
+      });
+    }
+
+    function renderChalkboardPanel(body) {
+      const box = document.createElement("div");
+      box.className = "panel-box";
+      box.innerHTML = `
+        <strong>🖍️ F08 涂鸦留言黑板 · Tracery 流行语注入</strong>
+        <p style="font-size:12px;color:var(--warm-slate);">输入你的圈内热梗或口癖，全镇居民和终章合唱歌词都会立刻复读！</p>
+        <div style="display:flex;gap:6px;">
+          <input id="lingoInput" type="text" maxlength="16" placeholder="例如：带薪发呆 / 今天也超可爱" style="flex:1;" />
+          <button id="addLingoBtn" class="btn primary">注入词库</button>
+        </div>
+        <div id="lingoChips" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
+          <span style="font-size:12px;">2D 纸片宠物昵称：</span>
+          <input id="petNameInput" type="text" maxlength="14" value="${state.petName}" style="flex:1;" />
+          <button id="savePetNameBtn" class="btn mint">改名</button>
+        </div>
+        <div style="border-top:1px dashed var(--border-wood);padding-top:8px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="font-size:12.5px;">📻 Tracery 岛屿即时怪闻播报</strong>
+            <button id="genNewsBtn" class="btn amber">生成并电子音朗读</button>
+          </div>
+          <div id="newsOut" style="padding:10px;border-radius:10px;background:#46455E;color:#FFF5E4;font-size:12.5px;line-height:1.5;">
+            ${expandTracery("#newsHeadline#")}
+          </div>
+        </div>
+      `;
+      body.appendChild(box);
+
+      const renderChips = () => {
+        const el = box.querySelector("#lingoChips");
+        el.innerHTML = "";
+        state.lingoPool.forEach((lg, idx) => {
+          const sp = document.createElement("span");
+          sp.className = "badge amber";
+          sp.style.cursor = "pointer";
+          sp.textContent = `#${lg} ✕`;
+          sp.addEventListener("click", () => {
+            if (state.lingoPool.length > 1) { state.lingoPool.splice(idx, 1); renderChips(); }
+          });
+          el.appendChild(sp);
+        });
+      };
+      renderChips();
+
+      box.querySelector("#addLingoBtn").addEventListener("click", () => {
+        const val = box.querySelector("#lingoInput").value.trim();
+        if (!val) return;
+        if (!state.lingoPool.includes(val)) state.lingoPool.unshift(val);
+        if (state.lingoPool.length > 8) state.lingoPool.pop();
+        state.yesterdayAction = "changed_chalkboard";
+        triggerEvent("lingo_injected");
+        box.querySelector("#lingoInput").value = "";
+        renderChips();
+        const line = expandTracery("#newsHeadline#");
+        box.querySelector("#newsOut").textContent = line;
+        speakVoice(line, "voice_mech", { basePitch: 0.95, charIntervalMs: 75 });
+        showToast(`🖍️ 已将「${val}」写入海湾黑板词库！`);
+      });
+
+      box.querySelector("#savePetNameBtn").addEventListener("click", () => {
+        const n = box.querySelector("#petNameInput").value.trim();
+        if (n) { state.petName = n; showToast(`🐾 纸片宠物已命名为「${n}」`); }
+      });
+
+      box.querySelector("#genNewsBtn").addEventListener("click", () => {
+        const line = expandTracery("#origin#");
+        box.querySelector("#newsOut").textContent = line;
+        speakVoice(line, "voice_mech", { basePitch: 0.95, charIntervalMs: 72 });
+      });
+    }
+
+    function renderCodexPanel(body) {
+      // Residents 0/3..3/3 & Affection & Duo Encounters
+      const resBox = document.createElement("div");
+      resBox.className = "panel-box";
+      resBox.innerHTML = `<strong>🐾 9 位怪友阶段进度（共 ${Object.values(state.charStages).reduce((a, b) => a + b, 0)}/27 幕 · 好感绝不衰减）</strong>`;
+
+      npcs.forEach(npc => {
+        const st = state.charStages[npc.id] || 0;
+        const aff = state.affection[npc.id] || 25;
+        const unlocked = isResidentUnlocked(npc.def);
+        const tier = npc.def.bondTiers.find(t => aff >= t.range[0] && aff <= t.range[1]) || npc.def.bondTiers[0];
+        const nextScript = (npc.ms && st < 3) ? npc.ms.scripts[st] : null;
+        const asset = ASSET_BY_CODE[npc.id];
+
+        const card = document.createElement("div");
+        card.className = "res-card";
+        card.innerHTML = `
+          <div style="display:flex;gap:10px;align-items:center;">
+            <img src="../workspace/assets/3d-modeling-closeups/${asset.id}.png" onerror="this.style.display='none'" style="width:46px;height:46px;border-radius:10px;object-fit:contain;background:#F5E6C8;border:1px solid #D9AC7C;" />
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong>${npc.def.species}·${npc.name}</strong>
+                <span class="badge">${st}/3 幕 · ${tier.label}</span>
+              </div>
+              <div style="font-size:11px;color:var(--warm-slate);margin:2px 0;">好感度 ${aff}/255 · 轻推 ${state.nudgeCounts[npc.id] || 0} 次 · ${unlocked ? "已在岛上" : `第${chapterIdx(npc.def.unlockChapter)}章登场`}</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${(aff / 255) * 100}%"></div></div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--warm-slate);">${nextScript ? `下一幕「${nextScript.title}」：${nextScript.trigger.summaryZh}` : "✨ 已完成全部 3 幕个人小剧本！"}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn locate-btn">📍 走到 TA 身边</button>
+            ${nextScript ? `<button class="btn amber play-stage-btn">🎭 排练第 ${st + 1} 幕</button>` : ""}
+          </div>
+        `;
+        card.querySelector(".locate-btn").addEventListener("click", () => {
+          if (!unlocked) { showToast("🔒 请先开启漫游模式或推进章节以解锁此居民"); return; }
+          player.x = npc.x; player.z = npc.z - 2.2; player.y = getElevationAt(player.x, player.z);
+          player.target = null; closeDrawer();
+          showToast(`📍 已步行至 ${npc.name} 身边`);
+        });
+        const psBtn = card.querySelector(".play-stage-btn");
+        if (psBtn) {
+          psBtn.addEventListener("click", () => {
+            if (!unlocked) state.freeRoamMode = true;
+            closeDrawer();
+            prepAndPlayScript(npc, nextScript);
+          });
+        }
+        resBox.appendChild(card);
+      });
+      body.appendChild(resBox);
+
+      // Duo Encounters
+      const duoBox = document.createElement("div");
+      duoBox.className = "panel-box";
+      duoBox.innerHTML = `<strong>👯 3 段双人偶遇微剧场 (D01–D03)</strong>`;
+      MS.duoEncounters.forEach(d => {
+        const done = Boolean((state.duoMask >> d.duoBitIndex) & 1);
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed #E4BA8B;font-size:12px;";
+        row.innerHTML = `<div><b>${d.scriptId}《${d.title}》</b><div style="font-size:11px;color:var(--warm-slate);">${d.trigger.summaryZh}</div></div>`;
+        const b = document.createElement("button");
+        b.className = done ? "btn" : "btn mint";
+        b.textContent = done ? "✓ 重温" : "🎭 立即演绎";
+        b.addEventListener("click", () => {
+          closeDrawer();
+          const f = DB.facilities.find(x => x.id === d.trigger.facilityId);
+          if (f) {
+            player.x = f.pos[0]; player.z = f.pos[2] - 2.5;
+            d.participants.forEach((pid, idx) => {
+              const p = npcs.find(n => n.id === pid);
+              if (p) { p.x = f.pos[0] + (idx === 0 ? -1.4 : 1.4); p.z = f.pos[2] - 0.8; p.y = f.pos[1]; }
+            });
+          }
+          startDuoDialogue(d);
+        });
+        row.appendChild(b);
+        duoBox.appendChild(row);
+      });
+      body.appendChild(duoBox);
+
+      // 26 Collectibles
+      const memBox = document.createElement("div");
+      memBox.className = "panel-box";
+      memBox.innerHTML = `<strong>📖 26 件海湾记忆碎片 (${state.collectedMemories.length}/26)</strong>`;
+      DB.collectibles.forEach(m => {
+        const has = state.collectedMemories.includes(m.id);
+        const item = document.createElement("div");
+        item.style.cssText = `padding:8px;border-radius:10px;border:1px solid #E4BA8B;background:${has ? "#FFF9EE" : "#F3EFE6"};font-size:12px;`;
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <b>${m.id} · ${m.title}</b>
+            <span class="badge ${has ? "" : "amber"}">${m.categoryLabel} · ${has ? "已收集" : m.facilityId}</span>
+          </div>
+          <div style="font-size:11.5px;color:var(--warm-slate);margin-top:4px;">${has ? m.excerpt : `前往 ${m.facilityId} 交互即可拾取此记忆碎片`}</div>
+        `;
+        if (!has) {
+          const btn = document.createElement("button");
+          btn.className = "btn"; btn.style.marginTop = "5px"; btn.textContent = `🧭 前往 ${m.facilityId}`;
+          btn.addEventListener("click", () => {
+            const fac = DB.facilities.find(f => f.id === m.facilityId);
+            if (fac) {
+              if (!isFacilityUnlocked(fac)) { showToast("🔒 该设施所在片区尚未解锁，可先在左上角开启「漫游模式」"); return; }
+              player.x = fac.pos[0]; player.z = fac.pos[2] - 2.2; player.y = getElevationAt(player.x, player.z);
+              closeDrawer();
+            }
+          });
+          item.appendChild(btn);
+        }
+        memBox.appendChild(item);
+      });
+      body.appendChild(memBox);
+    }
+
+    function prepAndPlayScript(npc, script) {
+      const fac = DB.facilities.find(f => f.id === script.trigger.facilityId);
+      if (fac) {
+        if (!isFacilityUnlocked(fac)) state.freeRoamMode = true;
+        player.x = fac.pos[0]; player.z = fac.pos[2] - 2.5; player.y = fac.pos[1];
+        npc.x = fac.pos[0] + 1.2; npc.z = fac.pos[2] - 0.8; npc.tx = npc.x; npc.tz = npc.z; npc.y = fac.pos[1];
+        markFacilityVisited(fac.id);
+      }
+      if (script.trigger.timeOfDay === "sunset") state.timeSlot = "dusk";
+      else if (script.trigger.timeOfDay === "night") state.timeSlot = "night";
+      else if (script.trigger.timeOfDay === "day") state.timeSlot = "afternoon";
+      syncEnvControls();
+      startMiniScriptDialogue(npc, script);
+    }
+
+    function renderSavePanel(body) {
+      const compact = buildCompactSavePayload();
+      const jsonStr = JSON.stringify(compact);
+      const bytes = new Blob([jsonStr]).size;
+      const box = document.createElement("div");
+      box.className = "panel-box";
+      box.innerHTML = `
+        <strong>💾 DataStore 本地存档与字节预算监测</strong>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span>当前紧凑载荷字节数（限额 6000 B）</span>
+          <strong style="color:#3D6B3B;">${bytes} B / 6000 B (${((bytes / 6000) * 100).toFixed(1)}%)</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100, (bytes / 6000) * 100)}%"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="saveBtn" class="btn primary">💾 立即存档</button>
+          <button id="loadBtn" class="btn mint">📂 读取存档</button>
+          <button id="resetBtn" class="btn">🔄 重置新开局</button>
+        </div>
+        <div style="font-size:11px;font-family:monospace;background:#F5E6C8;padding:8px;border-radius:8px;word-break:break-all;max-height:140px;overflow-y:auto;">${jsonStr}</div>
+      `;
+      body.appendChild(box);
+      box.querySelector("#saveBtn").addEventListener("click", () => { saveGame(false); renderSavePanel(body); });
+      box.querySelector("#loadBtn").addEventListener("click", () => { loadGame(false); closeDrawer(); });
+      box.querySelector("#resetBtn").addEventListener("click", () => {
+        localStorage.removeItem(DB.saveSchema.datastoreKey);
+        state = createInitialState();
+        player.x = -6; player.z = -18; player.y = 0.2;
+        syncEnvControls(); updateStatsHUD(); closeDrawer();
+        showToast("🌱 已重置为全新《时光小筑》序幕开局");
+      });
+    }
+
+    // ==================== 14. 62 项 3D 建模资产特写图鉴弹窗 ====================
+    let selectedGalAsset = ASSETS_62[0];
+
+    function renderGallery() {
+      const batch = document.getElementById("galBatchFilter").value;
+      const cat = document.getElementById("galCatFilter").value;
+      const q = document.getElementById("galSearchInput").value.trim().toLowerCase();
+      const grid = document.getElementById("galleryGrid");
+      grid.innerHTML = "";
+
+      const list = ASSETS_62.filter(a => {
+        if (batch !== "all" && a.batch !== batch) return false;
+        if (cat !== "all" && a.category !== cat) return false;
+        if (q && !(a.id.toLowerCase().includes(q) || a.name_zh.toLowerCase().includes(q) || a.code.toLowerCase().includes(q))) return false;
+        return true;
+      });
+
+      list.forEach(a => {
+        const card = document.createElement("button");
+        card.className = "asset-card";
+        if (selectedGalAsset && selectedGalAsset.id === a.id) card.style.borderColor = "var(--terracotta)";
+        card.innerHTML = `
+          <div class="asset-thumb-wrap">
+            <img class="asset-thumb" src="../workspace/assets/3d-modeling-closeups/${a.id}.png" alt="${a.name_zh}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+            <div class="asset-fallback" style="display:none;">🖼️ ${a.code}<br/>未找到本地PNG</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="badge">Batch ${a.batch}</span>
+            <span style="font-family:monospace;font-size:11px;font-weight:700;">${a.code}</span>
+          </div>
+          <div style="font-size:12px;font-weight:700;line-height:1.25;">${a.name_zh}</div>
+        `;
+        card.addEventListener("click", () => { selectedGalAsset = a; renderGalleryDetail(); renderGallery(); });
+        grid.appendChild(card);
+      });
+      renderGalleryDetail();
+    }
+
+    function renderGalleryDetail() {
+      const d = document.getElementById("galleryDetail");
+      const a = selectedGalAsset || ASSETS_62[0];
+      d.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong style="font-size:16px;">${a.code} · ${a.name_zh}</strong>
+          <span class="badge amber">Batch ${a.batch} · ${a.category}</span>
+        </div>
+        <div style="font-size:12px;color:var(--warm-slate);">${a.name_en}</div>
+        <div style="background:#F5E6C8;border:2px solid #D9AC7C;border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;min-height:240px;">
+          <img src="../workspace/assets/3d-modeling-closeups/${a.id}.png" alt="${a.name_zh}" style="max-width:100%;max-height:280px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+          <div class="asset-fallback" style="display:none;">无法加载 ../workspace/assets/3d-modeling-closeups/${a.id}.png</div>
+        </div>
+        <div class="panel-box" style="font-size:12px;">
+          <div><b>所属片区：</b>${a.zone}</div>
+          <div><b>尺度规格：</b><code>${a.dimensions}</code></div>
+          <div><b>资产文件：</b><code>../workspace/assets/3d-modeling-closeups/${a.id}.png</code></div>
+          <div><b>造型核心：</b>${a.subject}</div>
+        </div>
+      `;
+    }
+
+    // ==================== 15. HUD 控制、通知与事件绑定 ====================
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById("toastBanner");
+      el.textContent = msg;
+      el.classList.remove("hidden");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add("hidden"), 4200);
+    }
+
+    function syncEnvControls() {
+      document.querySelectorAll(".tod-btn").forEach(b => b.classList.toggle("active", b.dataset.tod === state.timeSlot));
+      document.getElementById("weatherSelect").value = state.weather;
+      const roamBtn = document.getElementById("toggleFreeRoamBtn");
+      roamBtn.textContent = state.freeRoamMode ? "🧭 漫游: 全区开放" : "🧭 漫游: 正常";
+      roamBtn.classList.toggle("active", state.freeRoamMode);
+    }
+
+    function updateStatsHUD() {
+      const ch = DB.chapters[chapterIdx(state.chapter)] || DB.chapters[0];
+      document.getElementById("chapterBadge").textContent = ch.title.split("：")[0];
+      document.getElementById("chapterSubtitle").textContent = ch.softGateToNext ? ch.softGateToNext.description : "全岛永久无门槛开放 · 尽享治愈沙盒";
+      document.getElementById("statWarm").textContent = state.warmFuzzies;
+      document.getElementById("statMem").textContent = state.collectedMemories.length;
+      document.getElementById("statScripts").textContent = Object.values(state.charStages).reduce((a, b) => a + b, 0);
+      document.getElementById("statZone").textContent = getZoneAt(player.x, player.z);
+      document.getElementById("dockBytes").textContent = getCompactByteCount();
+      renderQuestChecklist();
+    }
+
+    function renderQuestChecklist() {
+      const el = document.getElementById("questChecklist");
+      el.innerHTML = "";
+      DB.chapters.forEach(c => {
+        const cur = chapterIdx(state.chapter);
+        const done = c.index < cur;
+        const active = c.index === cur;
+        const div = document.createElement("div");
+        div.style.cssText = `padding:6px 8px;border-radius:8px;margin-bottom:5px;border:1px solid #E4BA8B;background:${active ? "#FFF3D6" : "#FFFDF8"};`;
+        div.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <b>${done ? "✅" : active ? "📍" : "⏳"} ${c.title}</b>
+          </div>
+          <div style="font-size:11px;color:var(--warm-slate);margin-top:2px;">${c.softGateToNext ? c.softGateToNext.description : "自由探索与音乐会无限重温"}</div>
+        `;
+        el.appendChild(div);
+      });
+    }
+
+    // Wire UI Events
+    document.getElementById("toggleQuestBtn").addEventListener("click", () => {
+      document.getElementById("questDropdown").classList.toggle("hidden");
+    });
+    document.getElementById("closeQuestBtn").addEventListener("click", () => {
+      document.getElementById("questDropdown").classList.add("hidden");
+    });
+
+    const jumpSel = document.getElementById("chapterJumpSelect");
+    DB.chapters.forEach(c => {
+      const o = document.createElement("option");
+      o.value = c.id; o.textContent = c.title;
+      jumpSel.appendChild(o);
+    });
+    document.getElementById("chapterJumpBtn").addEventListener("click", () => {
+      state.chapter = jumpSel.value;
+      if (chapterIdx(state.chapter) >= 2) triggerEvent("lighthouse_relight");
+      if (chapterIdx(state.chapter) >= 3) { triggerEvent("lightship_relight"); triggerEvent("blue_rose_bred"); state.mendelBlueRose = true; }
+      if (chapterIdx(state.chapter) >= 4) { triggerEvent("chronicle_restored"); triggerEvent("vinyl_played"); }
+      updateStatsHUD();
+      showToast(`⏩ 已切换主线阶段至「${DB.chapters[chapterIdx(state.chapter)].title}」`);
+    });
+    document.getElementById("triggerConcertBtn").addEventListener("click", () => {
+      state.freeRoamMode = true;
+      syncEnvControls();
+      document.getElementById("questDropdown").classList.add("hidden");
+      startEchoConcertFinale();
+    });
+
+    document.getElementById("toggleFreeRoamBtn").addEventListener("click", () => {
+      state.freeRoamMode = !state.freeRoamMode;
+      syncEnvControls();
+      showToast(state.freeRoamMode ? "🧭 全区自由漫游开启：Zone 0/W/E/N/S 与 9 位居民全部畅行！" : "🧭 已切回按章节渐进解锁模式");
+    });
+
+    document.querySelectorAll(".tod-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.timeSlot = btn.dataset.tod;
+        syncEnvControls();
+        const preset = DB.environmentPresets[state.timeSlot];
+        showToast(`🕰️ 已切换至 ${preset.label}`);
+      });
+    });
+    document.getElementById("weatherSelect").addEventListener("change", e => {
+      state.weather = e.target.value;
+    });
+    document.getElementById("photoSnapBtn").addEventListener("click", () => {
+      state.stats.photoCount++;
+      playBubblePopSfx();
+      spawnParticles(player.x, player.y + 1.5, player.z, "fx_sparkle", 12);
+      showToast(`📷 咔嚓！拍下一张抱月海湾明信片快照（累计 ${state.stats.photoCount} 次）`);
+    });
+    document.getElementById("bgmToggleBtn").addEventListener("click", () => toggleBGM());
+    document.getElementById("muteBtn").addEventListener("click", () => {
+      isMuted = !isMuted;
+      document.getElementById("muteBtn").textContent = isMuted ? "🔇" : "🔊";
+    });
+    document.getElementById("exitInteriorBtn").addEventListener("click", exitInterior);
+
+    document.querySelectorAll("[data-drawer]").forEach(btn => {
+      btn.addEventListener("click", () => openDrawer(btn.dataset.drawer));
+    });
+    document.querySelectorAll(".dtab").forEach(btn => {
+      btn.addEventListener("click", () => openDrawer(btn.dataset.tab));
+    });
+    document.getElementById("closeDrawerBtn").addEventListener("click", closeDrawer);
+    document.getElementById("drawerOverlay").addEventListener("click", e => {
+      if (e.target.id === "drawerOverlay") closeDrawer();
+    });
+
+    document.getElementById("openGalleryBtn").addEventListener("click", () => {
+      document.getElementById("galleryModal").classList.remove("hidden");
+      renderGallery();
+    });
+    document.getElementById("closeGalleryBtn").addEventListener("click", () => {
+      document.getElementById("galleryModal").classList.add("hidden");
+    });
+    ["galBatchFilter", "galCatFilter"].forEach(id => document.getElementById(id).addEventListener("change", renderGallery));
+    document.getElementById("galSearchInput").addEventListener("input", renderGallery);
+
+    document.getElementById("dlgNextBtn").addEventListener("click", advanceDialogue);
+    document.getElementById("dlgCloseBtn").addEventListener("click", () => closeDialogue(false));
+    document.getElementById("dlgReplayVoiceBtn").addEventListener("click", () => {
+      if (!activeDlg) return;
+      const line = activeDlg.lines[activeDlg.lineIdx];
+      const sp = npcs.find(n => n.id === line.speaker) || activeDlg.npc;
+      speakVoice(line.text, line.sfx, sp.ms ? sp.ms.voiceProfile : null);
+    });
+    document.getElementById("dlgGoHintBtn").addEventListener("click", () => {
+      if (!activeDlg || !activeDlg.hintScript) return;
+      const npc = activeDlg.npc, hs = activeDlg.hintScript;
+      closeDialogue(false);
+      prepAndPlayScript(npc, hs);
+    });
+    document.getElementById("feedFoodBtn").addEventListener("click", () => {
+      if (!activeDlg || !activeDlg.npc) return;
+      feedResident(activeDlg.npc, document.getElementById("feedFoodSelect").value);
+    });
+
+    // Startup
+    loadGame(true);
+    syncEnvControls();
+    updateStatsHUD();
+    showToast("🌊 欢迎来到 4× 抱月海湾《时光小筑》！按 WASD 或点击地面自由散步～");
+    requestAnimationFrame(renderFrame);
+  })();
+  </script>
+</body>
+</html>

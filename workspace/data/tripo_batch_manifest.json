@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "tripo_credit_budget": 1060,
+  "credit_per_high_precision_job": 50,
+  "batch1_submitted_refs": [
+    {
+      "id": "crop-strawberry-mature",
+      "ref": "workspace/assets/3d-modeling-closeups/crop-strawberry-mature.png",
+      "kind": "crop",
+      "crop": "Berry",
+      "height": 0.42,
+      "triangles": 1800,
+      "texture": 512,
+      "output": "workspace/assets/models/tripo-optimized/crop-strawberry-mature.glb"
+    },
+    {
+      "id": "crop-sunflower-mature",
+      "ref": "workspace/assets/3d-modeling-closeups/crop-sunflower-mature.png",
+      "kind": "crop",
+      "crop": "Sunflower",
+      "height": 0.85,
+      "triangles": 2200,
+      "texture": 512,
+      "output": "workspace/assets/models/tripo-optimized/crop-sunflower-mature.glb"
+    },
+    {
+      "id": "F30-studio-cottage",
+      "ref": "workspace/assets/3d-modeling-closeups/F30-studio-cottage-tripo-v2.png",
+      "kind": "model",
+      "resourceId": "model-f30-tripo",
+      "height": 4.2,
+      "triangles": 16000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F30-studio-cottage.glb",
+      "placements": [
+        { "name": "F30a_StudioCottage", "x": 42.0, "z": 24.0, "yaw": 180.0, "collision": true },
+        { "name": "F30b_StudioCottage", "x": 56.0, "z": 4.0, "yaw": -90.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F04-main-cottage",
+      "ref": "workspace/assets/3d-modeling-closeups/F04-main-cottage.png",
+      "kind": "model",
+      "resourceId": "model-f04-tripo",
+      "height": 4.8,
+      "triangles": 18000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F04-main-cottage.glb",
+      "replaceExisting": "Cottage_Main"
+    },
+    {
+      "id": "F01-arrival-dock",
+      "ref": "workspace/assets/3d-modeling-closeups/F01-arrival-dock.png",
+      "kind": "model",
+      "resourceId": "model-f01-tripo",
+      "height": 2.6,
+      "triangles": 12000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F01-arrival-dock.glb",
+      "placements": [
+        { "name": "F01_ArrivalDock", "x": -6.0, "z": -22.0, "yaw": 0.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F02-fishing-pier",
+      "ref": "workspace/assets/3d-modeling-closeups/F02-fishing-pier.png",
+      "kind": "model",
+      "resourceId": "model-f02-tripo",
+      "height": 2.2,
+      "triangles": 12000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F02-fishing-pier.glb",
+      "placements": [
+        { "name": "F02_FishingPier", "x": 10.0, "z": -23.0, "yaw": 180.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F05-coffee-terrace",
+      "ref": "workspace/assets/3d-modeling-closeups/F05-coffee-terrace.png",
+      "kind": "model",
+      "resourceId": "model-f05-tripo",
+      "height": 1.4,
+      "triangles": 10000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F05-coffee-terrace.glb",
+      "placements": [
+        { "name": "F05_CoffeeTerrace", "x": -2.0, "z": -7.0, "yaw": 180.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F08-chalkboard",
+      "ref": "workspace/assets/3d-modeling-closeups/F08-chalkboard.png",
+      "kind": "model",
+      "resourceId": "model-f08-tripo",
+      "height": 1.8,
+      "triangles": 6000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F08-chalkboard.glb",
+      "placements": [
+        { "name": "F08_Chalkboard", "x": -6.0, "z": -10.0, "yaw": 180.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F10-retro-vending",
+      "ref": "workspace/assets/3d-modeling-closeups/F10-retro-vending.png",
+      "kind": "model",
+      "resourceId": "model-f10-tripo",
+      "height": 2.4,
+      "triangles": 8000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F10-retro-vending.glb",
+      "placements": [
+        { "name": "F10_RetroVending", "x": 19.0, "z": 5.0, "yaw": 180.0, "collision": true }
+      ]
+    },
+    {
+      "id": "F11-plaza-benches",
+      "ref": "workspace/assets/3d-modeling-closeups/F11-plaza-benches.png",
+      "kind": "model",
+      "resourceId": "model-f11-tripo",
+      "height": 1.2,
+      "triangles": 8000,
+      "texture": 1024,
+      "output": "workspace/assets/models/tripo-optimized/F11-plaza-benches.glb",
+      "placements": [
+        { "name": "F11_PlazaBenches", "x": 11.0, "z": 5.0, "yaw": 180.0, "collision": true }
+      ]
+    }
+  ],
+  "batch2_multipart_and_priority": {
+    "multipart_assets": [
+      {
+        "asset": "F15",
+        "resourceId": "model-f15-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F15-windmill-tower.glb",
+        "partRefs": {
+          "tower": "workspace/assets/3d-modeling-closeups/parts/F15_part_tower.png",
+          "blades": "workspace/assets/3d-modeling-closeups/parts/F15_part_blades.png"
+        },
+        "placements": [
+          { "name": "F15_WindmillTower", "x": -12.0, "z": 20.0, "yaw": 180.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F14",
+        "resourceId": "model-f14-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F14-swing-pavilion.glb",
+        "partRefs": {
+          "pergola": "workspace/assets/3d-modeling-closeups/parts/F14_part_pergola.png",
+          "swing": "workspace/assets/3d-modeling-closeups/parts/F14_part_swing.png"
+        },
+        "placements": [
+          { "name": "F14_SwingPavilion", "x": -22.0, "z": -6.0, "yaw": 90.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F17",
+        "resourceId": "model-f17-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F17-three-fruit-tree.glb",
+        "partRefs": {
+          "tree": "workspace/assets/3d-modeling-closeups/parts/F17_part_tree_bare.png",
+          "fruit": "workspace/assets/3d-modeling-closeups/parts/F17_part_fruit_peach.png"
+        },
+        "placements": [
+          { "name": "F17_ThreeFruitTree", "x": 14.0, "z": 19.0, "yaw": 0.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F06",
+        "resourceId": "model-f06-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F06-mendel-flowerbed.glb",
+        "partRefs": {
+          "planter": "workspace/assets/3d-modeling-closeups/parts/F06_part_planter_empty.png",
+          "flower": "workspace/assets/3d-modeling-closeups/parts/F06_part_flower_bloom.png"
+        },
+        "placements": [
+          { "name": "F06_MendelFlowerbed", "x": 5.0, "z": -8.0, "yaw": 180.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F07",
+        "resourceId": "model-f07-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F07-pixel-flagpole.glb",
+        "partRefs": {
+          "pole": "workspace/assets/3d-modeling-closeups/parts/F07_part_pole_only.png"
+        },
+        "placements": [
+          { "name": "F07_PixelFlagpole", "x": 1.0, "z": -11.0, "yaw": 180.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F16",
+        "resourceId": "model-f16-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F16-sunset-overlook.glb",
+        "partRefs": {
+          "gazebo": "workspace/assets/3d-modeling-closeups/parts/F16_part_gazebo.png",
+          "telescope": "workspace/assets/3d-modeling-closeups/parts/F16_part_telescope.png"
+        },
+        "placements": [
+          { "name": "F16_SunsetOverlook", "x": -2.0, "z": 18.0, "yaw": 180.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "P04",
+        "resourceId": "model-p04-tripo",
+        "output": "workspace/assets/models/tripo-optimized/P04-shell-windchime-post.glb",
+        "partRefs": {
+          "post": "workspace/assets/3d-modeling-closeups/parts/P04_part_post.png",
+          "chime": "workspace/assets/3d-modeling-closeups/parts/Part_windchime_strand.png"
+        },
+        "placements": [
+          { "name": "P04_Windchime_WestBeach", "x": -40.0, "z": -32.0, "yaw": 140.0, "collision": true },
+          { "name": "P04_Windchime_South", "x": -10.0, "z": -43.0, "yaw": 10.0, "collision": true }
+        ]
+      },
+      {
+        "asset": "F42",
+        "resourceId": "model-f42-tripo",
+        "output": "workspace/assets/models/tripo-optimized/F42-postal-bike-stop.glb",
+        "partRefs": {
+          "signpost": "workspace/assets/3d-modeling-closeups/parts/F42_part_signpost.png",
+          "bicycle": "workspace/assets/3d-modeling-closeups/parts/F42_part_bicycle.png"
+        },
+        "placements": [
+          { "name": "F42a_BikeStop", "x": 6.0, "z": 4.5, "yaw": 180.0, "collision": true },
+          { "name": "F42b_BikeStop", "x": -34.0, "z": -3.5, "yaw": 180.0, "collision": true },
+          { "name": "F42c_BikeStop", "x": 40.0, "z": 5.0, "yaw": 180.0, "collision": true },
+          { "name": "F42d_BikeStop", "x": -12.0, "z": 31.5, "yaw": 180.0, "collision": true }
+        ]
+      }
+    ],
+    "whole_models": [
+      {
+        "id": "F12-cafe-kiosk",
+        "ref": "workspace/assets/3d-modeling-closeups/F12-cafe-kiosk.png",
+        "resourceId": "model-f12-tripo",
+        "height": 3.4,
+        "triangles": 14000,
+        "texture": 1024,
+        "output": "workspace/assets/models/tripo-optimized/F12-cafe-kiosk.glb",
+        "placements": [
+          { "name": "F12_CafeKiosk", "x": 23.0, "z": -4.0, "yaw": -90.0, "collision": true }
+        ]
+      },
+      {
+        "id": "F13a-house-amber",
+        "ref": "workspace/assets/3d-modeling-closeups/F13a-house-amber.png",
+        "resourceId": "model-f13a-tripo",
+        "height": 4.0,
+        "triangles": 14000,
+        "texture": 1024,
+        "output": "workspace/assets/models/tripo-optimized/F13a-house-amber.glb",
+        "placements": [
+          { "name": "F13a_HouseAmber", "x": -24.0, "z": 4.0, "yaw": 90.0, "collision": true }
+        ]
+      },
+      {
+        "id": "F13b-house-sage",
+        "ref": "workspace/assets/3d-modeling-closeups/F13b-house-sage.png",
+        "resourceId": "model-f13b-tripo",
+        "height": 4.4,
+        "triangles": 14000,
+        "texture": 1024,
+        "output": "workspace/assets/models/tripo-optimized/F13b-house-sage.glb",
+        "placements": [
+          { "name": "F13b_HouseSage", "x": -23.0, "z": 11.0, "yaw": 90.0, "collision": true }
+        ]
+      },
+      {
+        "id": "F13c-house-blue",
+        "ref": "workspace/assets/3d-modeling-closeups/F13c-house-blue.png",
+        "resourceId": "model-f13c-tripo",
+        "height": 3.8,
+        "triangles": 14000,
+        "texture": 1024,
+        "output": "workspace/assets/models/tripo-optimized/F13c-house-blue.glb",
+        "placements": [
+          { "name": "F13c_HouseBlue", "x": 24.0, "z": 8.0, "yaw": -90.0, "collision": true }
+        ]
+      }
+    ],
+    "characters_pending_rig": [
+      {
+        "id": "C06-strawhat-fox",
+        "ref": "workspace/assets/3d-modeling-closeups/C06-strawhat-fox.png",
+        "height": 1.38
+      },
+      {
+        "id": "C08-carpenter-raccoon",
+        "ref": "workspace/assets/3d-modeling-closeups/C08-carpenter-raccoon.png",
+        "height": 1.35
+      }
+    ]
+  }
+}

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《时光小筑》小镇规模、平面图与三级高差蓝图</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    canvas {
+      user-select: none;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 py-5 space-y-4">
+    <!-- 顶部规划摘要 -->
+    <header class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-lg font-bold tracking-tight">方案 C《时光小筑》小镇平面规划与三级高差蓝图</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] font-medium">
+              规划阶段 · 0 星光
+            </span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">
+            可步行陆地 <strong>64m × 56m</strong>（X: -32~+32m, Z: -28~+28m）· <strong>3 级微高差</strong>（L0 +0.0m / L1 +1.8m / L2 +3.6m，坡度 ≤20°）· <strong>6 大区域 / 18 项设施</strong>
+          </p>
+        </div>
+
+        <!-- 图层开关 -->
+        <div class="flex flex-wrap items-center gap-3 text-xs bg-[var(--content)] px-3 py-2 rounded-lg border border-[var(--border)]">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input id="layerZones" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>功能分区</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input id="layerElev" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>高差等高线</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input id="layerRoutes" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>动线与偶遇热区</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input id="layerPhase1" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>Phase 1 切片框 (30×26m)</span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主体：左平面图 + 右设施检查器 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- 平面图 Canvas -->
+      <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-semibold">全镇视图模式：</span>
+            <button id="view2DBtn" type="button" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)] font-medium cursor-pointer">
+              2D 网格平面图 (4m格)
+            </button>
+            <button id="viewIsoBtn" type="button" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--secondary)] font-medium cursor-pointer">
+              2.5D 全镇轴测鸟瞰
+            </button>
+          </div>
+          <div class="flex items-center gap-3 text-[var(--muted-foreground)]">
+            <span>▲ +Z 朝北高地</span>
+            <span>▼ -Z 朝南海湾</span>
+            <span class="px-1.5 py-0.5 rounded bg-[var(--content)] border border-[var(--border)]">当前选中：<strong id="topSelBadge" class="text-[var(--foreground)]">F04</strong></span>
+          </div>
+        </div>
+
+        <canvas id="planCanvas" class="w-full h-[460px] rounded-lg border border-[var(--border)] cursor-pointer"></canvas>
+
+        <!-- 图例 -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-[var(--muted-foreground)] pt-0.5">
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-sm bg-[#7CC6E8]"></i> 浅海湾 (-0.6m)</span>
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-sm bg-[#F5E6C8]"></i> L0 沙滩 (+0.0~0.4m)</span>
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-sm bg-[#B7DDA8]"></i> L1 生活主层 (+1.8m)</span>
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-sm bg-[#93C794]"></i> L2 观景高台 (+3.6m)</span>
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-sm border-2 border-dashed border-rose-500"></i> Phase 1 首批切片</span>
+          <span class="flex items-center gap-1"><i class="inline-block w-3 h-3 rounded-full bg-amber-500"></i> 居民高频偶遇热区</span>
+        </div>
+      </div>
+
+      <!-- 右侧设施详情检查器 -->
+      <aside class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 flex flex-col gap-3">
+        <div class="border-b border-[var(--border)] pb-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span id="detId" class="text-xs font-mono px-2 py-0.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)]">F04</span>
+            <span id="detPhase" class="text-xs px-2 py-0.5 rounded bg-[var(--content)] border border-[var(--border)]">Phase 1 核心</span>
+          </div>
+          <h2 id="detName" class="text-base font-bold mt-1.5">时光小筑主木屋</h2>
+          <p id="detZone" class="text-xs text-[var(--muted-foreground)]">区域 ② 时光小筑主庭院</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2 rounded-lg bg-[var(--content)] border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">世界坐标 (X, Y, Z)</div>
+            <div id="detCoord" class="font-mono font-semibold mt-0.5">(-10m, +1.8m, -2m)</div>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--content)] border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">占地与入口</div>
+            <div id="detSize" class="font-mono font-semibold mt-0.5">8×6m · 朝南偏东</div>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--content)] border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">可进入内部</div>
+            <div id="detEnter" class="font-semibold mt-0.5">是（单层温馨室内）</div>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--content)] border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">资产与星光路线</div>
+            <div id="detAsset" class="font-semibold mt-0.5">Blender + GI（0 星光）</div>
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)] text-xs space-y-1">
+          <div class="font-semibold">Smart Object 交互与玩法职责</div>
+          <div id="detRole" class="text-[var(--muted-foreground)] leading-relaxed">
+            支持进出室内与暖炉/茶桌交互；黄昏/夜晚窗格溢出 GI 暖光。
+          </div>
+        </div>
+
+        <!-- 筛选与快速跳转列表 -->
+        <div class="space-y-2 pt-1 flex-1 flex flex-col min-h-0">
+          <div class="flex items-center justify-between gap-2 text-xs">
+            <span class="font-semibold">全部 18 项设施列表</span>
+            <select id="filterSelect" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--content)] text-xs cursor-pointer">
+              <option value="all">全部显示 (18)</option>
+              <option value="Phase 1">仅看 Phase 1 (7)</option>
+              <option value="z1">① 潮汐沙滩 (L0)</option>
+              <option value="z2">② 主庭院 (L1)</option>
+              <option value="z3">③ 心愿广场 (L1)</option>
+              <option value="z4">④ 生活小巷 (L1)</option>
+              <option value="z5">⑤ 观景高台 (L2)</option>
+              <option value="z6">⑥ 秘境果林 (L2)</option>
+            </select>
+          </div>
+          <div id="facilityList" class="overflow-y-auto max-h-48 space-y-1 pr-1"></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 底部联动高差剖面图 -->
+    <section class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="text-sm font-semibold">三级微高差地形剖面与视线透视验证</h2>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            每级抬升 1.8m、用 5–6m 宽阶梯缓坡过渡（≤20°），既能俯瞰大海替代“滚木弯曲着色器”，又确保 Avatar 与 NPC 寻路顺畅不卡脚
+          </p>
+        </div>
+        <div class="flex gap-1.5 text-xs">
+          <button id="profNS" class="prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer font-medium">
+            南北向纵剖面 (Z: -28 → +28m)
+          </button>
+          <button id="profEW" class="prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] cursor-pointer font-medium">
+            东西向横剖面 (X: -32 → +32m)
+          </button>
+        </div>
+      </div>
+
+      <canvas id="profileCanvas" class="w-full h-44 rounded-lg border border-[var(--border)]"></canvas>
+    </section>
+  </div>
+
+  <script>
+    const zones = [
+      { id: 'z1', name: '① 潮汐沙滩与码头', level: 'L0 (+0.0~0.4m)', x: -24, z: -26, w: 48, d: 12, color: 'rgba(245, 230, 200, 0.45)' },
+      { id: 'z2', name: '② 时光小筑主庭院', level: 'L1 (+1.8m)', x: -15, z: -13, w: 24, d: 18, color: 'rgba(251, 191, 36, 0.18)' },
+      { id: 'z3', name: '③ 怪友心愿广场', level: 'L1 (+1.8m)', x: 9, z: -9, w: 20, d: 18, color: 'rgba(244, 114, 182, 0.16)' },
+      { id: 'z4', name: '④ 萌屋生活小巷', level: 'L1 (+1.8m)', x: -30, z: -10, w: 14, d: 23, color: 'rgba(96, 165, 250, 0.16)' },
+      { id: 'z5', name: '⑤ 暖阳风车观景台', level: 'L2 (+3.6m)', x: -22, z: 14, w: 26, d: 13, color: 'rgba(167, 139, 250, 0.18)' },
+      { id: 'z6', name: '⑥ 秘境果林与时光角', level: 'L2 (+3.6m)', x: 5, z: 14, w: 25, d: 13, color: 'rgba(52, 211, 153, 0.18)' }
+    ];
+
+    const facilities = [
+      { id: 'F01', name: '登岛小码头', zoneId: 'z1', zoneName: '① 潮汐码头与月牙沙滩', level: 'L0', y: 0.2, x: -6, z: -22, w: 6, d: 5, dir: '朝北/南', enter: '否（迎宾栈台）', phase: 'Phase 2', asset: 'Blender/SCAD（0 星光）', role: '玩家与 SharedMode 好友登岛出生点，衔接南西宽木阶梯。', color: '#0ea5e9' },
+      { id: 'F02', name: '木质钓鱼栈桥', zoneId: 'z1', zoneName: '① 潮汐码头与月牙沙滩', level: 'L0', y: 0.3, x: 10, z: -23, w: 4, d: 8, dir: '朝北', enter: '否（亲水栈桥）', phase: 'Phase 1', asset: 'Blender/Three.js（0 星光）', role: '支持垂钓、海面涟漪交互及居民观海发呆打卡。', color: '#0284c7' },
+      { id: 'F03', name: '漂流瓶沙滩拾贝带', zoneId: 'z1', zoneName: '① 潮汐码头与月牙沙滩', level: 'L0', y: 0.1, x: -18, z: -19, w: 12, d: 5, dir: '开放', enter: '否', phase: 'Phase 2', asset: 'Blender + 公共贝壳（0 星光）', role: '每日刷新漂流瓶与异步好友留言纸条，无惩罚轻收集。', color: '#d97706' },
+
+      { id: 'F04', name: '时光小筑主木屋', zoneId: 'z2', zoneName: '② 时光小筑主庭院', level: 'L1', y: 1.8, x: -10, z: -2, w: 8, d: 6, dir: '朝南偏东', enter: '是（可进入温馨室内）', phase: 'Phase 1', asset: 'Blender 室内外 + GI（0 星光）', role: '核心庇护所，内含茶桌/书架/暖炉；黄昏窗格溢出暖光。', color: '#dc2626' },
+      { id: 'F05', name: '户外咖啡茶桌露台', zoneId: 'z2', zoneName: '② 时光小筑主庭院', level: 'L1', y: 1.8, x: -2, z: -7, w: 5, d: 4, dir: '四向开放', enter: '否', phase: 'Phase 1', asset: '公共库召回 + 自建（0 星光）', role: '多槽位 Smart Object：同时供 2–3 名居民饮茶与社交八卦。', color: '#b45309' },
+      { id: 'F06', name: '孟德尔杂交花圃', zoneId: 'z2', zoneName: '② 时光小筑主庭院', level: 'L1', y: 1.8, x: 5, z: -8, w: 6, d: 4, dir: '朝南/西', enter: '否', phase: 'Phase 1', asset: 'Three.js/Blender 花模（0 星光）', role: '4×3 育种花格：浇水杂交（27/81 基因型）或单株无性克隆。', color: '#ec4899' },
+      { id: 'F07', name: '12×12 像素旗杆', zoneId: 'z2', zoneName: '② 时光小筑主庭院', level: 'L1', y: 1.8, x: 1, z: -11, w: 2, d: 2, dir: '朝南', enter: '否', phase: 'Phase 1', asset: 'Three.js + 动态贴图（0 星光）', role: '实时映射玩家绘制的 12×12 像素旗，仅 ~180B 存 DataStore。', color: '#ef4444' },
+      { id: 'F08', name: '庭院涂鸦留言黑板', zoneId: 'z2', zoneName: '② 时光小筑主庭院', level: 'L1', y: 1.8, x: -6, z: -10, w: 2, d: 1.5, dir: '朝南', enter: '否', phase: 'Phase 1', asset: 'Blender + Runtime UI（0 星光）', role: '流行语词库注入入口，触发居民在日常和新闻中转述吐槽。', color: '#334155' },
+
+      { id: 'F09', name: '中心心愿喷泉', zoneId: 'z3', zoneName: '③ 怪友心愿广场', level: 'L1', y: 1.8, x: 14, z: -1, w: 6, d: 6, dir: '四向', enter: '否', phase: 'Phase 1', asset: 'Blender + 水花粒子（0 星光）', role: '镇中心偶遇热区！接收暖心值，解锁新微个性与设施彩蛋。', color: '#3b82f6' },
+      { id: 'F10', name: '复古自动售货机', zoneId: 'z3', zoneName: '③ 怪友心愿广场', level: 'L1', y: 1.8, x: 19, z: 5, w: 2.5, d: 2, dir: '朝南', enter: '否', phase: 'Phase 2', asset: 'Three.js/Blender（0 星光）', role: '广播“饮食”动机；掉出奇葩饮料供投喂试探食物隐藏偏好。', color: '#ec4899' },
+      { id: 'F11', name: '广场八卦长椅群', zoneId: 'z3', zoneName: '③ 怪友心愿广场', level: 'L1', y: 1.8, x: 11, z: 5, w: 5, d: 2.5, dir: '朝南', enter: '否', phase: 'Phase 2', asset: '公共库「木椅/摇椅」（0 星光）', role: '把两名居民轻推到相邻长椅，触发对视发呆或心动气泡。', color: '#f59e0b' },
+      { id: 'F12', name: '露天海风咖啡小卖部', zoneId: 'z3', zoneName: '③ 怪友心愿广场', level: 'L1', y: 1.8, x: 23, z: -4, w: 5, d: 4, dir: '朝西', enter: '否', phase: 'Phase 2', asset: 'Blender + 2D 食物贴图（0 星光）', role: '产出多种 2D 拼贴美食道具，高频激发食物极值反应演出。', color: '#f97316' },
+
+      { id: 'F13', name: '居民萌屋 1（蓝顶）', zoneId: 'z4', zoneName: '④ 萌屋生活小巷', level: 'L1', y: 1.8, x: -24, z: 4, w: 5, d: 4.5, dir: '朝东', enter: '门廊交互（可扩展）', phase: 'Phase 2', asset: 'Blender 复用壳换色（0 星光）', role: '居民固定住处与门牌，门前有专属花盆与信箱小事件。', color: '#6366f1' },
+      { id: 'F14', name: '社区秋千与吉他角', zoneId: 'z4', zoneName: '④ 萌屋生活小巷', level: 'L1', y: 1.8, x: -22, z: -6, w: 5, d: 5, dir: '朝东', enter: '否', phase: 'Phase 2', asset: 'Three.js Pivot 摆动（0 星光）', role: '广播“玩耍/音乐”动机；吉他兴趣居民可即兴合唱。', color: '#8b5cf6' },
+      { id: 'F13B', name: '居民萌屋 2（薄荷顶）', zoneId: 'z4', zoneName: '④ 萌屋生活小巷', level: 'L1', y: 1.8, x: -23, z: 11, w: 5, d: 4.5, dir: '朝南偏东', enter: '门廊交互（可扩展）', phase: 'Phase 2', asset: 'Blender 复用壳换色（0 星光）', role: '生活小巷北端萌屋，与西侧圆石阶构成街景围合。', color: '#14b8a6' },
+      { id: 'F13C', name: '居民萌屋 3（鹅黄顶）', zoneId: 'z4', zoneName: '④ 萌屋生活小巷（东翼）', level: 'L1', y: 1.8, x: 25, z: 8, w: 5, d: 4.5, dir: '朝西', enter: '门廊交互（可扩展）', phase: 'Phase 2', asset: 'Blender 复用壳换色（0 星光）', role: '东翼生活角，衔接心愿广场与东侧果林缓坡通道。', color: '#eab308' },
+
+      { id: 'F15', name: '木质风车塔', zoneId: 'z5', zoneName: '⑤ 暖阳风车观景高台', level: 'L2', y: 3.6, x: -12, z: 20, w: 5, d: 5, dir: '朝南', enter: '否（视觉地标）', phase: 'Phase 3', asset: 'Blender + Lua 扇叶（0 星光）', role: '全镇最高远景地标，Lua 慢速旋叶搭配“仰望鼓掌”涌现点。', color: '#7c3aed' },
+      { id: 'F16', name: '日落望远镜与纪念长椅', zoneId: 'z5', zoneName: '⑤ 暖阳风车观景高台', level: 'L2', y: 3.6, x: -2, z: 18, w: 5, d: 3, dir: '朝南瞰海', enter: '否', phase: 'Phase 3', asset: 'Three.js/公共库（0 星光）', role: 'L2 +3.6m 俯瞰 L1 屋顶与 L0 海岸落日的最佳观景机位。', color: '#a855f7' },
+
+      { id: 'F17', name: '三果实标志果树林', zoneId: 'z6', zoneName: '⑥ 秘境果林与时光角', level: 'L2', y: 3.6, x: 14, z: 19, w: 14, d: 9, dir: '开放', enter: '否', phase: 'Phase 3', asset: 'Blender 3 果实树模板（0 星光）', role: '摇树掉果正向微回报，并作为动态树叶沙沙点声源区。', color: '#10b981' },
+      { id: 'F18', name: '纸片宠打卡坪与时光石', zoneId: 'z6', zoneName: '⑥ 秘境果林与时光角', level: 'L2', y: 3.6, x: 24, z: 17, w: 7, d: 6, dir: '朝西', enter: '否', phase: 'Phase 3', asset: '2D 纸片宠 + Blender（0 星光）', role: '2D 手绘纸片宠物自由散步区，旁设温柔的记忆纪念碑。', color: '#059669' }
+    ];
+
+    // 将 F13B / F13C 合并说明为 18 项设施概念中的萌屋 2/3（共20个标注点代表18项逻辑设施）
+    let selectedId = 'F04';
+    let profileMode = 'NS';
+    let viewMode = '2D';
+
+    function getTheme() {
+      const cs = getComputedStyle(document.documentElement);
+      const isLight = document.documentElement.classList.contains('light');
+      return {
+        isLight,
+        fg: cs.getPropertyValue('--foreground').trim() || (isLight ? '#18181b' : '#f4f4f5'),
+        muted: cs.getPropertyValue('--muted-foreground').trim() || (isLight ? '#71717a' : '#a1a1aa'),
+        border: cs.getPropertyValue('--border').trim() || (isLight ? '#d4d4d8' : '#3f3f46'),
+        card: cs.getPropertyValue('--card').trim() || (isLight ? '#ffffff' : '#18181b'),
+        primary: cs.getPropertyValue('--primary').trim() || '#3b82f6'
+      };
+    }
+
+    function fitCanvas(c) {
+      const r = c.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (c.width !== Math.round(r.width * dpr) || c.height !== Math.round(r.height * dpr)) {
+        c.width = Math.round(r.width * dpr);
+        c.height = Math.round(r.height * dpr);
+      }
+      const ctx = c.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, w: r.width, h: r.height };
+    }
+
+    // 坐标映射：X in [-36, +36], Z in [-32, +32] (+Z 在上方)
+    function createMapper(w, h) {
+      const pad = 28;
+      const scale = Math.min((w - pad * 2) / 72, (h - pad * 2) / 64);
+      const ox = w / 2, oy = h / 2;
+      return {
+        toPx: (x, z) => ({ px: ox + x * scale, py: oy - z * scale }),
+        scale
+      };
+    }
+
+    // 2.5D 等轴测投影映射（南面大海在前下方，北面 L2 高台在后上方）
+    function createIsoMapper(w, h) {
+      const s = Math.min((w - 60) / 84, (h - 50) / 68);
+      const ox = w * 0.50;
+      const oy = h * 0.56;
+      return {
+        toIso: (x, y, z) => ({
+          px: ox + (x * 0.88 - z * 0.36) * s,
+          py: oy + (-z * 0.52 - x * 0.14) * s - y * 3.0 * s
+        }),
+        s
+      };
+    }
+
+    function drawIsoPrism(ctx, toIso, x1, x2, z1, z2, yBot, yTop, topCol, frontCol, sideCol, strokeCol) {
+      const pBL = toIso(x1, yTop, z1), pBR = toIso(x2, yTop, z1), pTR = toIso(x2, yTop, z2), pTL = toIso(x1, yTop, z2);
+      const bBL = toIso(x1, yBot, z1), bBR = toIso(x2, yBot, z1), bTR = toIso(x2, yBot, z2), bTL = toIso(x1, yBot, z2);
+
+      // 南立面（前侧）
+      ctx.fillStyle = frontCol;
+      ctx.beginPath();
+      ctx.moveTo(pBL.px, pBL.py); ctx.lineTo(pBR.px, pBR.py);
+      ctx.lineTo(bBR.px, bBR.py); ctx.lineTo(bBL.px, bBL.py);
+      ctx.closePath(); ctx.fill();
+
+      // 东立面（右侧）或西立面（取决于视角偏移，此处斜向左偏故展示东侧与南侧；若x1..x2斜率向右则展示东或西，画东立面 pBR-pTR 与西立面 pTL-pBL）
+      ctx.fillStyle = sideCol;
+      ctx.beginPath();
+      ctx.moveTo(pBR.px, pBR.py); ctx.lineTo(pTR.px, pTR.py);
+      ctx.lineTo(bTR.px, bTR.py); ctx.lineTo(bBR.px, bBR.py);
+      ctx.closePath(); ctx.fill();
+
+      // 顶面
+      ctx.fillStyle = topCol;
+      ctx.beginPath();
+      ctx.moveTo(pBL.px, pBL.py); ctx.lineTo(pBR.px, pBR.py);
+      ctx.lineTo(pTR.px, pTR.py); ctx.lineTo(pTL.px, pTL.py);
+      ctx.closePath(); ctx.fill();
+
+      if (strokeCol) {
+        ctx.strokeStyle = strokeCol;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    function drawIso() {
+      const c = document.getElementById('planCanvas');
+      const info = fitCanvas(c);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      const tc = getTheme();
+      const { toIso, s } = createIsoMapper(w, h);
+
+      const showElev = document.getElementById('layerElev').checked;
+      const showRoutes = document.getElementById('layerRoutes').checked;
+      const showPhase1 = document.getElementById('layerPhase1').checked;
+
+      // 背景海空过渡
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, tc.isLight ? '#dbeafe' : '#132238');
+      bgGrad.addColorStop(1, tc.isLight ? '#7CC6E8' : '#1b3652');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // 水波线装饰
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = 1.5;
+      for (let i = -30; i <= 26; i += 14) {
+        const w1 = toIso(i, -0.4, -33), w2 = toIso(i + 9, -0.4, -33);
+        ctx.beginPath(); ctx.moveTo(w1.px, w1.py); ctx.lineTo(w2.px, w2.py); ctx.stroke();
+      }
+
+      // L0 亲水海滨沙滩整盘 (-32..+32, -28..+28, -0.5..+0.2)
+      drawIsoPrism(ctx, toIso, -32, 32, -28, 28, -0.6, 0.2, '#F5E6C8', '#DFC79F', '#C7AF88', 'rgba(120,90,40,0.25)');
+      // L1 主生活台地 (-32..+32, -14..+28, +0.2..+1.8)
+      drawIsoPrism(ctx, toIso, -32, 32, -14, 28, 0.2, 1.8, '#B7DDA8', '#8EB87D', '#769F67', 'rgba(40,80,40,0.28)');
+      // L2 北侧观景高台 (-30..+30, +14..+28, +1.8..+3.6)
+      drawIsoPrism(ctx, toIso, -30, 30, 14, 28, 1.8, 3.6, '#93C794', '#72A673', '#5E8D5F', 'rgba(30,70,30,0.32)');
+
+      // 4 处斜坡台阶块
+      if (showElev) {
+        [
+          { x: -6, z: -14, yb: 0.2, yt: 1.8, col: '#d97706' },
+          { x: 10, z: -14, yb: 0.2, yt: 1.8, col: '#d97706' },
+          { x: -16, z: 14, yb: 1.8, yt: 3.6, col: '#94a3b8' },
+          { x: 16, z: 14, yb: 1.8, yt: 3.6, col: '#84cc16' }
+        ].forEach(rp => {
+          drawIsoPrism(ctx, toIso, rp.x - 2.4, rp.x + 2.4, rp.z - 2.2, rp.z + 1.8, rp.yb, (rp.yb + rp.yt) * 0.55, rp.col, '#78350f', '#57280a', null);
+        });
+      }
+
+      // 步行环线
+      if (showRoutes) {
+        const pts = [[-6, 0.25, -20], [-6, 1.85, -11], [14, 1.85, -10], [14, 1.85, 5], [16, 3.65, 17], [-12, 3.65, 17], [-18, 1.85, 4], [-18, 1.85, -8], [-6, 1.85, -11]];
+        ctx.save();
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.85)';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        pts.forEach(([x, y, z], idx) => {
+          const p = toIso(x, y, z);
+          if (idx === 0) ctx.moveTo(p.px, p.py);
+          else ctx.lineTo(p.px, p.py);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Phase 1 切片线
+      if (showPhase1) {
+        const p1 = toIso(-15, 1.85, -26.5), p2 = toIso(17, 1.85, -26.5), p3 = toIso(17, 1.85, 2.5), p4 = toIso(-15, 1.85, 2.5);
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); ctx.lineTo(p3.px, p3.py); ctx.lineTo(p4.px, p4.py);
+        ctx.closePath(); ctx.stroke();
+        ctx.restore();
+      }
+
+      // 画家算法：由北向南（z 从大到小）排序绘制 3D 微缩设施体块
+      const sorted = [...facilities].sort((a, b) => (b.z - a.z) || (a.x - b.x));
+      sorted.forEach(f => {
+        const isSel = f.id === selectedId;
+        const hw = Math.max(1.2, f.w * 0.45), hd = Math.max(1.0, f.d * 0.45);
+        const hMap = { F04: 2.6, F13: 2.2, F13B: 2.2, F13C: 2.2, F15: 4.2, F17: 2.8, F07: 3.0, F10: 1.8, F12: 2.0, F09: 1.1 };
+        const height = hMap[f.id] || 0.9;
+        const topShade = isSel ? '#fde047' : f.color;
+        drawIsoPrism(ctx, toIso, f.x - hw, f.x + hw, f.z - hd, f.z + hd, f.y, f.y + height, topShade, f.color, '#475569', isSel ? '#ffffff' : 'rgba(15,23,42,0.45)');
+
+        // 风车叶片点缀
+        if (f.id === 'F15') {
+          const tip = toIso(f.x, f.y + height - 0.5, f.z - hd);
+          ctx.strokeStyle = '#fef3c7';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(tip.px - 9, tip.py - 9); ctx.lineTo(tip.px + 9, tip.py + 9);
+          ctx.moveTo(tip.px - 9, tip.py + 9); ctx.lineTo(tip.px + 9, tip.py - 9);
+          ctx.stroke();
+        }
+
+        // 标签徽章
+        const lblPos = toIso(f.x, f.y + height + 0.5, f.z);
+        ctx.fillStyle = isSel ? '#f43f5e' : 'rgba(15,23,42,0.78)';
+        ctx.beginPath();
+        ctx.roundRect(lblPos.px - 13, lblPos.py - 7, 26, 13, 4);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 8.5px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(f.id.replace('B', '+').replace('C', '*'), lblPos.px, lblPos.py);
+      });
+
+      // 标尺角标
+      ctx.fillStyle = tc.fg;
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('2.5D 微缩鸟瞰：L0(+0.2m) → L1(+1.8m) → L2(+3.6m)', 12, 20);
+    }
+
+    function drawPlan() {
+      if (viewMode === 'ISO') {
+        drawIso();
+        return;
+      }
+      const c = document.getElementById('planCanvas');
+      const info = fitCanvas(c);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      const tc = getTheme();
+      const { toPx, scale } = createMapper(w, h);
+
+      const showZones = document.getElementById('layerZones').checked;
+      const showElev = document.getElementById('layerElev').checked;
+      const showRoutes = document.getElementById('layerRoutes').checked;
+      const showPhase1 = document.getElementById('layerPhase1').checked;
+
+      // 海面底色
+      ctx.fillStyle = tc.isLight ? '#bfe6f5' : '#1b3652';
+      ctx.fillRect(0, 0, w, h);
+
+      // L0 陆地基座 (-32..+32, -28..+28)
+      const tl0 = toPx(-32, 28);
+      ctx.fillStyle = '#F5E6C8';
+      ctx.beginPath();
+      ctx.roundRect(tl0.px, tl0.py, 64 * scale, 56 * scale, 18 * (scale / 6));
+      ctx.fill();
+
+      // L1 生活主台地 (-32..+32, -14..+28)
+      const tl1 = toPx(-32, 28);
+      ctx.fillStyle = '#B7DDA8';
+      ctx.beginPath();
+      ctx.roundRect(tl1.px, tl1.py, 64 * scale, 42 * scale, 12 * (scale / 6));
+      ctx.fill();
+
+      // L2 北侧观景高台 (-30..+30, +14..+28)
+      const tl2 = toPx(-30, 28);
+      ctx.fillStyle = '#93C794';
+      ctx.beginPath();
+      ctx.roundRect(tl2.px, tl2.py, 60 * scale, 14 * scale, 10 * (scale / 6));
+      ctx.fill();
+
+      // 等高线轮廓
+      if (showElev) {
+        ctx.strokeStyle = tc.isLight ? 'rgba(60, 80, 50, 0.42)' : 'rgba(255, 255, 255, 0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(tl1.px, tl1.py, 64 * scale, 42 * scale);
+        ctx.strokeRect(tl2.px, tl2.py, 60 * scale, 14 * scale);
+
+        // 4 处台阶/缓坡指示
+        const ramps = [
+          { x: -6, z: -14, label: '木阶 18°' },
+          { x: 10, z: -14, label: '木阶 18°' },
+          { x: -16, z: 14, label: '石阶 19°' },
+          { x: 16, z: 14, label: '缓坡 16°' }
+        ];
+        ramps.forEach(rp => {
+          const p = toPx(rp.x, rp.z);
+          ctx.fillStyle = '#d97706';
+          ctx.fillRect(p.px - 2.4 * scale, p.py - 1.5 * scale, 4.8 * scale, 3 * scale);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(rp.label, p.px, p.py + 3);
+        });
+      }
+
+      // 4m 网格与坐标刻度
+      ctx.strokeStyle = tc.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let gx = -32; gx <= 32; gx += 4) {
+        const p1 = toPx(gx, -28), p2 = toPx(gx, 28);
+        ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); ctx.stroke();
+        if (gx % 16 === 0) {
+          ctx.fillStyle = tc.muted;
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(gx + 'm', p1.px, toPx(0, -30).py + 4);
+        }
+      }
+      for (let gz = -28; gz <= 28; gz += 4) {
+        const p1 = toPx(-32, gz), p2 = toPx(32, gz);
+        ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); ctx.stroke();
+        if (gz % 14 === 0) {
+          ctx.fillStyle = tc.muted;
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'right';
+          ctx.fillText(gz + 'm', toPx(-33, gz).px, p1.py + 3);
+        }
+      }
+
+      // 功能分区阴影层
+      if (showZones) {
+        zones.forEach(z => {
+          const p = toPx(z.x, z.z + z.d);
+          ctx.fillStyle = z.color;
+          ctx.fillRect(p.px, p.py, z.w * scale, z.d * scale);
+          ctx.fillStyle = tc.isLight ? '#1e293b' : '#f1f5f9';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(z.name, p.px + 4, p.py + 12);
+        });
+      }
+
+      // 步行环线与居民偶遇热区
+      if (showRoutes) {
+        const pts = [[-6, -20], [-6, -11], [14, -10], [14, 5], [16, 17], [-12, 17], [-18, 4], [-18, -8], [-6, -11]];
+        ctx.save();
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.72)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([6, 5]);
+        ctx.beginPath();
+        pts.forEach(([px, pz], idx) => {
+          const pt = toPx(px, pz);
+          if (idx === 0) ctx.moveTo(pt.px, pt.py);
+          else ctx.lineTo(pt.px, pt.py);
+        });
+        ctx.stroke();
+        ctx.restore();
+
+        // 偶遇热区光圈（主庭院与心愿广场交界）
+        [[2, -5, 6.5], [14, 1, 7.5]].forEach(([hx, hz, hr]) => {
+          const hp = toPx(hx, hz);
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+          ctx.beginPath(); ctx.arc(hp.px, hp.py, hr * scale, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+
+      // Phase 1 首批切片框 (30m x 26m: X -15..+15, Z -26..0 -> 延伸覆盖 F09)
+      if (showPhase1) {
+        const pTL = toPx(-15, 2.5);
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 2.2;
+        ctx.setLineDash([7, 4]);
+        ctx.strokeRect(pTL.px, pTL.py, 32 * scale, 29 * scale);
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('Phase 1 首批切片 (约 30×26m)', pTL.px + 4, pTL.py - 5);
+        ctx.restore();
+      }
+
+      // 绘制 18 项设施标记点
+      facilities.forEach(f => {
+        const center = toPx(f.x, f.z);
+        const rw = Math.max(14, f.w * scale);
+        const rd = Math.max(12, f.d * scale);
+        const isSel = f.id === selectedId;
+
+        ctx.save();
+        ctx.fillStyle = f.color;
+        ctx.globalAlpha = isSel ? 0.95 : 0.78;
+        ctx.beginPath();
+        ctx.roundRect(center.px - rw / 2, center.py - rd / 2, rw, rd, 4);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        if (isSel) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(center.px - rw / 2 - 2, center.py - rd / 2 - 2, rw + 4, rd + 4);
+        }
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9.5px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(f.id.replace('B', '+').replace('C', '*'), center.px, center.py);
+        ctx.restore();
+      });
+    }
+
+    // 剖面图绘制
+    function drawProfile() {
+      const c = document.getElementById('profileCanvas');
+      const info = fitCanvas(c);
+      if (!info) return;
+      const { ctx, w, h } = info;
+      const tc = getTheme();
+
+      ctx.fillStyle = tc.isLight ? '#f8fafc' : '#181c24';
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 44, padR = 24, padT = 18, padB = 26;
+      const gw = w - padL - padR;
+      const gh = h - padT - padB;
+      // Y 范围 -1.2m 到 +7.2m
+      const mapY = (m) => padT + gh - ((m + 1.2) / 8.4) * gh;
+
+      // 海平面虚线 Y=0
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(padL, mapY(0)); ctx.lineTo(w - padR, mapY(0)); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Y 轴高程刻度
+      [0, 1.8, 3.6].forEach(lev => {
+        const py = mapY(lev);
+        ctx.strokeStyle = tc.isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)';
+        ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(w - padR, py); ctx.stroke();
+        ctx.fillStyle = tc.muted;
+        ctx.font = '10px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(`+${lev.toFixed(1)}m`, padL - 5, py + 3);
+      });
+
+      if (profileMode === 'NS') {
+        const mapZ = (z) => padL + ((z + 32) / 64) * gw;
+        // 海水
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.fillRect(mapZ(-32), mapY(0), mapZ(-25) - mapZ(-32), mapY(-1.2) - mapY(0));
+
+        // 地形剖面多边形
+        const pts = [
+          [-32, -0.6], [-26, 0.1], [-17, 0.3], [-12, 1.8], [11, 1.8], [17, 3.6], [28, 3.6], [31, 2.0], [32, -0.6]
+        ];
+        ctx.fillStyle = '#84cc16';
+        ctx.globalAlpha = 0.38;
+        ctx.beginPath();
+        ctx.moveTo(mapZ(-32), mapY(-1.2));
+        pts.forEach(([z, y]) => ctx.lineTo(mapZ(z), mapY(y)));
+        ctx.lineTo(mapZ(32), mapY(-1.2));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        ctx.strokeStyle = '#65a30d';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        pts.forEach(([z, y], idx) => idx === 0 ? ctx.moveTo(mapZ(z), mapY(y)) : ctx.lineTo(mapZ(z), mapY(y)));
+        ctx.stroke();
+
+        // 建筑剪影：栈桥、主木屋、风车塔
+        ctx.fillStyle = '#92400e';
+        ctx.fillRect(mapZ(-26), mapY(0.45), mapZ(-19) - mapZ(-26), 5);
+        // 主木屋 (Z:-5..+1, L1+1.8)
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(mapZ(-5), mapY(5.0), mapZ(1) - mapZ(-5), mapY(1.8) - mapY(5.0));
+        // 风车塔 (Z:+17..+22, L2+3.6)
+        ctx.fillStyle = '#7c3aed';
+        ctx.fillRect(mapZ(18), mapY(6.8), mapZ(22) - mapZ(18), mapY(3.6) - mapY(6.8));
+
+        // 玩家身高 1.6m 比例尺 & L2 俯瞰视线
+        const pxPlayer = mapZ(15);
+        ctx.fillStyle = tc.primary;
+        ctx.fillRect(pxPlayer - 2, mapY(5.2), 4, mapY(3.6) - mapY(5.2));
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(pxPlayer, mapY(5.0)); ctx.lineTo(mapZ(-25), mapY(0.5)); ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = tc.fg;
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('L0 栈桥', mapZ(-22), h - 8);
+        ctx.fillText('木阶(18°)', mapZ(-14.5), h - 8);
+        ctx.fillText('L1 主木屋 & 广场', mapZ(-1), h - 8);
+        ctx.fillText('石阶(19°)', mapZ(14), h - 8);
+        ctx.fillText('L2 风车高台 (玩家高1.6m + 瞰海视线)', mapZ(23), h - 8);
+      } else {
+        const mapX = (x) => padL + ((x + 34) / 68) * gw;
+        const pts = [
+          [-34, -0.5], [-30, 1.8], [30, 1.8], [34, -0.5]
+        ];
+        ctx.fillStyle = '#84cc16';
+        ctx.globalAlpha = 0.35;
+        ctx.beginPath();
+        ctx.moveTo(mapX(-34), mapY(-1.2));
+        pts.forEach(([x, y]) => ctx.lineTo(mapX(x), mapY(y)));
+        ctx.lineTo(mapX(34), mapY(-1.2));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        ctx.strokeStyle = '#65a30d';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        pts.forEach(([x, y], idx) => idx === 0 ? ctx.moveTo(mapX(x), mapY(y)) : ctx.lineTo(mapX(x), mapY(y)));
+        ctx.stroke();
+
+        // 西萌屋、主木屋、喷泉、咖啡亭剪影
+        ctx.fillStyle = '#6366f1';
+        ctx.fillRect(mapX(-26), mapY(4.4), mapX(-21) - mapX(-26), mapY(1.8) - mapY(4.4));
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(mapX(-14), mapY(5.0), mapX(-6) - mapX(-14), mapY(1.8) - mapY(5.0));
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillRect(mapX(11), mapY(3.1), mapX(17) - mapX(11), mapY(1.8) - mapY(3.1));
+        ctx.fillStyle = '#f97316';
+        ctx.fillRect(mapX(21), mapY(4.2), mapX(26) - mapX(21), mapY(1.8) - mapY(4.2));
+
+        ctx.fillStyle = tc.fg;
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('西翼萌屋(-24m)', mapX(-23.5), h - 8);
+        ctx.fillText('主木屋(-10m)', mapX(-10), h - 8);
+        ctx.fillText('中心喷泉(+14m)', mapX(14), h - 8);
+        ctx.fillText('咖啡亭(+23m)', mapX(23.5), h - 8);
+      }
+    }
+
+    function selectFacility(id) {
+      const f = facilities.find(item => item.id === id) || facilities[0];
+      selectedId = f.id;
+      document.getElementById('topSelBadge').textContent = f.id;
+      document.getElementById('detId').textContent = f.id;
+      document.getElementById('detPhase').textContent = f.phase;
+      document.getElementById('detName').textContent = f.name;
+      document.getElementById('detZone').textContent = f.zoneName;
+      document.getElementById('detCoord').textContent = `(${f.x}m, +${f.y.toFixed(1)}m, ${f.z}m)`;
+      document.getElementById('detSize').textContent = `${f.w}×${f.d}m · ${f.dir}`;
+      document.getElementById('detEnter').textContent = f.enter;
+      document.getElementById('detAsset').textContent = f.asset;
+      document.getElementById('detRole').textContent = f.role;
+      renderFacilityList();
+      drawPlan();
+    }
+
+    function renderFacilityList() {
+      const list = document.getElementById('facilityList');
+      const filter = document.getElementById('filterSelect').value;
+      list.innerHTML = '';
+      const filtered = facilities.filter(f => {
+        if (filter === 'all') return true;
+        if (filter === 'Phase 1') return f.phase === 'Phase 1';
+        return f.zoneId === filter;
+      });
+      filtered.forEach(f => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const active = f.id === selectedId;
+        btn.className = `w-full text-left px-2.5 py-1.5 rounded-lg border text-xs flex items-center justify-between cursor-pointer ${
+          active ? 'border-[var(--primary)] bg-[var(--content)] font-semibold' : 'border-[var(--border)] hover:bg-[var(--content)]'
+        }`;
+        btn.innerHTML = `<span><span class="font-mono mr-1.5">${f.id}</span>${f.name}</span><span class="text-[11px] text-[var(--muted-foreground)]">${f.level}</span>`;
+        btn.addEventListener('click', () => selectFacility(f.id));
+        list.appendChild(btn);
+      });
+    }
+
+    // 平面图 & 2.5D 轴测点击拾取
+    const planCanvas = document.getElementById('planCanvas');
+    planCanvas.addEventListener('pointerdown', (e) => {
+      const r = planCanvas.getBoundingClientRect();
+      const px = e.clientX - r.left, py = e.clientY - r.top;
+      let best = null, bestDist = 28;
+      if (viewMode === 'ISO') {
+        const { toIso } = createIsoMapper(r.width, r.height);
+        facilities.forEach(f => {
+          const c = toIso(f.x, f.y + 0.8, f.z);
+          const d = Math.hypot(px - c.px, py - c.py);
+          if (d < bestDist) { bestDist = d; best = f; }
+        });
+      } else {
+        const { toPx } = createMapper(r.width, r.height);
+        facilities.forEach(f => {
+          const c = toPx(f.x, f.z);
+          const d = Math.hypot(px - c.px, py - c.py);
+          if (d < bestDist) { bestDist = d; best = f; }
+        });
+      }
+      if (best) selectFacility(best.id);
+    });
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      const is2D = mode === '2D';
+      document.getElementById('view2DBtn').className = `px-2.5 py-1 rounded border border-[var(--border)] font-medium cursor-pointer ${is2D ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'bg-[var(--secondary)]'}`;
+      document.getElementById('viewIsoBtn').className = `px-2.5 py-1 rounded border border-[var(--border)] font-medium cursor-pointer ${!is2D ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'bg-[var(--secondary)]'}`;
+      drawPlan();
+    }
+    document.getElementById('view2DBtn').addEventListener('click', () => setViewMode('2D'));
+    document.getElementById('viewIsoBtn').addEventListener('click', () => setViewMode('ISO'));
+
+    ['layerZones', 'layerElev', 'layerRoutes', 'layerPhase1'].forEach(id => {
+      document.getElementById(id).addEventListener('change', drawPlan);
+    });
+    document.getElementById('filterSelect').addEventListener('change', renderFacilityList);
+
+    document.getElementById('profNS').addEventListener('click', () => {
+      profileMode = 'NS';
+      document.getElementById('profNS').className = 'prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer font-medium';
+      document.getElementById('profEW').className = 'prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] cursor-pointer font-medium';
+      drawProfile();
+    });
+    document.getElementById('profEW').addEventListener('click', () => {
+      profileMode = 'EW';
+      document.getElementById('profEW').className = 'prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer font-medium';
+      document.getElementById('profNS').className = 'prof-btn px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] cursor-pointer font-medium';
+      drawProfile();
+    });
+
+    function drawAll() {
+      drawPlan();
+      drawProfile();
+    }
+    window.addEventListener('themechange', drawAll);
+    window.addEventListener('resize', drawAll);
+
+    selectFacility('F04');
+    drawAll();
+  </script>
+</body>
+</html>

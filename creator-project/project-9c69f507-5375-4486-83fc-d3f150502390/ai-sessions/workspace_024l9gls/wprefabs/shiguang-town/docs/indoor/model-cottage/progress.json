@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "prefabId": "shiguang-town",
+  "resourceId": "model-cottage",
+  "request": "绘本暖阳风8x6m单层可进入海滨温馨木屋，入口局部Y=0朝+Z，外带木廊台与入户阶，内含人字木地板、暖色石砌壁炉、圆角茶桌与双坐垫茶具、矮书架与彩书、墙面12x12像素太阳画框，真实可穿行门洞与可开合DoorPivot",
+  "budgetSeconds": 1200,
+  "startedAt": 1795334009917,
+  "stageStartedAt": 1795334490029,
+  "completed": [
+    {
+      "stage": "style",
+      "finishedAt": 1795334132487,
+      "elapsedSeconds": 122.57,
+      "note": "Stage 0 design.md 已保存：固化 8x6x4.8m 尺度、入口局部 Y=0 朝 +Z、DoorPivot 与必做室内家具清单"
+    },
+    {
+      "stage": "architecture",
+      "finishedAt": 1795334179232,
+      "elapsedSeconds": 46.745,
+      "note": "Stage 1 主体墙体真实门窗洞口、廊台双阶、分层陶瓦屋顶、烟囱与独立 DoorPivot 源码已保存"
+    },
+    {
+      "stage": "regions",
+      "finishedAt": 1795334180916,
+      "elapsedSeconds": 1.684,
+      "note": "Stage 2 regions.md 已保存：玄关、茶叙、壁炉、西墙阅读与北墙像素画五区留白与通路已定"
+    },
+    {
+      "stage": "furnish",
+      "finishedAt": 1795334431285,
+      "elapsedSeconds": 250.369,
+      "note": "Stage 3 已完成全部室内外陈设、人字木地板纹理、12x12像素太阳画框，已归档并由inspect-model出图验收外观与透窗可见性"
+    },
+    {
+      "stage": "critic",
+      "finishedAt": 1795334490029,
+      "elapsedSeconds": 58.744,
+      "note": "Stage 4 已完成外观复核与交付说明，室内穿行与DoorPivot开合待Runtime首版实测"
+    }
+  ],
+  "revisions": [],
+  "capture": {
+    "sourceFingerprint": "a5e3864a6a6ff0e32e00d9bfbd4ea5e296610b8c2950ca6848a755908678ac5c",
+    "modelFingerprint": "5802250852cd8fd5409cb29e057030b420b504df72ea009c2764387304a8fcc8",
+    "images": [
+      {
+        "file": "wprefabs/shiguang-town/docs/indoor/model-cottage/exterior.png",
+        "fingerprint": "b21b3b00ec5ff96a01ba69f813212941e56cd901d15421ba3b327cb5a80a29db"
+      }
+    ]
+  },
+  "reviewStatus": "ready",
+  "reviewedCaptureFingerprint": "91f3004b3730492071d627277c154f5f08a75f50bd81c02a7b92f2e0b54918f3"
+}

@@ -1,0 +1,4 @@
+[
+  "--config",
+  "{\"action\":\"advance\",\"prefabId\":\"shiguang-town\",\"resourceId\":\"model-cottage\",\"stage\":\"critic\",\"note\":\"Stage 4 已完成外观复核与交付说明，室内穿行与DoorPivot开合待Runtime首版实测\"}"
+]

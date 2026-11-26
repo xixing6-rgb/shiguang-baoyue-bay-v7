@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "7b6011a0b04715899e75a126ff3eb3124746161215a543a73e850189dcfe5cdf",
+  "actor": {
+    "instanceId": "338cbd17-5efc-41b5-a905-70a69bd8bbe0",
+    "projectRoot": "C:\\Users\\29933\\AppData\\Roaming\\AI World Creator\\projects\\project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5",
+    "clientSessionId": "69ff9f78-c84e-4e80-b3e1-87a75fcf5271"
+  },
+  "target": {
+    "workspaceId": "workspace_024l9gls",
+    "prefabId": "shiguang-town"
+  },
+  "intent": "主木屋外观视觉检查",
+  "finished": true,
+  "previews": 0,
+  "executions": {
+    "cottage-ext-1": {
+      "entryId": "inspect-model",
+      "argvHash": "fc47663f02f9e42ffcbc70f1485dfa6f45872a8cad97168fec42bc681da9e295"
+    }
+  },
+  "closing": true
+}

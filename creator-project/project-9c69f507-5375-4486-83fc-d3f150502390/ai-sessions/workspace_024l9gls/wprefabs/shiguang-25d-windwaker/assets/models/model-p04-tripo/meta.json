@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-p04-tripo",
+  "displayName": "导入模型",
+  "summary": "从显式 GLB 来源保留的二进制作者输入；来源没有可恢复的作者元数据。",
+  "nodeMergeBlacklist": [
+    "P04_ChimePivot_1",
+    "P04_ChimePivot_2",
+    "P04_ChimePivot_3",
+    "P04_Post"
+  ]
+}

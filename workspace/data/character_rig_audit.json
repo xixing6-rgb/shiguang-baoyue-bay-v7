@@ -1,0 +1,221 @@
+{
+  "summary": {
+    "totalDesignResidents": 9,
+    "fbxAvailable": 7,
+    "riggedCount": 4,
+    "unriggedCount": 3,
+    "missing3dCount": 2,
+    "riggedIds": [
+      "C01",
+      "C02",
+      "C03",
+      "C05"
+    ],
+    "unriggedIds": [
+      "C04",
+      "C07",
+      "C09"
+    ],
+    "missingIds": [
+      "C06",
+      "C08"
+    ]
+  },
+  "characters": [
+    {
+      "id": "C01",
+      "name": "阿木",
+      "species": "眼镜棕熊",
+      "role": "镇史年谱守护者",
+      "fbxPath": "图片\\模型\\C01-眼镜棕熊·阿木\\C01-眼镜棕熊·阿木.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C01-glasses-bear.glb",
+      "glbBytes": 8467564,
+      "rigged": true,
+      "rigLabel": "已绑骨 (41 骨)",
+      "armatures": 1,
+      "bones": 41,
+      "skinned": true,
+      "vertexGroups": 29,
+      "tris": 10232,
+      "gltfSkins": 1,
+      "hasJointsAttr": true,
+      "images": 1,
+      "unitySize": [
+        0.713,
+        1.55,
+        0.751
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C02",
+      "name": "绵绵",
+      "species": "垂耳白兔",
+      "role": "杂交花圃引路人",
+      "fbxPath": "图片\\模型\\C02-垂耳白兔·绵绵\\C02-垂耳白兔·绵绵.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C02-lop-rabbit.glb",
+      "glbBytes": 6780072,
+      "rigged": true,
+      "rigLabel": "已绑骨 (41 骨)",
+      "armatures": 1,
+      "bones": 41,
+      "skinned": true,
+      "vertexGroups": 30,
+      "tris": 10104,
+      "gltfSkins": 1,
+      "hasJointsAttr": true,
+      "images": 1,
+      "unitySize": [
+        0.627,
+        1.28,
+        0.9
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C03",
+      "name": "阿橘",
+      "species": "面瘫橘猫",
+      "role": "未寄信件收藏家",
+      "fbxPath": "图片\\模型\\C03-面瘫橘猫·阿橘\\C03-面瘫橘猫·阿橘.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C03-deadpan-cat.glb",
+      "glbBytes": 6420712,
+      "rigged": true,
+      "rigLabel": "已绑骨 (41 骨)",
+      "armatures": 1,
+      "bones": 41,
+      "skinned": true,
+      "vertexGroups": 30,
+      "tris": 10140,
+      "gltfSkins": 1,
+      "hasJointsAttr": true,
+      "images": 1,
+      "unitySize": [
+        0.737,
+        1.3,
+        0.813
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C04",
+      "name": "奶包",
+      "species": "吃包柯基",
+      "role": "微光夜市烘焙大厨",
+      "fbxPath": "图片\\模型\\C04-吃包柯基·奶包\\C04-吃包柯基·奶包.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C04-corgi-baker-unrigged.glb",
+      "glbBytes": 6755964,
+      "rigged": false,
+      "rigLabel": "未绑骨 (静态网格)",
+      "armatures": 0,
+      "bones": 0,
+      "skinned": false,
+      "vertexGroups": 0,
+      "tris": 10234,
+      "gltfSkins": 0,
+      "hasJointsAttr": false,
+      "images": 1,
+      "unitySize": [
+        0.834,
+        1.28,
+        1.145
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C05",
+      "name": "墨羽",
+      "species": "悬浮猫头鹰",
+      "role": "昔日夜行星象信使",
+      "fbxPath": "图片\\模型\\C05-悬浮猫头鹰·墨羽\\C05-悬浮猫头鹰·墨羽.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C05-floating-owl.glb",
+      "glbBytes": 5203112,
+      "rigged": true,
+      "rigLabel": "已绑骨 (41 骨)",
+      "armatures": 1,
+      "bones": 41,
+      "skinned": true,
+      "vertexGroups": 27,
+      "tris": 10647,
+      "gltfSkins": 1,
+      "hasJointsAttr": true,
+      "images": 1,
+      "unitySize": [
+        0.651,
+        1.15,
+        0.865
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C07",
+      "name": "团团",
+      "species": "水獭邮差",
+      "role": "迷糊邮差与单车驿站长",
+      "fbxPath": "图片\\模型\\C07-迷糊邮差水獭·团团\\C07-迷糊邮差水獭·团团.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C07-postman-otter-unrigged.glb",
+      "glbBytes": 6571720,
+      "rigged": false,
+      "rigLabel": "未绑骨 (静态网格)",
+      "armatures": 0,
+      "bones": 0,
+      "skinned": false,
+      "vertexGroups": 0,
+      "tris": 10424,
+      "gltfSkins": 0,
+      "hasJointsAttr": false,
+      "images": 1,
+      "unitySize": [
+        0.717,
+        1.3,
+        1.205
+      ],
+      "blenderMinZ": 0.0
+    },
+    {
+      "id": "C09",
+      "name": "绒绒",
+      "species": "社恐小羊",
+      "role": "纸片画师与流行语策划",
+      "fbxPath": "图片\\模型\\C09-纸片画师小羊·绒绒\\C09-纸片画师小羊·绒绒.fbx",
+      "glbPath": "workspace\\assets\\models\\characters\\C09-artist-sheep-unrigged.glb",
+      "glbBytes": 2433316,
+      "rigged": false,
+      "rigLabel": "未绑骨 (静态网格)",
+      "armatures": 0,
+      "bones": 0,
+      "skinned": false,
+      "vertexGroups": 0,
+      "tris": 10935,
+      "gltfSkins": 0,
+      "hasJointsAttr": false,
+      "images": 1,
+      "unitySize": [
+        0.723,
+        1.28,
+        1.075
+      ],
+      "blenderMinZ": 0.0
+    }
+  ],
+  "missing": [
+    {
+      "id": "C06",
+      "name": "阿澈",
+      "species": "草帽狐狸",
+      "role": "退休的白昼号船长",
+      "rigged": false,
+      "status": "missing_3d_fbx",
+      "note": "仅概念特写图 C06-strawhat-fox.png，缺少 3D FBX/GLB 源文件"
+    },
+    {
+      "id": "C08",
+      "name": "咔哒",
+      "species": "木工小浣熊",
+      "role": "直角强迫症首席木匠",
+      "rigged": false,
+      "status": "missing_3d_fbx",
+      "note": "仅概念特写图 C08-carpenter-raccoon.png，缺少 3D FBX/GLB 源文件"
+    }
+  ]
+}

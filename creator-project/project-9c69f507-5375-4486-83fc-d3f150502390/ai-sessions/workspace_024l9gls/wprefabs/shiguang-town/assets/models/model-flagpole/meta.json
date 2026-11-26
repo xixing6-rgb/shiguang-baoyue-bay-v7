@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-flagpole",
+  "displayName": "像素庭院旗杆",
+  "summary": "1.6x1.6x4.2m木质旗杆与可轻摆FlagClothPivot 12x12像素小鱼彩旗。",
+  "nodeMergeBlacklist": [
+    "FlagpoleRoot/FlagClothPivot"
+  ]
+}

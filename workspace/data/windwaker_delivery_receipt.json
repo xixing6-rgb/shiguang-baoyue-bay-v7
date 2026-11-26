@@ -1,0 +1,198 @@
+{
+  "version": "v7",
+  "wprefabUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/dqmwp0c48in0gkmb.wprefab",
+  "lastRootId": "-283711215",
+  "sceneImport": {
+    "ok": true,
+    "command": "scene",
+    "data": {
+      "operationId": "024b82466d10203d8f33dad5a58dcdd36aa25a7f73fc41b8db561844d4eb8567",
+      "status": "committed",
+      "rootIDs": [
+        "-283711215"
+      ],
+      "requestId": "shiguang-25d-v7-import"
+    }
+  },
+  "sceneSave": {
+    "ok": true,
+    "command": "scene",
+    "data": {
+      "operationId": "4fb8a44193a1b126ce536c31b6e928bfeb87b64c237d77398553e01444de70e9",
+      "status": "committed",
+      "hasUnsavedChanges": false,
+      "requestId": "shiguang-25d-v7-save"
+    }
+  },
+  "replacedSceneRoot": {
+    "ok": true,
+    "command": "scene",
+    "data": {
+      "operationId": "122aa7ff259c4d2df37ce604aa077a085dc16b71a757d7594b878be41ba5ce05",
+      "status": "committed",
+      "removedRootIDs": [
+        "-1808327000"
+      ],
+      "requestId": "shiguang-25d-v7-replace-v6"
+    }
+  },
+  "workspaceId": "workspace_024l9gls",
+  "prefabId": "shiguang-25d-windwaker",
+  "resourceAuthoringPrefabId": "shiguang-v7-resources",
+  "runtimeId": "ccdbd06b-6844-43ee-8979-1b11f052321f",
+  "export": {
+    "path": "workspace/exports/shiguang-25d-windwaker-v7.wprefab",
+    "sha256": "65f3466fb1744251e12744cb056894e8eb295ba78dc8a2dc5335fabf231ded8a",
+    "bytes": 3005780
+  },
+  "verification": {
+    "layoutObjects": 61,
+    "minimumPairClearanceMeters": 0.73,
+    "layoutOverlaps": 0,
+    "roadViolations": 0,
+    "prefabValidationItems": 0,
+    "prefabValidationWarnings": 0,
+    "camera": {
+      "input": {
+        "status": "completed",
+        "executedActionCount": 7,
+        "durationMs": 227,
+        "releasedButtons": [
+          "right"
+        ]
+      },
+      "before": {
+        "mode": "native-free",
+        "pitch": 16.5,
+        "yaw": 108.61602020264
+      },
+      "after": {
+        "mode": "native-free",
+        "pitch": 70.000007629395,
+        "yaw": 325.21603393555
+      }
+    },
+    "dialogueNpcIds": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C07",
+      "C09"
+    ],
+    "riggedNpcIds": [
+      "C01",
+      "C02",
+      "C03",
+      "C05"
+    ],
+    "unriggedMarkers": [
+      "UnriggedMarker_C04",
+      "UnriggedMarker_C07",
+      "UnriggedMarker_C09"
+    ],
+    "charactersMissing3d": [
+      "C06",
+      "C08"
+    ],
+    "uiOrientation": "landscape_draft",
+    "farmPlotsDetected": 8,
+    "seedSwitchCycle": [
+      "radish",
+      "berry",
+      "sunflower",
+      "radish"
+    ],
+    "visibleVoxelRenderers": 0,
+    "distanceDrivenFootsteps": false,
+    "footstepEvent": "_G.SHIGUANG_25D.NotifyFootstep",
+    "footsteps": {
+      "grass": {
+        "voxel": "grass",
+        "movementOnlyStepDelta": 0,
+        "footstepEventDelta": 1,
+        "rippleDelta": 0
+      },
+      "road": {
+        "voxel": "road",
+        "movementOnlyStepDelta": 0,
+        "footstepEventDelta": 1,
+        "rippleDelta": 0
+      },
+      "sand": {
+        "voxel": "sand",
+        "movementOnlyStepDelta": 0,
+        "footstepEventDelta": 1,
+        "rippleDelta": 0
+      },
+      "water": {
+        "voxel": "water",
+        "movementOnlyStepDelta": 0,
+        "footstepEventDelta": 1,
+        "rippleDelta": 1,
+        "lagoonYBefore": -0.013542545959353,
+        "lagoonYAfter": 0.02861837670207
+      }
+    },
+    "tempHookResidues": [],
+    "startupUnityNullReferenceExceptions": 10
+  },
+  "screenshots": [
+    "workspace/debug/v7-free-camera.png",
+    "workspace/debug/v7-free-camera-rotated.png",
+    "workspace/debug/v7-dialogue-amu.png",
+    "workspace/debug/v7-dialogue-tuantuan.png"
+  ],
+  "rollbackV6": {
+    "previousRootId": "-1808327000",
+    "saveRequestId": "shiguang-25d-v6-baseline-save",
+    "localPrefab": "workspace/exports/shiguang-25d-windwaker-v6.wprefab",
+    "sceneDataBackup": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\shiguang-v6-baseline-scene.data"
+  },
+  "previousV41Delivery": {
+    "wprefabUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/y7gbk41sh5cgq9ti.wprefab",
+    "lastRootId": "-167362314",
+    "sceneImport": {
+      "ok": true,
+      "command": "scene",
+      "data": {
+        "operationId": "1372bae5e1fd45f934e7f608568d9de9bd5c12de9a583efc7a15f1bbcc62e1b0",
+        "status": "committed",
+        "rootIDs": [
+          "-167362314"
+        ]
+      }
+    },
+    "sceneSave": {
+      "ok": true,
+      "command": "scene",
+      "data": {
+        "operationId": "142766786d255e331b3b42de8c07ed0809694da92fdb11e4c4c69fa663849d53",
+        "status": "committed",
+        "hasUnsavedChanges": false,
+        "requestId": "shiguang-25d-v41-save"
+      }
+    }
+  },
+  "supersededV5SceneUpdate": {
+    "wprefabUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/qzof45wxtf0okly6.wprefab",
+    "archivedResources": 20,
+    "authoringInstances": 25,
+    "instanceId": "993d993d-fe6a-44b0-87f9-9c6d2f95ef69",
+    "importRequestId": "shiguang-25d-v5-import",
+    "sceneImportLastResponse": {
+      "ok": false,
+      "command": "scene",
+      "error": {
+        "code": "SESSION_CLOSED",
+        "message": "客户端会话已暂停或断开",
+        "hint": "保留 --request-id \"shiguang-25d-v5-import\" 及相同目标、参数以恢复原回执，不要换新请求自动重试。",
+        "details": {
+          "requestId": "shiguang-25d-v5-import",
+          "instanceId": "993d993d-fe6a-44b0-87f9-9c6d2f95ef69"
+        }
+      }
+    }
+  }
+}

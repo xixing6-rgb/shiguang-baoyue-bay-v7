@@ -1,0 +1,36 @@
+{
+  "mainLightPitch": 26,
+  "mainLightYaw": -62,
+  "mainLightColor": "#ffc68a",
+  "mainLightStrength": 1.35,
+  "shadowStrength": 0.58,
+  "flareEnable": true,
+  "flareAsset": 3,
+  "skyboxTextureUri": {
+    "type": "cubeimage",
+    "uri": "hamlet-ugc/aigc_editor/MarsWorld_sky01_Sunset01.tga"
+  },
+  "reflectionTextureUri": {
+    "type": "cubeimage",
+    "uri": "hamlet-ugc/aigc_editor/MarsWorld_sky01_Sunset01.tga"
+  },
+  "characterAmbientEnable": true,
+  "characterAmbient": "#f2c5a8",
+  "enableCharacterLight": true,
+  "characterLightColor": "#ffe2be",
+  "characterStrenght": 3.8,
+  "fogEnable": true,
+  "fogColor": "#f5c79e",
+  "startFog": 55,
+  "endFog": 260,
+  "enablePostProcess": true,
+  "bloomEnabled": true,
+  "bloomColor": "#ffdfb0",
+  "bloomThreshold": 1.35,
+  "bloomIntensity": 0.65,
+  "bloomScatter": 0.85,
+  "vignette": true,
+  "vignetteColor": "#5c3d46",
+  "vignetteAmount": 0.14,
+  "vignetteSoftness": 0.48
+}

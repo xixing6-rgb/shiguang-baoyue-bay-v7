@@ -1,0 +1,4 @@
+[
+  "--config",
+  "{\"action\":\"start\",\"prefabId\":\"shiguang-town\",\"resourceId\":\"model-cottage\",\"request\":\"绘本暖阳风8x6m单层可进入海滨温馨木屋，入口局部Y=0朝+Z，外带木廊台与入户阶，内含人字木地板、暖色石砌壁炉、圆角茶桌与双坐垫茶具、矮书架与彩书、墙面12x12像素太阳画框，真实可穿行门洞与可开合DoorPivot\",\"budgetSeconds\":1200}"
+]

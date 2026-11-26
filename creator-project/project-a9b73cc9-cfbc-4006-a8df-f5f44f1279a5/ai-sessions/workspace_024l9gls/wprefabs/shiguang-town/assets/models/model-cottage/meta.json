@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 4,
+  "resourceId": "model-cottage",
+  "displayName": "时光小筑主木屋",
+  "summary": "8x6m绘本暖阳风格化可进入海滨木屋，含真实门窗洞口、廊台台阶、人字地板、壁炉茶桌书架与像素挂画。",
+  "nodeMergeBlacklist": [
+    "CottageRoot/DoorPivot"
+  ]
+}

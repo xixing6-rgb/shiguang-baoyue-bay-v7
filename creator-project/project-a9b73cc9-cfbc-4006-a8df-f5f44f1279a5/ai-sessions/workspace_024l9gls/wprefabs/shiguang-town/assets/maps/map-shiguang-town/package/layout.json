@@ -1,0 +1,1437 @@
+{
+  "schemaVersion": 2,
+  "mapScale": "4x-crescent-bay",
+  "worldMapBounds": [
+    136,
+    122
+  ],
+  "coordinateSystem": "unity-y-up-meter",
+  "space": "map-local",
+  "slots": [
+    {
+      "id": "arrival-dock",
+      "size": [
+        6.0,
+        3.1,
+        5.0
+      ]
+    },
+    {
+      "id": "bakery-kiln-stall",
+      "size": [
+        12.0,
+        4.2,
+        9.5
+      ]
+    },
+    {
+      "id": "beach-discovery",
+      "size": [
+        11.4,
+        0.8,
+        4.6
+      ]
+    },
+    {
+      "id": "cafe-kiosk",
+      "size": [
+        5.0,
+        3.5,
+        4.0
+      ]
+    },
+    {
+      "id": "camphor-bell-pavilion",
+      "size": [
+        12.0,
+        12.5,
+        10.0
+      ]
+    },
+    {
+      "id": "chalkboard",
+      "size": [
+        2,
+        1.8,
+        1.2
+      ]
+    },
+    {
+      "id": "cliff-cottage",
+      "size": [
+        5.5,
+        4.2,
+        4.5
+      ]
+    },
+    {
+      "id": "community-pavilion",
+      "size": [
+        5.0,
+        3.2,
+        5.0
+      ]
+    },
+    {
+      "id": "cottage",
+      "size": [
+        8,
+        4.8,
+        6
+      ]
+    },
+    {
+      "id": "creek-arch-bridge",
+      "size": [
+        2.8,
+        2.0,
+        5.6
+      ]
+    },
+    {
+      "id": "daylight-lightship",
+      "size": [
+        11.0,
+        9.5,
+        5.0
+      ]
+    },
+    {
+      "id": "driftwood-campfire",
+      "size": [
+        6.0,
+        1.4,
+        5.0
+      ]
+    },
+    {
+      "id": "echo-amphitheater-arch",
+      "size": [
+        10.0,
+        6.5,
+        9.0
+      ]
+    },
+    {
+      "id": "ferry-dock-rowboat",
+      "size": [
+        5.0,
+        2.2,
+        4.5
+      ]
+    },
+    {
+      "id": "flagpole",
+      "size": [
+        1.6,
+        4.2,
+        1.6
+      ]
+    },
+    {
+      "id": "flowerbed",
+      "size": [
+        6,
+        1,
+        4
+      ]
+    },
+    {
+      "id": "forest-watermill",
+      "size": [
+        7.0,
+        4.8,
+        6.0
+      ]
+    },
+    {
+      "id": "fountain",
+      "size": [
+        6,
+        2.2,
+        6
+      ]
+    },
+    {
+      "id": "fruit-orchard",
+      "size": [
+        13.4,
+        3.8,
+        5.4
+      ]
+    },
+    {
+      "id": "kite-terrace-bench",
+      "size": [
+        9.0,
+        2.8,
+        7.0
+      ]
+    },
+    {
+      "id": "mailbox-gallery",
+      "size": [
+        6.0,
+        3.2,
+        4.0
+      ]
+    },
+    {
+      "id": "memory-corner",
+      "size": [
+        5.8,
+        2.0,
+        5.2
+      ]
+    },
+    {
+      "id": "memory-greenhouse",
+      "size": [
+        12.0,
+        6.2,
+        9.0
+      ]
+    },
+    {
+      "id": "mini-book-booth",
+      "size": [
+        2.5,
+        2.6,
+        2.0
+      ]
+    },
+    {
+      "id": "old-boatyard",
+      "size": [
+        10.0,
+        5.0,
+        8.0
+      ]
+    },
+    {
+      "id": "pier",
+      "size": [
+        4,
+        1.4,
+        8
+      ]
+    },
+    {
+      "id": "plaza-benches",
+      "size": [
+        5.0,
+        1.2,
+        2.5
+      ]
+    },
+    {
+      "id": "postal-bike-stop",
+      "size": [
+        2.4,
+        2.3,
+        1.2
+      ]
+    },
+    {
+      "id": "resident-amber",
+      "size": [
+        5.0,
+        4.5,
+        4.5
+      ]
+    },
+    {
+      "id": "resident-blue",
+      "size": [
+        5.0,
+        3.8,
+        4.5
+      ]
+    },
+    {
+      "id": "resident-sage",
+      "size": [
+        5.0,
+        4.5,
+        4.5
+      ]
+    },
+    {
+      "id": "sea-arch-bridge",
+      "size": [
+        2.8,
+        3.0,
+        16.5
+      ]
+    },
+    {
+      "id": "studio-cottage",
+      "size": [
+        5.5,
+        4.2,
+        4.5
+      ]
+    },
+    {
+      "id": "sunset-overlook",
+      "size": [
+        5.3,
+        3.6,
+        3.9
+      ]
+    },
+    {
+      "id": "terrace",
+      "size": [
+        5,
+        1.4,
+        4
+      ]
+    },
+    {
+      "id": "tidal-stepping-stones",
+      "size": [
+        2.6,
+        1.2,
+        17.8
+      ]
+    },
+    {
+      "id": "tidepool-rocks",
+      "size": [
+        11.0,
+        1.5,
+        8.5
+      ]
+    },
+    {
+      "id": "timber-slide",
+      "size": [
+        2.4,
+        3.8,
+        45.0
+      ]
+    },
+    {
+      "id": "tree-hollow-postbox",
+      "size": [
+        5.0,
+        3.5,
+        4.5
+      ]
+    },
+    {
+      "id": "vending",
+      "size": [
+        2.5,
+        2.4,
+        2.0
+      ]
+    },
+    {
+      "id": "west-cape-lighthouse",
+      "size": [
+        7.0,
+        11.5,
+        7.0
+      ]
+    },
+    {
+      "id": "windchime-corridor",
+      "size": [
+        6.4,
+        3.8,
+        3.8
+      ]
+    },
+    {
+      "id": "windchime-post-office",
+      "size": [
+        9.0,
+        5.5,
+        7.0
+      ]
+    },
+    {
+      "id": "windmill",
+      "size": [
+        5,
+        8.5,
+        5
+      ]
+    }
+  ],
+  "instances": [
+    {
+      "id": "model-resident-amber",
+      "slot": "resident-amber",
+      "facility": "F13a",
+      "position": [
+        -24,
+        1.8,
+        4
+      ],
+      "rotation": [
+        0,
+        0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-resident-sage",
+      "slot": "resident-sage",
+      "facility": "F13b",
+      "position": [
+        -23,
+        1.8,
+        11
+      ],
+      "rotation": [
+        0,
+        0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-resident-blue",
+      "slot": "resident-blue",
+      "facility": "F13c",
+      "position": [
+        24,
+        1.8,
+        8
+      ],
+      "rotation": [
+        0,
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-cafe-kiosk",
+      "slot": "cafe-kiosk",
+      "facility": "F12",
+      "position": [
+        23,
+        1.8,
+        -4
+      ],
+      "rotation": [
+        0,
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-arrival-dock",
+      "slot": "arrival-dock",
+      "facility": "F01",
+      "position": [
+        -6,
+        0.2,
+        -22
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "fishing-pier",
+      "slot": "pier",
+      "facility": "F02",
+      "position": [
+        10,
+        0.2,
+        -23
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-beach-discovery",
+      "slot": "beach-discovery",
+      "facility": "F03",
+      "position": [
+        -18,
+        0.2,
+        -19
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "cottage-main",
+      "slot": "cottage",
+      "facility": "F04",
+      "position": [
+        -10,
+        1.8,
+        -2
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "coffee-terrace",
+      "slot": "terrace",
+      "facility": "F05",
+      "position": [
+        -2,
+        1.8,
+        -7
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "flower-bed",
+      "slot": "flowerbed",
+      "facility": "F06",
+      "position": [
+        5,
+        1.8,
+        -8
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "pixel-flag",
+      "slot": "flagpole",
+      "facility": "F07",
+      "position": [
+        1,
+        1.8,
+        -11
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "chalkboard-main",
+      "slot": "chalkboard",
+      "facility": "F08",
+      "position": [
+        -6,
+        1.8,
+        -10
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wish-fountain",
+      "slot": "fountain",
+      "facility": "F09",
+      "position": [
+        14,
+        1.8,
+        -1
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-vending",
+      "slot": "vending",
+      "facility": "F10",
+      "position": [
+        19,
+        1.8,
+        5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-plaza-benches",
+      "slot": "plaza-benches",
+      "facility": "F11",
+      "position": [
+        11,
+        1.8,
+        5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-community-pavilion",
+      "slot": "community-pavilion",
+      "facility": "F14",
+      "position": [
+        -22,
+        1.8,
+        -6
+      ],
+      "rotation": [
+        0,
+        0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "windmill-north",
+      "slot": "windmill",
+      "facility": "F15",
+      "position": [
+        -12,
+        3.6,
+        20
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-sunset-overlook",
+      "slot": "sunset-overlook",
+      "facility": "F16",
+      "position": [
+        -2,
+        3.6,
+        18
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-fruit-orchard",
+      "slot": "fruit-orchard",
+      "facility": "F17",
+      "position": [
+        14,
+        3.6,
+        19
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "model-memory-corner",
+      "slot": "memory-corner",
+      "facility": "F18",
+      "position": [
+        23,
+        3.6,
+        17
+      ],
+      "rotation": [
+        0,
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F19-windchime-post-office",
+      "slot": "windchime-post-office",
+      "facility": "F19",
+      "position": [
+        -44,
+        1.8,
+        4
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F20-mailbox-gallery",
+      "slot": "mailbox-gallery",
+      "facility": "F20",
+      "position": [
+        -38,
+        1.8,
+        -8
+      ],
+      "rotation": [
+        0,
+        0.99144486,
+        0,
+        0.13052619
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F21-windchime-corridor",
+      "slot": "windchime-corridor",
+      "facility": "F21",
+      "position": [
+        -49.5,
+        3.6,
+        -14
+      ],
+      "rotation": [
+        0,
+        0.98480775,
+        0,
+        0.17364818
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F22-west-cape-lighthouse",
+      "slot": "west-cape-lighthouse",
+      "facility": "F22",
+      "position": [
+        -56,
+        5.4,
+        -24
+      ],
+      "rotation": [
+        0,
+        0.95371695,
+        0,
+        0.3007058
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F23a-cliff-cottage",
+      "slot": "cliff-cottage",
+      "facility": "F23a",
+      "position": [
+        -48,
+        3.6,
+        20
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F23b-cliff-cottage",
+      "slot": "cliff-cottage",
+      "facility": "F23b",
+      "position": [
+        -58,
+        3.6,
+        14
+      ],
+      "rotation": [
+        0,
+        0.95371695,
+        0,
+        0.3007058
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F24-driftwood-campfire",
+      "slot": "driftwood-campfire",
+      "facility": "F24",
+      "position": [
+        -42,
+        0.2,
+        -30
+      ],
+      "rotation": [
+        0,
+        0.92387953,
+        0,
+        0.38268343
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F25-bakery-kiln-stall",
+      "slot": "bakery-kiln-stall",
+      "facility": "F25",
+      "position": [
+        44,
+        1.8,
+        -4
+      ],
+      "rotation": [
+        0,
+        -0.96592583,
+        0,
+        0.25881905
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F26-old-boatyard",
+      "slot": "old-boatyard",
+      "facility": "F26",
+      "position": [
+        54,
+        1.0,
+        -18
+      ],
+      "rotation": [
+        0,
+        -0.8660254,
+        0,
+        0.5
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F27-daylight-lightship",
+      "slot": "daylight-lightship",
+      "facility": "F27",
+      "position": [
+        52,
+        0.2,
+        -32
+      ],
+      "rotation": [
+        0,
+        -0.84339145,
+        0,
+        0.53729961
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F28-tidepool-rocks",
+      "slot": "tidepool-rocks",
+      "facility": "F28",
+      "position": [
+        36,
+        -0.15,
+        -26
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F29-kite-terrace-bench",
+      "slot": "kite-terrace-bench",
+      "facility": "F29",
+      "position": [
+        48,
+        3.6,
+        14
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F30a-studio-cottage",
+      "slot": "studio-cottage",
+      "facility": "F30a",
+      "position": [
+        42,
+        3.6,
+        24
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F30b-studio-cottage",
+      "slot": "studio-cottage",
+      "facility": "F30b",
+      "position": [
+        56,
+        1.8,
+        4
+      ],
+      "rotation": [
+        0,
+        -0.70710678,
+        0,
+        0.70710678
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F31-memory-greenhouse",
+      "slot": "memory-greenhouse",
+      "facility": "F31",
+      "position": [
+        -16,
+        3.6,
+        42
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F32a-creek-arch-bridge",
+      "slot": "creek-arch-bridge",
+      "facility": "F32a",
+      "position": [
+        -12,
+        3.6,
+        34.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F32b-creek-arch-bridge",
+      "slot": "creek-arch-bridge",
+      "facility": "F32b",
+      "position": [
+        18,
+        3.6,
+        34.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F33-forest-watermill",
+      "slot": "forest-watermill",
+      "facility": "F33",
+      "position": [
+        26,
+        3.6,
+        42
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F34-camphor-bell-pavilion",
+      "slot": "camphor-bell-pavilion",
+      "facility": "F34",
+      "position": [
+        0,
+        5.4,
+        58
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F35W-timber-slide",
+      "slot": "timber-slide",
+      "facility": "F35W",
+      "position": [
+        -26.5,
+        3.6,
+        35
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F35E-timber-slide",
+      "slot": "timber-slide",
+      "facility": "F35E",
+      "position": [
+        27,
+        3.6,
+        35.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F36-tree-hollow-postbox",
+      "slot": "tree-hollow-postbox",
+      "facility": "F36",
+      "position": [
+        -36,
+        4.2,
+        46
+      ],
+      "rotation": [
+        0,
+        0.96592583,
+        0,
+        0.25881905
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F37-sea-arch-bridge",
+      "slot": "sea-arch-bridge",
+      "facility": "F37",
+      "position": [
+        -28,
+        0.2,
+        -35
+      ],
+      "rotation": [
+        0,
+        0.76939956,
+        0,
+        0.63876782
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F38-tidal-stepping-stones",
+      "slot": "tidal-stepping-stones",
+      "facility": "F38",
+      "position": [
+        22,
+        0.2,
+        -36
+      ],
+      "rotation": [
+        0,
+        -0.80073137,
+        0,
+        0.5990236
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F39-echo-amphitheater-arch",
+      "slot": "echo-amphitheater-arch",
+      "facility": "F39",
+      "position": [
+        -2,
+        1.4,
+        -45
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F40-ferry-dock-rowboat",
+      "slot": "ferry-dock-rowboat",
+      "facility": "F40",
+      "position": [
+        -5,
+        0.2,
+        -36
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F41-mini-book-booth",
+      "slot": "mini-book-booth",
+      "facility": "F41",
+      "position": [
+        10,
+        0.2,
+        -47
+      ],
+      "rotation": [
+        0,
+        -0.21643961,
+        0,
+        0.97629601
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F42a-postal-bike-stop",
+      "slot": "postal-bike-stop",
+      "facility": "F42a",
+      "position": [
+        6,
+        1.8,
+        4.5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F42b-postal-bike-stop",
+      "slot": "postal-bike-stop",
+      "facility": "F42b",
+      "position": [
+        -34,
+        1.8,
+        -3.5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F42c-postal-bike-stop",
+      "slot": "postal-bike-stop",
+      "facility": "F42c",
+      "position": [
+        40,
+        1.8,
+        5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "F42d-postal-bike-stop",
+      "slot": "postal-bike-stop",
+      "facility": "F42d",
+      "position": [
+        -12,
+        3.6,
+        31.5
+      ],
+      "rotation": [
+        0,
+        -1,
+        0,
+        6.123233995736766e-17
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

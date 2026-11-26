@@ -1,0 +1,15 @@
+[
+  {"facility": "F13", "id": "model-resident-amber", "name": "琥珀屋", "position": [-24, 1.8, 4], "yaw": 90},
+  {"facility": "F13", "id": "model-resident-sage", "name": "鼠尾草屋", "position": [-23, 1.8, 11], "yaw": 90},
+  {"facility": "F13", "id": "model-resident-blue", "name": "海风屋", "position": [24, 1.8, 8], "yaw": -90},
+  {"facility": "F12", "id": "model-cafe-kiosk", "name": "海风咖啡亭", "position": [23, 1.8, -4], "yaw": -90},
+  {"facility": "F01", "id": "model-arrival-dock", "name": "登岛码头", "position": [-6, 0.2, -22], "yaw": 0},
+  {"facility": "F14", "id": "model-community-pavilion", "name": "社区秋千亭", "position": [-22, 1.8, -6], "yaw": 90},
+  {"facility": "F16", "id": "model-sunset-overlook", "name": "日落观景亭", "position": [-2, 3.6, 18], "yaw": 180},
+  {"facility": "F03", "id": "model-beach-discovery", "name": "漂流瓶拾贝带", "position": [-18, 0.2, -19], "yaw": 0, "visualOnly": true},
+  {"facility": "F10", "id": "model-vending", "name": "复古自动售货机", "position": [19, 1.8, 5], "yaw": 180},
+  {"facility": "F11", "id": "model-plaza-benches", "name": "广场长椅群", "position": [11, 1.8, 5], "yaw": 180},
+  {"facility": "F17", "id": "model-fruit-orchard", "name": "三果实秘境果林", "position": [14, 3.6, 19], "yaw": 0},
+  {"facility": "F18", "id": "model-memory-corner", "name": "纸片宠物打卡坪与时光石", "position": [23, 3.6, 17], "yaw": -90},
+  {"id": "model-town-promenade", "name": "滨海街巷与高台环线", "position": [0, 0, 0], "yaw": 0, "visualOnly": true}
+]

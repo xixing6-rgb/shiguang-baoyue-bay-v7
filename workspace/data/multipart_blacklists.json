@@ -1,0 +1,49 @@
+{
+  "model-f15-tripo": [
+    "F15_BladesPivot",
+    "F15_Tower"
+  ],
+  "model-f14-tripo": [
+    "F14_Pergola",
+    "F14_SwingPivot"
+  ],
+  "model-f17-tripo": [
+    "F17_Fruit_1",
+    "F17_Fruit_2",
+    "F17_Fruit_3",
+    "F17_Tree"
+  ],
+  "model-f06-tripo": [
+    "F06_Planter",
+    "F06_Slot_1",
+    "F06_Slot_2",
+    "F06_Slot_3",
+    "F06_Slot_4",
+    "F06_Slot_5",
+    "F06_Slot_6",
+    "F06_Slot_7",
+    "F06_Slot_8",
+    "F06_Slot_9",
+    "F06_Slot_10",
+    "F06_Slot_11",
+    "F06_Slot_12"
+  ],
+  "model-f07-tripo": [
+    "F07_Pole",
+    "FlagClothPivot"
+  ],
+  "model-f16-tripo": [
+    "F16_Gazebo",
+    "F16_TelescopePivot"
+  ],
+  "model-p04-tripo": [
+    "P04_ChimePivot_1",
+    "P04_ChimePivot_2",
+    "P04_ChimePivot_3",
+    "P04_Post"
+  ],
+  "model-f42-tripo": [
+    "F42_Bicycle",
+    "F42_Signpost"
+  ]
+}

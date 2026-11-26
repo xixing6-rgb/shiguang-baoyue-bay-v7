@@ -1,0 +1,5 @@
+[
+  "--model-path",
+  "wprefabs/shiguang-town/assets/models/model-cottage/package/model.glb",
+  "--render"
+]

@@ -1,0 +1,4 @@
+[
+  "--config",
+  "{\"action\":\"advance\",\"prefabId\":\"shiguang-town\",\"resourceId\":\"model-cottage\",\"stage\":\"architecture\",\"note\":\"Stage 1 主体墙体真实门窗洞口、廊台双阶、分层陶瓦屋顶、烟囱与独立 DoorPivot 源码已保存\"}"
+]

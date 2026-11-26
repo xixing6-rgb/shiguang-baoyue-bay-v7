@@ -1,0 +1,198 @@
+{
+  "modelPath": "wprefabs/shiguang-town/assets/models/model-cottage/package/model.glb",
+  "sourceSha256": "5802250852cd8fd5409cb29e057030b420b504df72ea009c2764387304a8fcc8",
+  "nodeNames": [
+    {
+      "nodeIndex": 0,
+      "name": "CottageRoot"
+    },
+    {
+      "nodeIndex": 1,
+      "name": "FoundationAndPorch"
+    },
+    {
+      "nodeIndex": 2,
+      "name": "WallShell"
+    },
+    {
+      "nodeIndex": 3,
+      "name": "WindowSouthLeft"
+    },
+    {
+      "nodeIndex": 4,
+      "name": "WindowSouthRight"
+    },
+    {
+      "nodeIndex": 5,
+      "name": "WindowWest"
+    },
+    {
+      "nodeIndex": 6,
+      "name": "WindowEast"
+    },
+    {
+      "nodeIndex": 7,
+      "name": "DoorPivot"
+    },
+    {
+      "nodeIndex": 8,
+      "name": "DoorLeafMain"
+    },
+    {
+      "nodeIndex": 9,
+      "name": "DoorPanelLower"
+    },
+    {
+      "nodeIndex": 10,
+      "name": "DoorUpperFrame"
+    },
+    {
+      "nodeIndex": 11,
+      "name": "DoorGlass"
+    },
+    {
+      "nodeIndex": 12,
+      "name": "DoorKnobOuter"
+    },
+    {
+      "nodeIndex": 13,
+      "name": "DoorKnobInner"
+    },
+    {
+      "nodeIndex": 14,
+      "name": "RoofAndChimney"
+    },
+    {
+      "nodeIndex": 15,
+      "name": "RoofSlopeWest"
+    },
+    {
+      "nodeIndex": 16,
+      "name": "RoofSlopeEast"
+    },
+    {
+      "nodeIndex": 17,
+      "name": "TeaTableGroup"
+    },
+    {
+      "nodeIndex": 18,
+      "name": "FireplaceGroup"
+    },
+    {
+      "nodeIndex": 19,
+      "name": "BookshelfAndArt"
+    },
+    {
+      "nodeIndex": 20,
+      "name": "WestBookshelf"
+    },
+    {
+      "nodeIndex": 21,
+      "name": "PorchProps"
+    },
+    {
+      "nodeIndex": 22,
+      "name": "__optimized_merged_material_0"
+    },
+    {
+      "nodeIndex": 23,
+      "name": "__optimized_merged_material_1"
+    },
+    {
+      "nodeIndex": 24,
+      "name": "__optimized_merged_material_2"
+    },
+    {
+      "nodeIndex": 25,
+      "name": "__optimized_merged_material_3"
+    },
+    {
+      "nodeIndex": 26,
+      "name": "__optimized_merged_material_4"
+    },
+    {
+      "nodeIndex": 27,
+      "name": "__optimized_merged_material_5"
+    },
+    {
+      "nodeIndex": 28,
+      "name": "__optimized_merged_material_6"
+    },
+    {
+      "nodeIndex": 29,
+      "name": "__optimized_merged_material_9"
+    },
+    {
+      "nodeIndex": 30,
+      "name": "__optimized_merged_material_10"
+    },
+    {
+      "nodeIndex": 31,
+      "name": "__optimized_merged_material_7"
+    },
+    {
+      "nodeIndex": 32,
+      "name": "__optimized_merged_material_11"
+    },
+    {
+      "nodeIndex": 33,
+      "name": "__optimized_merged_material_12"
+    },
+    {
+      "nodeIndex": 34,
+      "name": "__optimized_merged_material_13"
+    },
+    {
+      "nodeIndex": 35,
+      "name": "__optimized_merged_material_14"
+    },
+    {
+      "nodeIndex": 36,
+      "name": "__optimized_merged_material_15"
+    },
+    {
+      "nodeIndex": 37,
+      "name": "__optimized_merged_material_16"
+    },
+    {
+      "nodeIndex": 38,
+      "name": "__optimized_merged_material_17"
+    },
+    {
+      "nodeIndex": 39,
+      "name": "__optimized_merged_material_18"
+    },
+    {
+      "nodeIndex": 40,
+      "name": "__optimized_merged_material_19"
+    }
+  ],
+  "rigging": {
+    "status": "unrigged",
+    "skinCount": 0,
+    "jointCount": 0,
+    "activeSkinCount": 0,
+    "issues": []
+  },
+  "sampledSha256": "5802250852cd8fd5409cb29e057030b420b504df72ea009c2764387304a8fcc8",
+  "animations": [],
+  "warnings": [],
+  "views": [
+    "+Z",
+    "+X",
+    "-Z"
+  ],
+  "renderOptions": {
+    "views": [
+      "+Z",
+      "+X",
+      "-Z"
+    ]
+  },
+  "framing": "Source pose and requested samples share mesh bounds; camera is fixed per view.",
+  "frames": [
+    {
+      "mesh": ".animation-inspections/check-ulaeAa/0-mesh.png"
+    }
+  ]
+}

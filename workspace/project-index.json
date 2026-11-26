@@ -1,0 +1,1054 @@
+{
+  "schemaVersion": 1,
+  "initializedAt": "2026-11-22T12:55:00+08:00",
+  "updatedAt": "2026-11-23T18:50:00+08:00",
+  "localRoot": "C:\\Users\\Administrator\\Desktop\\抖音",
+  "cliVersion": "1.0.105",
+  "tools": {
+    "blenderPath": "C:\\Program Files\\Blender Foundation\\Blender 5.3\\blender.exe",
+    "blenderVersion": "5.3.0"
+  },
+  "editorProject": {
+    "projectName": "新世界项目",
+    "projectDirName": "project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5",
+    "projectRoot": "C:\\Users\\29933\\AppData\\Roaming\\AI World Creator\\projects\\project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5",
+    "worldId": "12054206254850",
+    "worldType": "avatar",
+    "cover": "tos-cn-i-c2ox06qgwk/aigc_editor/blank.png"
+  },
+  "instance": {
+    "instanceId": "awc-ecccd176-a180-4219-827f-8076ceb13b5f",
+    "mode": "foreground",
+    "reusedUserInstance": false,
+    "stopOnCleanup": false
+  },
+  "authoring": {
+    "workspaceId": "workspace_024l9gls",
+    "authorWorkspaceRoot": "C:\\Users\\29933\\AppData\\Roaming\\AI World Creator\\projects\\project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5\\ai-sessions\\workspace_024l9gls",
+    "prefabs": [
+      {
+        "prefabId": "shiguang-town",
+        "displayName": "时光小筑海滨小镇",
+        "prefabRoot": "C:\\Users\\29933\\AppData\\Roaming\\AI World Creator\\projects\\project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5\\ai-sessions\\workspace_024l9gls\\wprefabs\\shiguang-town",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/gazfl2u92v3bu016.wprefab",
+        "archiveRevision": "external:automation:603ea3fa-f0e3-464f-9663-e6482b5f939f:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563:c62a030209f4528bca814dbc34f2706a6fc378b538f89484c120bde075590563",
+        "faceCount": 53516,
+        "localExport": "exports/shiguang-town-complete.wprefab",
+        "hasRuntimeScript": true,
+        "localExportSha256": "4585f791efa659f0e6d740d9f9c6ee6241186f1987e059aa2bb74727b3e7c355"
+      }
+    ],
+    "resources": [
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-arrival-dock",
+        "sourcePath": "assets/models/model-arrival-dock",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-arrival-dock/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/fmjca6bdt6z73z0p.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-beach-discovery",
+        "sourcePath": "assets/models/model-beach-discovery",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-beach-discovery/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/mnu47co8ow5wsok2.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-cafe-kiosk",
+        "sourcePath": "assets/models/model-cafe-kiosk",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-cafe-kiosk/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/a3qiv5lp7jf8ingz.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-chalkboard",
+        "sourcePath": "assets/models/model-chalkboard",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-chalkboard/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/7viydc8khl3m0gh8.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-community-pavilion",
+        "sourcePath": "assets/models/model-community-pavilion",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-community-pavilion/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/c0wron9cn4dcp8y3.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-cottage",
+        "sourcePath": "assets/models/model-cottage",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-cottage/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/ptytoyd68l8ke9hv.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-flagpole",
+        "sourcePath": "assets/models/model-flagpole",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-flagpole/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/8perthyi9ieiwmub.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-flowerbed",
+        "sourcePath": "assets/models/model-flowerbed",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-flowerbed/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/5adx7dh1yjs9ozf0.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-fountain",
+        "sourcePath": "assets/models/model-fountain",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-fountain/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/dm9iq2s7xi5qj9f9.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-fruit-orchard",
+        "sourcePath": "assets/models/model-fruit-orchard",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-fruit-orchard/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/3leg3lrlgnif65zl.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-memory-corner",
+        "sourcePath": "assets/models/model-memory-corner",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-memory-corner/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/49uk1gbk2o510zfl.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-pier",
+        "sourcePath": "assets/models/model-pier",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-pier/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/4paoagbcv69ooqou.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-plaza-benches",
+        "sourcePath": "assets/models/model-plaza-benches",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-plaza-benches/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/zu4dgh0pn38d5r6y.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-resident-amber",
+        "sourcePath": "assets/models/model-resident-amber",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-resident-amber/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/zz0g054uuxdn9aq2.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-resident-blue",
+        "sourcePath": "assets/models/model-resident-blue",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-resident-blue/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/f3fh3d0edp6c6jpb.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-resident-sage",
+        "sourcePath": "assets/models/model-resident-sage",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-resident-sage/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/0psg2d5oykn8aow1.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-sunset-overlook",
+        "sourcePath": "assets/models/model-sunset-overlook",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-sunset-overlook/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/7hsu2prqxxve4xax.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-terrace",
+        "sourcePath": "assets/models/model-terrace",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-terrace/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/r3ogr973db98xiak.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-town-hardscape",
+        "sourcePath": "assets/models/model-town-hardscape",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-town-hardscape/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/adftbq6lddytn2mk.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-town-promenade",
+        "sourcePath": "assets/models/model-town-promenade",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-town-promenade/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/2m8g47nwpljj4egy.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-vending",
+        "sourcePath": "assets/models/model-vending",
+        "sourceFiles": [
+          "meta.json",
+          "topology/README.md",
+          "topology/model.glb"
+        ],
+        "sourceState": "topology",
+        "preparedPath": "assets/models/model-vending/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/n5kna2hd8j5cqmlb.glb"
+      },
+      {
+        "kind": "model",
+        "prefabId": "shiguang-town",
+        "resourceId": "model-windmill",
+        "sourcePath": "assets/models/model-windmill",
+        "sourceFiles": [
+          "meta.json",
+          "static/preview-module.js"
+        ],
+        "sourceState": "threejs",
+        "preparedPath": "assets/models/model-windmill/package/model.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/bp2gy1aqmnaba2ki.glb"
+      },
+      {
+        "kind": "map",
+        "prefabId": "shiguang-town",
+        "resourceId": "map-shiguang-town",
+        "sourcePath": "assets/maps/map-shiguang-town",
+        "sourceFiles": [
+          "meta.json",
+          "source/assets/licenses/scad-authoring/LICENSE",
+          "source/assets/licenses/scad-authoring/THIRD_PARTY_NOTICES.md",
+          "source/scad/lib/kit_environment.scad",
+          "source/scad/lib/kit_layout.scad",
+          "source/scad/lib/kit_terrain.scad",
+          "source/scad/lib/shiguang_parts.scad",
+          "source/scene.scad"
+        ],
+        "sourceState": "files",
+        "preparedPath": "assets/maps/map-shiguang-town/package/map.glb",
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/ijc9e64m30yfqqi8.glb"
+      }
+    ]
+  },
+  "design": {
+    "selectedScheme": "C",
+    "title": "时光小筑",
+    "phase": "4x-narrative-complete-with-62-closeups",
+    "townSizeMeters": {
+      "width": 64,
+      "depth": 56
+    },
+    "elevationLevelsMeters": [
+      0.0,
+      1.8,
+      3.6
+    ],
+    "buildingLayout": "scripts/town-building-layout.json",
+    "plannedFacilityCount": 18
+  },
+  "scene": {
+    "generationMode": "high-quality",
+    "importedRoots": [
+      {
+        "prefabId": "shiguang-town",
+        "requestId": "shiguang-town-completion-import-1",
+        "rootIDs": [
+          "1692056964"
+        ],
+        "worldPosition": [
+          115,
+          78.15,
+          86
+        ],
+        "archiveUri": "hamlet-ugc/aigc_editor/dev/unity/MS4wLjABAAAAyvqdmrGLNT202gjmywqj-uY-M27N9cGwNr7K4ldqN2A7wZZqLTIKeW74rX46XC3f/gazfl2u92v3bu016.wprefab"
+      }
+    ],
+    "lastSaveRequestId": "shiguang-town-completion-save-1",
+    "lastSaveOperationId": "531c8f17401ed796d552d24f25fd18b3be328fe395be1ab81b149c58f7ed626b"
+  },
+  "verification": {
+    "records": [
+      {
+        "stage": "phase1-courtyard-and-interaction",
+        "runtimeId": "2bd33995-7224-41b8-900b-729e3e438ccd",
+        "saveRequestId": "shiguang-p1-save-1",
+        "result": "自然出生于庭院，木屋自动门稳定开合并可步行出入，花圃首次靠近自动育种，长按 E 只触发一次，松开后可再次触发。",
+        "screenshots": [
+          "debug/p1-verified-player-overview.png",
+          "debug/p1-verified-cottage-door-open.png",
+          "debug/p1-cottage-interior.png",
+          "debug/p1-flowerbed-fountain.png"
+        ]
+      },
+      {
+        "stage": "town-ensemble-first-pass",
+        "runtimeId": "b070dfd2-da74-4839-b0af-e38ede63000d",
+        "saveRequestId": "shiguang-town-ensemble-save-1",
+        "structures": [
+          {
+            "name": "琥珀屋",
+            "position": [
+              91,
+              79.95,
+              90
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ],
+            "renderers": 39,
+            "activeColliders": 39,
+            "bounds": [
+              [
+                88.787,
+                79.95,
+                87.507
+              ],
+              [
+                93.2,
+                84.435,
+                92.493
+              ]
+            ]
+          },
+          {
+            "name": "鼠尾草屋",
+            "position": [
+              92,
+              79.95,
+              97
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ],
+            "renderers": 40,
+            "activeColliders": 40,
+            "bounds": [
+              [
+                89.787,
+                79.95,
+                94.507
+              ],
+              [
+                94.2,
+                84.43,
+                99.493
+              ]
+            ]
+          },
+          {
+            "name": "海风屋",
+            "position": [
+              139,
+              79.95,
+              94
+            ],
+            "front": [
+              -1,
+              0,
+              0
+            ],
+            "renderers": 44,
+            "activeColliders": 44,
+            "bounds": [
+              [
+                136.8,
+                79.95,
+                91.507
+              ],
+              [
+                141.216,
+                83.77,
+                96.493
+              ]
+            ]
+          },
+          {
+            "name": "海风咖啡亭",
+            "position": [
+              138,
+              79.95,
+              82
+            ],
+            "front": [
+              -1,
+              0,
+              0
+            ],
+            "renderers": 8,
+            "activeColliders": 8,
+            "bounds": [
+              [
+                136.018,
+                79.95,
+                79.617
+              ],
+              [
+                139.982,
+                83.475,
+                84.403
+              ]
+            ]
+          },
+          {
+            "name": "登岛码头",
+            "position": [
+              109,
+              78.35,
+              64
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ],
+            "renderers": 8,
+            "activeColliders": 8,
+            "bounds": [
+              [
+                106.07,
+                78.35,
+                61.69
+              ],
+              [
+                111.93,
+                81.475,
+                66.482
+              ]
+            ]
+          },
+          {
+            "name": "社区秋千亭",
+            "position": [
+              93,
+              79.95,
+              80
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ],
+            "renderers": 66,
+            "activeColliders": 66,
+            "bounds": [
+              [
+                91.075,
+                79.95,
+                77.678
+              ],
+              [
+                95.325,
+                83.052,
+                82.322
+              ]
+            ]
+          },
+          {
+            "name": "日落观景亭",
+            "position": [
+              113,
+              81.75,
+              104
+            ],
+            "front": [
+              0,
+              0,
+              -1
+            ],
+            "renderers": 71,
+            "activeColliders": 71,
+            "bounds": [
+              [
+                110.36,
+                81.75,
+                101.925
+              ],
+              [
+                115.64,
+                85.295,
+                105.783
+              ]
+            ]
+          },
+          {
+            "name": "街道路网与广场铺装",
+            "position": [
+              115,
+              78.15,
+              86
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ],
+            "renderers": 11,
+            "activeColliders": 0,
+            "bounds": [
+              [
+                93.3,
+                79.982,
+                71.564
+              ],
+              [
+                136.809,
+                80.01,
+                97.843
+              ]
+            ]
+          }
+        ],
+        "screenshots": [
+          "debug/town-ensemble-coast.png",
+          "debug/town-ensemble-overview.png",
+          "debug/town-ensemble-west-lane.png"
+        ],
+        "review": "七处新增建筑与构筑物就位。新增铺装沿用地图地形碰撞。住宅为外部体量，远景岸线仍可见条纹。"
+      },
+      {
+        "stage": "town-exterior-complete",
+        "runtimeId": "95016659-ee65-4b45-baa1-3a21eaa21b26",
+        "saveRequestId": "shiguang-town-completion-save-1",
+        "planFacilityCount": 18,
+        "structures": [
+          {
+            "name": "琥珀屋",
+            "renderers": 39,
+            "activeColliders": 39,
+            "location": [
+              -24,
+              1.8,
+              4
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "鼠尾草屋",
+            "renderers": 40,
+            "activeColliders": 40,
+            "location": [
+              -23,
+              1.8,
+              11
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "海风屋",
+            "renderers": 44,
+            "activeColliders": 44,
+            "location": [
+              24,
+              1.8,
+              8
+            ],
+            "front": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "海风咖啡亭",
+            "renderers": 8,
+            "activeColliders": 8,
+            "location": [
+              23,
+              1.8,
+              -4
+            ],
+            "front": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "登岛码头",
+            "renderers": 8,
+            "activeColliders": 8,
+            "location": [
+              -6,
+              0.2,
+              -22
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "name": "社区秋千亭",
+            "renderers": 66,
+            "activeColliders": 66,
+            "location": [
+              -22,
+              1.8,
+              -6
+            ],
+            "front": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "日落观景亭",
+            "renderers": 71,
+            "activeColliders": 71,
+            "location": [
+              -2,
+              3.6,
+              18
+            ],
+            "front": [
+              0,
+              0,
+              -1
+            ]
+          },
+          {
+            "name": "漂流瓶拾贝带",
+            "renderers": 33,
+            "activeColliders": 0,
+            "location": [
+              -18,
+              0.2,
+              -19
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "name": "复古自动售货机",
+            "renderers": 12,
+            "activeColliders": 12,
+            "location": [
+              19,
+              1.8,
+              5
+            ],
+            "front": [
+              0,
+              0,
+              -1
+            ]
+          },
+          {
+            "name": "广场长椅群",
+            "renderers": 8,
+            "activeColliders": 8,
+            "location": [
+              11,
+              1.8,
+              5
+            ],
+            "front": [
+              0,
+              0,
+              -1
+            ]
+          },
+          {
+            "name": "三果实秘境果林",
+            "renderers": 127,
+            "activeColliders": 127,
+            "location": [
+              14,
+              3.6,
+              19
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "name": "纸片宠物打卡坪与时光石",
+            "renderers": 29,
+            "activeColliders": 29,
+            "location": [
+              23,
+              3.6,
+              17
+            ],
+            "front": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "滨海街巷与高台环线",
+            "renderers": 3,
+            "activeColliders": 0,
+            "location": [
+              0,
+              0,
+              0
+            ],
+            "front": [
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "routeGroundChecks": [
+          {
+            "name": "拾贝带至码头",
+            "samples": 38,
+            "maxHeightDelta": 0.133,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "西坡道",
+            "samples": 18,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "东坡道",
+            "samples": 17,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "坡道至心愿广场",
+            "samples": 27,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "西宅巷至广场",
+            "samples": 86,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "广场至东宅巷",
+            "samples": 28,
+            "maxHeightDelta": 0.132,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "东宅巷至高台",
+            "samples": 40,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "西宅巷至高台",
+            "samples": 37,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          },
+          {
+            "name": "高台至果林打卡坪",
+            "samples": 96,
+            "maxHeightDelta": 0,
+            "issues": [],
+            "issueCount": 0
+          }
+        ],
+        "screenshots": [
+          "debug/town-full-orthographic.jpg",
+          "debug/town-full-coast-link.png",
+          "debug/town-full-site-plan.png"
+        ],
+        "review": "海滨步道与双坡道连接广场、东西住宅巷和高台。F03 贴合沙面 +0.20 m，F18 中心北移 1 m 以使全坪落在高台上。常规远距离透视采集仍可见局部铺装闪纹，整镇主图使用运行态正交相机。"
+      }
+    ]
+  },
+  "starlight": {
+    "approvalPolicy": "ask_each_time",
+    "tasks": []
+  },
+  "directories": {
+    "docs": "docs",
+    "assetsReferences": "assets/references",
+    "assetsReferencesArtBible": "assets/references/art-bible",
+    "assetsModels": "assets/models",
+    "assetsUi": "assets/ui",
+    "assetsAudio": "assets/audio",
+    "scripts": "scripts",
+    "exports": "exports",
+    "debug": "debug"
+  },
+  "expansion4x": {
+    "layoutType": "embrace-crescent-bay-double-capes-and-offshore-islet",
+    "boundsMeters": {
+      "width": 136,
+      "depth": 122,
+      "xRange": [
+        -68,
+        68
+      ],
+      "zRange": [
+        -54,
+        68
+      ]
+    },
+    "outerSeaMeters": {
+      "width": 184,
+      "depth": 168
+    },
+    "walkableAreaM2": {
+      "v1Baseline": 3584.0,
+      "v2TerrainM2": 14170.3,
+      "v2WithBridgesM2": 14262.0,
+      "target4xM2": 14334.0,
+      "scaleFactor": 3.9794
+    },
+    "elevationLevelsMeters": [
+      -0.25,
+      0.2,
+      1.8,
+      3.6,
+      5.4
+    ],
+    "zones": [
+      "Zone0",
+      "ZoneW",
+      "ZoneE",
+      "ZoneN",
+      "ZoneS"
+    ],
+    "plannedFacilityRange": "F01-F42",
+    "placedInstanceCount": 51,
+    "layoutJson": "creator-project/project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5/ai-sessions/workspace_024l9gls/wprefabs/shiguang-town/assets/maps/map-shiguang-town/package/layout.json",
+    "buildingLayout": "scripts/town-building-layout.json",
+    "scadSource": "creator-project/project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5/ai-sessions/workspace_024l9gls/wprefabs/shiguang-town/assets/maps/map-shiguang-town/source/scene.scad",
+    "blenderModels": {
+      "terrain4xGlb": "assets/models/map-shiguang-town-4x.glb",
+      "hardscape4xGlb": "assets/models/town-hardscape-4x.glb",
+      "landmarksDir": "assets/models/landmarks-4x",
+      "landmarkGlbCount": 31
+    },
+    "routeAudit4x": {
+      "reportPath": "debug/route-audit-4x.json",
+      "routeCount": 15,
+      "totalSamples": 3564,
+      "maxSlopeDeg": 17.23,
+      "issueCount": 0,
+      "passed": true
+    },
+    "screenshots": [
+      "debug/town-4x-site-plan.png",
+      "debug/town-4x-overview.png",
+      "debug/town-4x-full-assembly.png"
+    ]
+  },
+  "narrative": {
+    "designDoc": "docs/narrative-design-and-script.md",
+    "mapResearchDoc": "docs/map-design-research-4x.md",
+    "masterplan4xDoc": "docs/town-masterplan-4x.md",
+    "dbJson": "data/narrative-db.json",
+    "dbJs": "data/narrative-db.js",
+    "chaptersCount": 6,
+    "residentCount": 9,
+    "collectiblesCount": 26,
+    "blackboardLinesCount": 86,
+    "luaScripts": [
+      "scripts/lua/narrative-host.lua",
+      "scripts/lua/resident-utility-ai.lua",
+      "scripts/lua/blackboard-dialogue-engine.lua",
+      "scripts/lua/smart-object-broadcaster.lua",
+      "scripts/lua/fast-travel-and-ferry.lua",
+      "scripts/lua/time-weather-lighting.lua",
+      "scripts/lua/ugc-flag-chalkboard-pet.lua"
+    ],
+    "bindScript4x": "scripts/bind-scripts-4x.js"
+  },
+  "characterMiniScripts": {
+    "authorModel": "gemini-4-neon-xhigh",
+    "doc": "docs/character-mini-scripts.md",
+    "json": "data/character-mini-scripts.json",
+    "js": "data/character-mini-scripts.js",
+    "charactersCount": 9,
+    "personalEpisodesCount": 27,
+    "duoEncountersCount": 3,
+    "totalDialogueLines": 254,
+    "datastoreSchemaBytesMax": 87,
+    "allowedActionWhitelistCount": 17,
+    "verified": true
+  },
+  "assetCloseups62": {
+    "manifest": "assets/3d-modeling-closeups/manifest.json",
+    "auditDoc": "docs/asset-closeup-style-audit.md",
+    "auditMetrics": "assets/3d-modeling-closeups/audit-metrics.json",
+    "generatorScript": "scripts/codex-gen-closeup.py",
+    "contactSheetsScript": "scripts/build-contact-sheets.py",
+    "totalAssets": 62,
+    "residentsTPoseCount": 9,
+    "minCornerRgbChannel": 241,
+    "auditPassRate": "62/62",
+    "contactSheets": [
+      "assets/3d-modeling-closeups/_contact-sheets/sheet-1-core-town-F01-F18.png",
+      "assets/3d-modeling-closeups/_contact-sheets/sheet-2-expansion-west-east-F19-F31.png",
+      "assets/3d-modeling-closeups/_contact-sheets/sheet-3-expansion-north-south-F32-F42.png",
+      "assets/3d-modeling-closeups/_contact-sheets/sheet-4-residents-props-C01-U01.png"
+    ]
+  },
+  "interactiveDemos": {
+    "playableNarrativeGame4x": "../interactive-demos/shiguang-narrative-game.html",
+    "blueprint4x": "../interactive-demos/town-layout-blueprint-4x.html",
+    "artAlignmentBoard": "../interactive-demos/art-alignment-board.md",
+    "offlineZeroCdnVerified": true
+  }
+}
