@@ -61,6 +61,243 @@ local function setGoActive(go, active)
   end
 end
 
+local Vector3 = UnityEngine.Vector3
+local Quaternion = UnityEngine.Quaternion
+local HumanBodyBones = UnityEngine.HumanBodyBones
+local ActorService = DouyinActorService or CS.DouyinActorService
+local cropProps = {}
+local HARVEST_PROPS = {
+  radish = { node = "Harvest_Radish_Prop", scale = 0.50, liftScale = 0.06, gripDrop = 0.060, yaw = 0, roll = -20 },
+  berry = { node = "Harvest_Strawberry_Prop", scale = 0.63, liftScale = 0.07, gripDrop = 0.065, yaw = 25, roll = -15 },
+  sunflower = { node = "Harvest_Sunflower_Prop", scale = 0.39, liftScale = 0.04, gripDrop = 0.105, yaw = -20, roll = -24 },
+}
+local celebration
+local warnedAboutCelebration = false
+local HARVEST_DURATION = 2.05
+local TAKEOFF_AT = 0.46
+local FLIGHT_TIME = 0.58
+local ARM_BONES = {
+  { "LeftUpperArm", "LeftLowerArm", "LeftHand", -1 },
+  { "RightUpperArm", "RightLowerArm", "RightHand", 1 },
+}
+
+local LEG_BONES = {
+  { "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", -1 },
+  { "RightUpperLeg", "RightLowerLeg", "RightFoot", 1 },
+}
+
+local function alive(object)
+  return object ~= nil and not object:Equals(nil)
+end
+
+local function smoothStep(from, to, time)
+  local t = math.max(0, math.min(1, (time - from) / (to - from)))
+  return t * t * (3 - 2 * t)
+end
+
+local function restoreHarvestPose()
+  if celebration == nil or celebration.pose == nil then return end
+  for _, original in ipairs(celebration.pose) do
+    if alive(original.bone) then
+      original.bone.localPosition = original.position
+      original.bone.localRotation = original.rotation
+    end
+  end
+  celebration.pose = nil
+end
+
+local function finishHarvestCelebration()
+  restoreHarvestPose()
+  local action = celebration
+  celebration = nil
+  if action ~= nil and alive(action.prop) then setGoActive(action.prop.gameObject, false) end
+end
+
+local function startHarvestCelebration(cropId, plotTransform)
+  local prop = cropProps[cropId]
+  local grip = HARVEST_PROPS[cropId]
+  if not alive(prop) or not alive(plotTransform) or ActorService == nil then return end
+  local actor = ActorService.GetLocalActor()
+  if actor == nil or not alive(actor.gameObject) or not actor:IsGrounded() then return end
+  local hips = actor:GetBoneTransform(HumanBodyBones.Hips)
+  local chest = actor:GetBoneTransform(HumanBodyBones.Chest)
+  local head = actor:GetBoneTransform(HumanBodyBones.Head)
+  if not alive(hips) or not alive(hips.parent) or not alive(chest) or not alive(head) then return end
+  local avatar = hips:GetComponentInParent(typeof(UnityEngine.Animator))
+  if not alive(avatar) or hips.parent == actor.gameObject.transform then return end
+
+  local arms = {}
+  for _, names in ipairs(ARM_BONES) do
+    local upper = actor:GetBoneTransform(HumanBodyBones[names[1]])
+    local lower = actor:GetBoneTransform(HumanBodyBones[names[2]])
+    local hand = actor:GetBoneTransform(HumanBodyBones[names[3]])
+    if not alive(upper) or not alive(lower) or not alive(hand) then return end
+    arms[#arms + 1] = { upper = upper, lower = lower, hand = hand, side = names[4] }
+  end
+
+  local legs = {}
+  for _, names in ipairs(LEG_BONES) do
+    local upper = actor:GetBoneTransform(HumanBodyBones[names[1]])
+    local lower = actor:GetBoneTransform(HumanBodyBones[names[2]])
+    local foot = actor:GetBoneTransform(HumanBodyBones[names[3]])
+    if not alive(upper) or not alive(lower) or not alive(foot) then return end
+    legs[#legs + 1] = { upper = upper, lower = lower, hand = foot, side = names[4] }
+  end
+
+  finishHarvestCelebration()
+  local player = actor.gameObject.transform
+  local planted = plotTransform.position
+  local delta = planted - player.position
+  local flat = Vector3(delta.x, 0, delta.z)
+  local direction = flat.sqrMagnitude > 0.01 and flat.normalized or avatar.transform.forward
+  celebration = {
+    root = hips.parent, avatar = avatar.transform, actor = actor, player = player,
+    direction = direction, chest = chest, head = head, arms = arms, legs = legs,
+    started = Time.time, bodyWeight = 1, prop = prop, grip = grip,
+  }
+end
+
+local function aimBone(bone, child, target)
+  local from = child.position - bone.position
+  local to = target - bone.position
+  if from.sqrMagnitude > 0.000001 and to.sqrMagnitude > 0.000001 then
+    bone.rotation = Quaternion.FromToRotation(from, to) * bone.rotation
+  end
+end
+
+local function poseLimb(arm, target, pole)
+  local shoulder = arm.upper.position
+  local offset = target - shoulder
+  if offset.sqrMagnitude < 0.000001 then return end
+  local axis = offset.normalized
+  local upper = Vector3.Distance(shoulder, arm.lower.position)
+  local lower = Vector3.Distance(arm.lower.position, arm.hand.position)
+  if upper < 0.001 or lower < 0.001 then return end
+  local distance = math.max(math.abs(upper - lower) + 0.0005,
+    math.min(offset.magnitude, upper + lower - 0.0005))
+  local along = (upper * upper - lower * lower + distance * distance) / (2 * distance)
+  local bend = math.sqrt(math.max(0, upper * upper - along * along))
+  local normal = (pole - axis * Vector3.Dot(pole, axis)).normalized
+  aimBone(arm.upper, arm.lower, shoulder + axis * along + normal * bend)
+  aimBone(arm.lower, arm.hand, shoulder + axis * distance)
+end
+
+local function animateHarvest()
+  local action = celebration
+  local time = Time.time - action.started
+  if time >= HARVEST_DURATION or not alive(action.player) or not alive(action.root)
+      or not alive(action.prop) then
+    finishHarvestCelebration()
+    return
+  end
+  local grounded = action.actor:IsGrounded()
+  -- A player-initiated jump can provide the takeoff; there is only one automatic request.
+  if not grounded and action.tookOff == nil then
+    action.tookOff = time
+  elseif grounded and action.tookOff ~= nil and action.landed == nil then
+    action.landed = time
+  end
+  if grounded and time >= TAKEOFF_AT and not action.jumpRequested and action.tookOff == nil then
+    action.jumpRequested = true
+    action.actor:Jump()
+  end
+
+  local velocity = action.actor.velocity
+  local moving = velocity.x * velocity.x + velocity.z * velocity.z > 0.18
+  local goal = (moving or (action.landed ~= nil and not grounded)) and 0 or 1
+  action.bodyWeight = UnityEngine.Mathf.MoveTowards(action.bodyWeight, goal, Time.deltaTime * 12)
+
+  action.pose = {}
+  local function remember(bone)
+    action.pose[#action.pose + 1] = { bone = bone, position = bone.localPosition, rotation = bone.localRotation }
+  end
+  remember(action.root)
+  remember(action.chest)
+  remember(action.head)
+  for _, arm in ipairs(action.arms) do
+    remember(arm.upper)
+    remember(arm.lower)
+  end
+  for _, leg in ipairs(action.legs) do
+    remember(leg.upper)
+    remember(leg.lower)
+  end
+
+  local release = smoothStep(1.86, HARVEST_DURATION, time)
+  local face = smoothStep(0.0, 0.20, time) * (1 - release) * action.bodyWeight
+  local direction = Vector3.Slerp(action.avatar.forward, action.direction, face)
+  local jumpStart = action.tookOff or TAKEOFF_AT
+  local jumpEnd = action.landed or (jumpStart + FLIGHT_TIME)
+  local phase = math.max(0, math.min(1, (time - jumpStart) / math.max(0.15, jumpEnd - jumpStart)))
+  -- Fade the shortest remaining yaw so a running player keeps a forward-facing gait.
+  local turn = 360 * smoothStep(0, 1, phase)
+  local spin = (turn > 180 and turn - 360 or turn) * action.bodyWeight
+  local spinRotation = Quaternion.AngleAxis(spin, Vector3.up)
+  local forward = spinRotation * direction
+  local right = Vector3.Cross(Vector3.up, forward).normalized
+  local angle = Vector3.SignedAngle(action.avatar.forward, direction, Vector3.up)
+  local air = math.sin(math.pi * phase)
+  local landingStart = action.landed or (TAKEOFF_AT + FLIGHT_TIME)
+  local land = smoothStep(landingStart - 0.025, landingStart + 0.085, time)
+    - smoothStep(landingStart + 0.085, landingStart + 0.25, time)
+  local pickupDip = smoothStep(0.0, 0.23, time) - smoothStep(0.25, 0.39, time)
+  local launchDip = smoothStep(0.32, 0.40, time) - smoothStep(0.40, TAKEOFF_AT + 0.025, time)
+  local crouch = (0.080 * pickupDip + 0.083 * launchDip + 0.076 * land) * action.bodyWeight
+  local fallbackLift = action.tookOff == nil and air * 0.20 * action.bodyWeight or 0
+  action.root.position = action.root.position + Vector3.up * (fallbackLift - crouch)
+  action.root.rotation = Quaternion.AngleAxis(spin + angle, Vector3.up) * action.root.rotation
+
+  for _, leg in ipairs(action.legs) do
+    local tuck = air * (leg.side == 1 and 0.067 or 0.045) * action.bodyWeight
+    local target = leg.hand.position + Vector3.up * (crouch + tuck) - forward * (tuck * 0.60)
+    if action.bodyWeight > 0.01 and (crouch > 0.001 or tuck > 0.001) then
+      poseLimb(leg, target, forward + right * (leg.side * 0.08))
+    end
+  end
+
+  local show = smoothStep(landingStart + 0.04, landingStart + 0.34, time) * (1 - release)
+  local reach = smoothStep(0, 0.22, time) * (1 - release)
+  local lift = smoothStep(0.23, 0.43, time)
+  action.chest.rotation = Quaternion.AngleAxis(crouch * 160 - show * 9, right) * action.chest.rotation
+  action.head.rotation = Quaternion.AngleAxis(-air * 10 - show * 10, right) * action.head.rotation
+
+  local chest = action.chest.position
+  local carry = chest + forward * 0.12 + Vector3.up * -0.03
+  local raised = action.arms[2].upper.position + forward * 0.105 + right * 0.103 + Vector3.up * 0.155
+  local display = Vector3.Lerp(carry, raised, show)
+  local pickup = chest + forward * 0.15 + Vector3.up * -0.105
+  local hands = Vector3.Lerp(pickup, display, lift)
+  for _, arm in ipairs(action.arms) do
+    local grip = hands + right * (0.037 * arm.side)
+    if arm.side == -1 then
+      local outstretched = arm.upper.position - right * 0.16 + forward * 0.03 + Vector3.up * 0.026
+      grip = Vector3.Lerp(grip, outstretched, show)
+    end
+    poseLimb(arm, Vector3.Lerp(arm.hand.position, grip, reach), right * arm.side - Vector3.up)
+  end
+
+  local carried = Vector3.Lerp(
+    (action.arms[1].hand.position + action.arms[2].hand.position) * 0.5,
+    action.arms[2].hand.position, show
+  )
+  local entry = smoothStep(0.16, 0.43, time)
+  local plantReach = action.player.position + forward * 0.23 - Vector3.up * 0.25
+  local grip = action.grip
+  local held = carried + forward * 0.048 - Vector3.up * grip.gripDrop
+  action.prop.position = Vector3.Lerp(plantReach, held, entry)
+  action.prop.rotation = Quaternion.LookRotation(forward, Vector3.up) * Quaternion.Euler(0, grip.yaw, show * grip.roll)
+  local scale = (grip.scale + grip.liftScale * show) * (1 - 0.9 * release)
+  action.prop.localScale = Vector3(scale, scale, scale)
+  setGoActive(action.prop.gameObject, true)
+end
+
+local function reportCelebrationError(err)
+  if warnedAboutCelebration then return end
+  warnedAboutCelebration = true
+  print("[farming-25d] Harvest animation: " .. tostring(err))
+end
+
+
 local function findAllTransformsByPrefixOrExact()
   local byName = {}
   local stack = { self.transform }
@@ -288,6 +525,7 @@ local function describePlotAction(i)
 end
 
 local function interactPlot(i)
+  if celebration ~= nil then return false, "庆祝完这次收获再继续吧～" end
   local p = plots[i]
   if p == nil then return false, "没有选中的菜地" end
 
@@ -324,12 +562,21 @@ local function interactPlot(i)
     p.duration = 0.0
     syncPlotVisuals(i, true)
     saveState()
+    local ok, err = pcall(startHarvestCelebration, def.id, p.transform)
+    if not ok then
+      finishHarvestCelebration()
+      reportCelebrationError(err)
+    end
     return true, string.format("收获了新鲜的%s！已放进小篮子", def.label)
   end
 end
 
 function Start()
   local byName = findAllTransformsByPrefixOrExact()
+  cropProps = {}
+  for id, grip in pairs(HARVEST_PROPS) do
+    cropProps[id] = byName[grip.node]
+  end
   plots = {}
   local foundPlots = 0
   for i = 1, 8 do
@@ -433,6 +680,7 @@ function Start()
 end
 
 function Update()
+  restoreHarvestPose()
   if not initialized then return end
   local dt = Time.deltaTime
   for i = 1, 8 do
@@ -454,7 +702,21 @@ function Update()
   end
 end
 
+function LateUpdate()
+  if celebration == nil then return end
+  local ok, err = pcall(animateHarvest)
+  if not ok then
+    finishHarvestCelebration()
+    reportCelebrationError(err)
+  end
+end
+
+function OnDisable()
+  finishHarvestCelebration()
+end
+
 function OnDestroy()
+  finishHarvestCelebration()
   if initialized then
     saveState()
   end

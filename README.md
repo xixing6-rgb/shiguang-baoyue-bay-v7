@@ -1,16 +1,18 @@
-# 《时光小筑 · 抱月湾 2.5D》（风之杖海湾原型）
+# 《时光小筑 · 抱月湾 2.5D》
 
-面向 **抖音造世界（`douyin-world` CLI + Hamlet Lua 5.3 + Unity Runtime）** 打造的全栈 AI **2.5D 轻种菜 + 轻量剧情海湾** 项目。  
-针对早期 4× 离散方块地形高差生硬、坡道不可通行及画风割裂的问题，当前阶段已完成连续平滑抱月湾地形重构、伪无边界海天远景、固定斜俯视 2.5D 镜头控制、8 格小菜园玩法、底部对话盒 + 左侧透明动态角色序列帧管线，以及 Tripo AI 模型减面与实机运行态首轮联调。
+《时光小筑 · 抱月湾》是用抖音造世界、Hamlet Lua 5.3 和 Unity Runtime 制作的海湾生活游戏。玩家可以散步、种菜，并和动物邻居聊天、送礼。
 
-> **当前仓库阶段状态（2026-11-25 暂停节点）**：  
-> - **已完成并实机验收通过**：平滑抱月湾连续地形 + 伪无边界海洋（Blender 重建与法线朝向修复）、2.5D 固定斜俯视镜头与玩家正常出生落地（Check A）、全岛及西跨海拱桥无阻挡通行（Check B）、8 格种菜前端交互（种植 + 浇水计时减半实测）。  
-> - **已构建归档待接入实景继续验证**：已全面清理游戏内 UI 与对白中的设计术语文案，重新归档 UI 资源与 `shiguang-25d-windwaker` 预制件（`eitflflegg6eihqv.wprefab`），**尚未重新导入实景并执行 `scene save`**；暂停于此节点，等待下一阶段继续。详细接续步骤见 [HANDOFF.md](HANDOFF.md)。  
-> - **造世界星光消耗**：**0**（全部地形、资产优化、UI 与脚本均在本机与开放 CLI 管线内完成）。
+## 2026-11-27 更新
 
----
+- **三种作物的收获动画。** 摘下小红萝卜、甜草莓或向日葵时，主角会抱起对应作物，蹬地起跳并在空中转一圈，落地后单手举起作物摆造型。三种作物各有适合自身尺寸和形状的握持位置。[收获脚本](workspace/scripts/lua-25d/farming-plot-system.lua)
+- **走跑和跳跃。** 移除了收获动画对主角移动速度、跳跃高度和动画播放器的临时改写。在造世界里连续测试了三种作物的道具显示、背包数量加一和道具收起，随后按 `W` 跑动、按空格跳跃并落地。
+- **新增 27 件场景素材。** 北麓花园新增玻璃房、观景亭、钟楼、水井和园艺工具房，东湾街区新增面包房、双层民居、樱花树与盆栽，庭院果园和西翼坡地补充了树木、灌木和岩石。各模型可独立编辑，已核对运行态可见、落在地形上，摆位避开主要道路。[摆位清单](workspace/data/windwaker_supplemental_placements.json) · [模型源文件](workspace/assets/models/supplemental/)
 
-## 核心特性与技术方案
+![北麓花园运行态预览](workspace/debug/v7-supplemental-north-garden.png)
+
+[恢复造世界工程](本次打包与恢复说明.md) · [最新可编辑 WPrefab](workspace/exports/shiguang-25d-windwaker-v7-supplemental.wprefab) · [下一步待办](下一步待办清单.md)
+
+## v2–v3 核心特性与技术记录
 
 | 模块 | 实现方案与当前指标 | 关键产出入口 |
 | :--- | :--- | :--- |
@@ -22,7 +24,7 @@
 
 ---
 
-## 阶段视觉预览
+## v2–v3 阶段视觉预览
 
 | Blender 2.5D 地形与海景渲染预览 | 实机运行态：西跨海拱桥与礁岸浅滩（Check B） | 实机运行态：主庭院出生点与 8 格菜园（Check A） |
 | :---: | :---: | :---: |
@@ -43,7 +45,7 @@
 | **`workspace/data/`** | 2.5D 资产 URI 清单、地形高程与坡度审计表、环境参数补丁、交付回执与叙事库 | [windwaker_scene_manifest.json](workspace/data/windwaker_scene_manifest.json) · [windwaker_delivery_receipt.json](workspace/data/windwaker_delivery_receipt.json) · [windwaker_env_patch.json](workspace/data/windwaker_env_patch.json) |
 | **`workspace/debug/`** | Blender 渲染预览与实机运行态验收截图 | [windwaker-bay-overview.png](workspace/debug/windwaker-bay-overview.png) · [farm-garden-preview.png](workspace/debug/farm-garden-preview.png) · [tripo-optimized-preview.png](workspace/debug/tripo-optimized-preview.png) |
 | **`interactive-demos/`** | 早期零依赖浏览器端交互原型与蓝图 | [shiguang-narrative-game.html](interactive-demos/shiguang-narrative-game.html) · [town-layout-blueprint-4x.html](interactive-demos/town-layout-blueprint-4x.html) |
-| **`creator-project/`** | 早期 v1 造世界本地工程快照（`ui-town-interaction` 及初代脚本留档；现行 2.5D 工程位于造世界默认数据目录） | [project.json](creator-project/project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5/project.json) |
+| **`creator-project/`** | 早期 v1 造世界本地工程快照（`ui-town-interaction` 及初代脚本留档；现行工程快照位于下方恢复说明所列的项目目录） | [project.json](creator-project/project-a9b73cc9-cfbc-4006-a8df-f5f44f1279a5/project.json) |
 | **`图片/`** | 角色 T-Pose 参考图、62 项分包图集与联络表（原始未减面 `.fbx` / `.fbm` 由 `.gitignore` 忽略） | [图片/manifest.json](图片/manifest.json) |
 
 ---
